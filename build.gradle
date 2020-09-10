@@ -1,0 +1,80 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.0'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+group 'org.example'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
+
+dependencies {
+    implementation "me.mattstudios.utils:matt-framework:1.4.6"
+    implementation "me.mattstudios.utils:matt-framework-gui:2.0.2"
+    implementation "me.mattstudios.utils:matt-framework-msg:1.1"
+
+    implementation "com.github.ipsk:ConfigMe:M-1.0"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    implementation "io.papermc:paperlib:1.0.5"
+
+    // Spigot
+    compileOnly "org.spigotmc:spigot-api:1.16.2-R0.1-SNAPSHOT"
+    compileOnly "me.clip:placeholderapi:2.10.9"
+
+    implementation "me.mattstudios:triumph-core:1.0.4"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+    options.encoding = 'UTF-8'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8
+    kotlinOptions.javaParameters = true
+}
+
+shadowJar {
+
+    relocate("me.mattstudios.core", "me.mattstudios.triumphchat.core")
+    relocate("me.mattstudios.mf", "me.mattstudios.triumphchat.mf")
+    relocate("me.mattstudios.mfgui", "me.mattstudios.triumphchat.mfgui")
+    relocate("me.mattstudios.mfmsg", "me.mattstudios.triumphchat.mfmsg")
+    relocate("ch.jalu.configme", "me.mattstudios.triumphchat.configme")
+    relocate("io.papermc.lib", "me.mattstudios.triumphchat.paperlib")
+
+    relocate("kotlin", "me.mattstudios.triumphchat.kotlin")
+
+    relocate("org.commonmark", "me.mattstudios.triumphchat.commonmark")
+    relocate("org.yaml", "me.mattstudios.triumphchat.yaml")
+
+    archiveFileName = "TriumphChat-${project.version}.jar"
+
+    destinationDir file("C:/Users/xpsyk/Desktop/servers/paper-1.16/plugins")
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
