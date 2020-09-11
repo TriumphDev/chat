@@ -3,14 +3,10 @@ package me.mattstudios.triumphchat
 import io.papermc.lib.PaperLib
 import me.mattstudios.core.TriumphPlugin
 import me.mattstudios.core.func.log
-import me.mattstudios.core.util.Task.async
-import me.mattstudios.mfmsg.base.Message
 import me.mattstudios.triumphchat.config.Settings
+import me.mattstudios.triumphchat.listeners.ChatListener
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.AsyncPlayerChatEvent
 
 /**
  * @author Matt
@@ -23,7 +19,7 @@ class TriumphChat : TriumphPlugin(), Listener {
         displayStartupMessage()
         if (!checkPapi()) return
 
-        Bukkit.getPluginManager().registerEvents(this, this)
+        registerListeners(listOf(ChatListener(config)))
     }
 
     private fun checkPapi(): Boolean {
@@ -48,28 +44,6 @@ class TriumphChat : TriumphPlugin(), Listener {
         } else {
             "Go die".log()
         }
-    }
-
-    @EventHandler
-    fun AsyncPlayerChatEvent.onChat() {
-        isCancelled = true
-
-        async {
-            testChat(message, recipients, player)
-        }
-    }
-
-    private fun testChat(rawMessage: String, recipients: Set<Player>, player: Player) {
-        val finalMessage = buildString {
-            append("**<#e74c3c>Admin** <#3498db>")
-            append(player.name)
-            append("<#34495e> **»** &r")
-            append(rawMessage)
-        }
-
-        val message = Message.create()
-        val component = message.parse(finalMessage)
-        recipients.forEach { component.sendMessage(it) }
     }
 
 }
