@@ -10,12 +10,27 @@ data class Component(
 ) {
 
     fun formatComponent(): String {
+        if (text.isEmpty()) return text
 
-        println(text)
-        println(hover)
-        println(click)
+        val joinedHover = hover.joinToString("\n")
+        if (joinedHover.isEmpty() && (click.type == null || click.value == null)) return text
 
-        return ""
+        val formattedHover = buildString {
+            append("hover: ")
+            append(joinedHover)
+        }
+
+        val formattedClick = click.getFormatted()
+
+        return buildString {
+            append("[")
+            append(text)
+            append("](")
+            if (joinedHover.isNotEmpty()) append(formattedHover)
+            if (joinedHover.isNotEmpty() && formattedClick != null) append("|")
+            if (formattedClick != null) append(formattedClick)
+            append(")")
+        }
     }
 
 }
