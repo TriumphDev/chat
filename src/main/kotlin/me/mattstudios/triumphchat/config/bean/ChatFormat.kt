@@ -5,7 +5,7 @@ import me.mattstudios.triumphchat.config.bean.objects.Component
 /**
  * @author Matt
  */
-data class Format(
+data class ChatFormat(
         var priority: Int = 1,
         var components: Map<String, Component> = emptyMap()
 )

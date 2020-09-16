@@ -1,5 +1,8 @@
 package me.mattstudios.triumphchat.config.bean.objects
 
+import me.mattstudios.triumphchat.func.parsePAPI
+import org.bukkit.entity.Player
+
 /**
  * @author Matt
  */
@@ -8,7 +11,7 @@ data class ClickAction(
         var value: String? = null
 ) {
 
-    fun getFormatted(): String? {
+    fun getFormatted(player: Player): String? {
         if (type == null || value == null) return null
 
         val formatType = when (type?.toUpperCase()) {
@@ -21,7 +24,7 @@ data class ClickAction(
         return buildString {
             append(formatType)
             append(": ")
-            append(value)
+            append(value?.parsePAPI(player))
         }
     }
 

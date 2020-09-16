@@ -19,7 +19,7 @@ class TriumphChat : TriumphPlugin(), Listener {
         displayStartupMessage()
         if (!checkPapi()) return
 
-        registerListeners(listOf(ChatListener(config)))
+        registerListeners(listOf(ChatListener(this)))
     }
 
     private fun checkPapi(): Boolean {

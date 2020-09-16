@@ -1,19 +1,19 @@
 package me.mattstudios.triumphchat.listeners
 
-import me.mattstudios.core.configuration.Config
 import me.mattstudios.core.util.Task.async
-import me.mattstudios.mfmsg.base.Message
-import me.mattstudios.triumphchat.config.Settings
+import me.mattstudios.triumphchat.TriumphChat
+import me.mattstudios.triumphchat.handlers.FormatHandler
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
+import kotlin.system.measureTimeMillis
 
 
 /**
  * @author Matt
  */
-class ChatListener(private val config: Config) : Listener {
+class ChatListener(private val plugin: TriumphChat) : Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun AsyncPlayerChatEvent.onPlayerChat() {
@@ -28,17 +28,18 @@ class ChatListener(private val config: Config) : Listener {
     }
 
     private fun AsyncPlayerChatEvent.handleChat() {
-        val format = config[Settings.FORMATS].entries.first().value
 
-        val sendMessage = buildString {
-            /*append(format.prefix)
-            append(format.name)
-            append(format.suffix)
-            append(format.`chat-color`)*/
-            append(message)
+        val time = measureTimeMillis {
+            val component = FormatHandler.getMessage(player, plugin.config)
+
+            recipients.forEach {
+                component.sendMessage(it)
+            }
+
         }
 
-        Message.create().parse(sendMessage).sendMessage(player)
+        player.sendMessage("Time - ${time}ms")
+
     }
 
 }

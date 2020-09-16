@@ -5,9 +5,8 @@ import ch.jalu.configme.properties.Property
 import ch.jalu.configme.properties.PropertyBuilder.MapPropertyBuilder
 import ch.jalu.configme.properties.PropertyInitializer.newProperty
 import ch.jalu.configme.properties.types.BeanPropertyType
-import me.mattstudios.triumphchat.config.bean.Format
-import me.mattstudios.triumphchat.config.bean.objects.ClickAction
-import me.mattstudios.triumphchat.config.bean.objects.Component
+import me.mattstudios.triumphchat.config.bean.ChatFormat
+import me.mattstudios.triumphchat.constants.Constant
 
 /**
  * @author Matt
@@ -15,17 +14,16 @@ import me.mattstudios.triumphchat.config.bean.objects.Component
 object Settings : SettingsHolder {
 
     val TEST: Property<Boolean> = newProperty(
-            "test", true
+        "test", true
     )
 
-    val FORMATS: Property<Map<String, Format>> =
-            MapPropertyBuilder(BeanPropertyType.of(Format::class.java))
-                    .path("formats")
-                    .defaultEntry("default", Format(1, mapOf(
-                            "prefix" to Component("%vault_prefix% ", click = ClickAction("RUN_COMMAND", "ranks")),
-                            "name" to Component("&f%player_name%", listOf("Click to send a message"), ClickAction("SUGGEST_COMMAND", "/msg %player_name% ")),
-                            "message" to Component("&8> &a%message%", listOf("Sent @ %server_time ....%"))
-                    )))
-                    .build()
+    val FORMATS: Property<Map<String, ChatFormat>> =
+        MapPropertyBuilder(BeanPropertyType.of(ChatFormat::class.java))
+                .path("chat.formats")
+                .defaultEntry("default", Constant.DEFAULT_FORMAT)
+                .build()
+
+    val CONSOLE_FORMAT: Property<String> =
+        newProperty("chat.console-format", "[%vault_rank%] %player_name% > %message%")
 
 }

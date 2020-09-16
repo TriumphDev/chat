@@ -1,5 +1,5 @@
 name: TriumphChat
 main: me.mattstudios.triumphchat.TriumphChat
-version: 1.0
+version: @version@
 softdepend: [PlaceholderAPI]
 api-version: 1.13

@@ -18,7 +18,7 @@ repositories {
 dependencies {
     implementation "me.mattstudios.utils:matt-framework:1.4.6"
     implementation "me.mattstudios.utils:matt-framework-gui:2.0.2"
-    implementation "me.mattstudios.utils:matt-framework-msg:1.1"
+    implementation "me.mattstudios.utils:matt-framework-msg:1.1.1"
 
     implementation "com.github.ipsk:ConfigMe:M-1.0"
 
@@ -59,7 +59,6 @@ shadowJar {
 
     relocate("kotlin", "me.mattstudios.triumphchat.kotlin")
 
-    relocate("org.commonmark", "me.mattstudios.triumphchat.commonmark")
     relocate("org.yaml", "me.mattstudios.triumphchat.yaml")
 
     archiveFileName = "TriumphChat-${project.version}.jar"
