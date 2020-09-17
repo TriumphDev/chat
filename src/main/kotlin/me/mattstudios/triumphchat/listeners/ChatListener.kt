@@ -2,7 +2,9 @@ package me.mattstudios.triumphchat.listeners
 
 import me.mattstudios.core.util.Task.async
 import me.mattstudios.triumphchat.TriumphChat
-import me.mattstudios.triumphchat.handlers.FormatHandler
+import me.mattstudios.triumphchat.chat.ChatMessage
+import me.mattstudios.triumphchat.events.TriumphChatEvent
+import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -30,11 +32,15 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
     private fun AsyncPlayerChatEvent.handleChat() {
 
         val time = measureTimeMillis {
-            val component = FormatHandler.getMessage(player, plugin.config)
 
-            recipients.forEach {
-                component.sendMessage(it)
-            }
+            val chatMessage = ChatMessage(player, message, recipients, plugin.config)
+
+            val triumphChatEvent = TriumphChatEvent(chatMessage)
+            Bukkit.getPluginManager().callEvent(triumphChatEvent)
+
+            if (triumphChatEvent.isCancelled) return
+
+            chatMessage.sendMessage()
 
         }
 

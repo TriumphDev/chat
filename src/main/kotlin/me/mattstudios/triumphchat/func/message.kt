@@ -7,4 +7,4 @@ import org.bukkit.entity.Player
  * @author Matt
  */
 
-fun String.parsePAPI(player: Player) = PlaceholderAPI.setPlaceholders(player, this)
+fun String.parsePAPI(player: Player?) = if (player == null) this else PlaceholderAPI.setPlaceholders(player, this)
