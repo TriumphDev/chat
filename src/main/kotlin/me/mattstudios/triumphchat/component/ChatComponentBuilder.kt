@@ -1,12 +1,12 @@
 package me.mattstudios.triumphchat.component
 
-import me.mattstudios.mfmsg.base.Message
+import me.mattstudios.mfmsg.base.MessageOptions
 import me.mattstudios.mfmsg.base.internal.Format
-import me.mattstudios.mfmsg.base.internal.action.ClickAction
-import me.mattstudios.mfmsg.base.internal.action.HoverAction
 import me.mattstudios.mfmsg.base.internal.color.FlatColor
-import me.mattstudios.mfmsg.base.internal.component.MessagePart
+import me.mattstudios.mfmsg.base.internal.color.MessageColor
+import me.mattstudios.mfmsg.base.internal.components.MessageNode
 import me.mattstudios.mfmsg.base.internal.parser.MessageParser
+import me.mattstudios.mfmsg.base.internal.util.Version
 import me.mattstudios.triumphchat.config.bean.objects.Click
 import me.mattstudios.triumphchat.config.bean.objects.Component
 import me.mattstudios.triumphchat.func.parsePAPI
@@ -18,12 +18,17 @@ import java.util.*
  */
 class ChatComponentBuilder {
 
-    private val finalParts = mutableListOf<MessagePart>()
-    private val current = mutableListOf<MessagePart>()
+    private val finalParts = mutableListOf<MessageNode>()
+    private val current = mutableListOf<MessageNode>()
 
-    fun append(message: String, formats: Set<Format> = EnumSet.allOf(Format::class.java)) {
+    fun append(
+        message: String,
+        formats: Set<Format> = EnumSet.allOf(Format::class.java),
+        defaultColor: MessageColor = FlatColor("white")
+    ) {
         save()
-        current.addAll(MessageParser(message, formats, FlatColor("white")).build())
+        val parser = MessageParser(MessageOptions.Builder().build(), Version.V1_16_R2)
+        current.addAll(parser.build())
     }
 
     fun append(component: Component, player: Player) {
@@ -34,11 +39,11 @@ class ChatComponentBuilder {
 
     fun addHover(hover: String) {
         if (hover.isEmpty()) return
-        current.forEach { it.actions.add(HoverAction(Message.create().parse(hover).messageLines)) }
+        //current.forEach { it.actions.add(HoverAction(Message.create().parse(hover).messageLines)) }
     }
 
     fun addClick(type: Format, click: String) {
-        current.forEach { it.actions.add(ClickAction(type, click)) }
+        //current.forEach { it.actions.add(ClickAction(type, click)) }
     }
 
     fun addClick(click: Click, player: Player) {

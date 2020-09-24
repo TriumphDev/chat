@@ -21,6 +21,6 @@ object Constant {
 
     val KEYWORD_PATTERN = Pattern.compile("(?<identifier>\\{.*?})")
 
-    val MESSAGE_PATTERN = Pattern.compile("(?<message>%message%)")
+    val MESSAGE_PATTERN = Pattern.compile("(?<message>([<&](?<hex>#[A-Fa-f0-9]{3,6})[>]?|&(?<char>[a-fA-F0-9rR])|<(?:g|gradient):(?<gradient>.+?)>|<(?<r>r|rainbow)(?<sat>:\\d*\\.\\d*)?(?<lig>:\\d*\\.\\d*)?>)?[ ]?%message%)")
 
 }

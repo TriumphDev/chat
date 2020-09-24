@@ -27,6 +27,8 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
         }
 
         handleChat()
+
+        format
     }
 
     private fun AsyncPlayerChatEvent.handleChat() {

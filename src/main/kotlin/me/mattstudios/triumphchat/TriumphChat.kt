@@ -30,6 +30,7 @@ class TriumphChat : TriumphPlugin(), Listener {
         }
 
         "&aHooked into PlaceholderAPI successfully!".log()
+
         return true
     }
 

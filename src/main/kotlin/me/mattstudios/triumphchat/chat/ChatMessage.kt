@@ -1,6 +1,10 @@
 package me.mattstudios.triumphchat.chat
 
 import me.mattstudios.core.configuration.Config
+import me.mattstudios.mfmsg.base.internal.color.FlatColor
+import me.mattstudios.mfmsg.base.internal.color.MessageColor
+import me.mattstudios.mfmsg.base.internal.color.handlers.ColorMapping
+import me.mattstudios.mfmsg.base.internal.util.ColorUtils
 import me.mattstudios.triumphchat.component.ChatComponent
 import me.mattstudios.triumphchat.component.ChatComponentBuilder
 import me.mattstudios.triumphchat.config.Settings
@@ -21,6 +25,7 @@ class ChatMessage(
     private val config: Config
 ) {
 
+    private var defaultColor: MessageColor = FlatColor("white")
     private val component = getMessage()
 
     fun sendMessage() {
@@ -64,6 +69,34 @@ class ChatMessage(
             if (before.isNotEmpty()) append(chatComponent, before, component.hover, component.click)
 
             if (identifier.isNotEmpty()) {
+
+                // Looks for legacy colors and stopping points
+                val colorChar = matcher.group("char")
+                if (colorChar != null) {
+                    if (true) {
+                        defaultColor = FlatColor(ColorMapping.fromChar(colorChar[0]))
+                    } else {
+                        if ("r".equals(colorChar, ignoreCase = true)) defaultColor = defaultColor
+                    }
+                }
+
+                // Looks for hex colors
+                val hex = matcher.group("hex")
+                if (hex != null) {
+                    defaultColor = FlatColor(ColorUtils.ofHex(hex))
+                }
+
+                // Looks for gradient
+                val gradient = matcher.group("gradient")
+                //if (gradient != null && !ServerVersion.CURRENT_VERSION.isColorLegacy) {
+                    //defaultColor = ColorUtils.colorFromGradient(gradient)
+                //}
+
+                // Looks for rainbow
+                //if (matcher.group("r") != null && !ServerVersion.CURRENT_VERSION.isColorLegacy) {
+                    //defaultColor = ColorUtils.colorFromRainbow(matcher.group("sat"), matcher.group("lig"))
+                //}
+
                 handleMessageLater(component, chatComponent)
             }
 
@@ -85,13 +118,11 @@ class ChatMessage(
 
             val before = rawMessage.substring(start, matcher.start())
             if (before.isNotEmpty()) {
-                append(chatComponent, before, component.hover, component.click)
-                println(before)
+                append(chatComponent, before, component.hover, component.click, true)
             }
 
             if (identifier.isNotEmpty()) {
                 append(chatComponent, identifier, emptyList(), component.click)
-                println(identifier)
             }
 
             start = matcher.end()
@@ -99,14 +130,20 @@ class ChatMessage(
         }
 
         if (rest.isNotEmpty()) {
-            append(chatComponent, rest, component.hover, component.click)
-            println(rest)
+            append(chatComponent, rest, component.hover, component.click, true)
         }
 
     }
 
-    private fun append(chatComponent: ChatComponentBuilder, text: String, hover: List<String>, click: Click) {
-        chatComponent.append(text)
+    private fun append(
+        chatComponent: ChatComponentBuilder,
+        text: String,
+        hover: List<String>,
+        click: Click,
+        shouldColor: Boolean = false
+    ) {
+        if (shouldColor) chatComponent.append(text, defaultColor = defaultColor)
+        else chatComponent.append(text)
         chatComponent.addHover(hover.joinToString("\\n") { it.parsePAPI(player) })
         chatComponent.addClick(click, player)
     }

@@ -1,18 +1,18 @@
 package me.mattstudios.triumphchat.component
 
-import me.mattstudios.mfmsg.base.bukkit.nms.NmsMessage
-import me.mattstudios.mfmsg.base.internal.component.MessageLine
-import me.mattstudios.mfmsg.base.internal.component.MessagePart
-import me.mattstudios.mfmsg.base.serializer.JsonSerializer
+
+import me.mattstudios.mfmsg.base.internal.components.MessageNode
+import me.mattstudios.mfmsg.bukkit.NmsMessage
+import me.mattstudios.mfmsg.bukkit.serializer.NodeSerializer
 import org.bukkit.entity.Player
 
 /**
  * @author Matt
  */
-class ChatComponent(private val parts: List<MessagePart>) {
+class ChatComponent(private val parts: List<MessageNode>) {
 
     fun sendMessage(player: Player) {
-        NmsMessage.sendMessage(player, JsonSerializer.toString(listOf(MessageLine(parts))))
+        NmsMessage.sendMessage(player, NodeSerializer.toString(parts))
     }
 
 }
