@@ -46,7 +46,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
 
         }
 
-        player.sendMessage("Time - ${time}ms")
+        //player.sendMessage("Time - ${time}ms")
 
     }
 

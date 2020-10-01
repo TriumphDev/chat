@@ -1,19 +1,31 @@
 package me.mattstudios.triumphchat.chat
 
 import me.mattstudios.core.configuration.Config
+import me.mattstudios.mfmsg.adventure.AdventureMessage
+import me.mattstudios.mfmsg.base.MessageOptions
+import me.mattstudios.mfmsg.base.internal.Format
+import me.mattstudios.mfmsg.base.internal.action.HoverMessageAction
+import me.mattstudios.mfmsg.base.internal.action.content.HoverContent
 import me.mattstudios.mfmsg.base.internal.color.FlatColor
 import me.mattstudios.mfmsg.base.internal.color.MessageColor
-import me.mattstudios.mfmsg.base.internal.color.handlers.ColorMapping
-import me.mattstudios.mfmsg.base.internal.util.ColorUtils
+import me.mattstudios.mfmsg.base.internal.components.MessageNode
+import me.mattstudios.mfmsg.base.internal.components.ReplaceableNode
+import me.mattstudios.mfmsg.base.internal.components.TextNode
+import me.mattstudios.mfmsg.base.internal.extensions.ReplaceableExtension
 import me.mattstudios.triumphchat.component.ChatComponent
 import me.mattstudios.triumphchat.component.ChatComponentBuilder
 import me.mattstudios.triumphchat.config.Settings
 import me.mattstudios.triumphchat.config.bean.objects.Click
 import me.mattstudios.triumphchat.config.bean.objects.Component
-import me.mattstudios.triumphchat.constants.Constant
 import me.mattstudios.triumphchat.constants.Permission
+import me.mattstudios.triumphchat.events.DEFAULT_FORMAT
+import me.mattstudios.triumphchat.events.MESSAGE_PATTERN
 import me.mattstudios.triumphchat.func.parsePAPI
+import org.bukkit.ChatColor
+import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack
 import org.bukkit.entity.Player
+import java.util.*
+
 
 /**
  * @author Matt
@@ -36,21 +48,17 @@ class ChatMessage(
 
     private fun getMessage(): ChatComponent {
         val formats = config[Settings.FORMATS]
-
         val format = formats
                 .filter { player.hasPermission("${Permission.FORMAT.permission}${it.key}") }
-                .maxByOrNull { it.value.priority }?.value ?: formats["default"] ?: Constant.DEFAULT_FORMAT
+                .maxByOrNull { it.value.priority }?.value ?: formats["default"] ?: DEFAULT_FORMAT
 
         val components = format.components
 
         val chatComponent = ChatComponentBuilder()
 
         components.forEach { (_, component) ->
-            if ("%message%" in component.text) {
-                handleMessage(component, chatComponent)
-            } else {
-                chatComponent.append(component, player)
-            }
+            if ("%message%" in component.text) handleMessage(component, chatComponent)
+            else chatComponent.append(component, player)
         }
 
         return chatComponent.build()
@@ -58,80 +66,28 @@ class ChatMessage(
 
     private fun handleMessage(component: Component, chatComponent: ChatComponentBuilder) {
         val message = component.text
-        val matcher = Constant.MESSAGE_PATTERN.matcher(message)
+        val matcher = MESSAGE_PATTERN.matcher(message)
 
         var rest = message
         var start = 0
         while (matcher.find()) {
-            val identifier = matcher.group("message") ?: continue
-
             val before = message.substring(start, matcher.start())
             if (before.isNotEmpty()) append(chatComponent, before, component.hover, component.click)
 
-            if (identifier.isNotEmpty()) {
-
-                // Looks for legacy colors and stopping points
-                val colorChar = matcher.group("char")
-                if (colorChar != null) {
-                    if (true) {
-                        defaultColor = FlatColor(ColorMapping.fromChar(colorChar[0]))
-                    } else {
-                        if ("r".equals(colorChar, ignoreCase = true)) defaultColor = defaultColor
-                    }
-                }
-
-                // Looks for hex colors
-                val hex = matcher.group("hex")
-                if (hex != null) {
-                    defaultColor = FlatColor(ColorUtils.ofHex(hex))
-                }
-
-                // Looks for gradient
-                val gradient = matcher.group("gradient")
-                //if (gradient != null && !ServerVersion.CURRENT_VERSION.isColorLegacy) {
-                    //defaultColor = ColorUtils.colorFromGradient(gradient)
-                //}
-
-                // Looks for rainbow
-                //if (matcher.group("r") != null && !ServerVersion.CURRENT_VERSION.isColorLegacy) {
-                    //defaultColor = ColorUtils.colorFromRainbow(matcher.group("sat"), matcher.group("lig"))
-                //}
-
-                handleMessageLater(component, chatComponent)
-            }
+            chatComponent.append(
+                AdventureMessage.create(
+                    MessageOptions.Builder(EnumSet.allOf(Format::class.java)).setReplaceableHandler(Test()).build()
+                ).parseToNodes(rawMessage),
+                component.hover,
+                component.click,
+                player
+            )
 
             start = matcher.end()
             rest = message.substring(start)
         }
 
         if (rest.isNotEmpty()) append(chatComponent, rest, component.hover, component.click)
-
-    }
-
-    private fun handleMessageLater(component: Component, chatComponent: ChatComponentBuilder) {
-        val matcher = Constant.KEYWORD_PATTERN.matcher(rawMessage)
-
-        var rest = rawMessage
-        var start = 0
-        while (matcher.find()) {
-            val identifier = matcher.group("identifier") ?: continue
-
-            val before = rawMessage.substring(start, matcher.start())
-            if (before.isNotEmpty()) {
-                append(chatComponent, before, component.hover, component.click, true)
-            }
-
-            if (identifier.isNotEmpty()) {
-                append(chatComponent, identifier, emptyList(), component.click)
-            }
-
-            start = matcher.end()
-            rest = rawMessage.substring(start)
-        }
-
-        if (rest.isNotEmpty()) {
-            append(chatComponent, rest, component.hover, component.click, true)
-        }
 
     }
 
@@ -146,6 +102,61 @@ class ChatMessage(
         else chatComponent.append(text)
         chatComponent.addHover(hover.joinToString("\\n") { it.parsePAPI(player) })
         chatComponent.addClick(click, player)
+
+    }
+
+    inner class Test : ReplaceableExtension('{', '}', 1) {
+
+        override fun getNode(literal: String): MessageNode? {
+            if (literal == "item") {
+                val item = player.inventory.itemInMainHand
+                val nmsItemStack = CraftItemStack.asNMSCopy(item)
+                //println(LocaleLanguage.a(nmsItemStack.name))
+
+                val test = ReplaceableNode()
+                val itemMeta = item.itemMeta
+
+                val itemName = if (itemMeta != null) {
+                    buildString {
+                        append("[")
+                        if (itemMeta.hasEnchants()) append(ChatColor.AQUA).append(ChatColor.ITALIC)
+
+                        if (itemMeta.hasDisplayName()) {
+                            append(itemMeta.displayName)
+                        } else {
+                            append(item.type.name.replace("_", " ").toLowerCase())
+                        }
+                        append(ChatColor.RESET)
+                        append("]")
+                    }
+                } else {
+                    buildString {
+                        append("[")
+                        append(item.type.name.replace("_", " ").toLowerCase())
+                        append("]")
+                    }
+                }
+
+                val node = TextNode(itemName)
+
+                val nbt = nmsItemStack.tag.toString()
+                println(nbt)
+                node.actions = listOf(
+                    HoverMessageAction(
+                        HoverContent.showItem(
+                            item.type.name.toLowerCase(),
+                            1,
+                            nbt
+                        )
+                    )
+                )
+                test.addNode(node)
+                return test
+            }
+
+            return null
+        }
+
     }
 
 }

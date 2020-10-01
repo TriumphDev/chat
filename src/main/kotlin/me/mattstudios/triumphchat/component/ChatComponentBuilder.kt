@@ -2,33 +2,43 @@ package me.mattstudios.triumphchat.component
 
 import me.mattstudios.mfmsg.base.MessageOptions
 import me.mattstudios.mfmsg.base.internal.Format
+import me.mattstudios.mfmsg.base.internal.action.ClickMessageAction
+import me.mattstudios.mfmsg.base.internal.action.HoverMessageAction
+import me.mattstudios.mfmsg.base.internal.action.MessageAction
+import me.mattstudios.mfmsg.base.internal.action.content.HoverContent
 import me.mattstudios.mfmsg.base.internal.color.FlatColor
 import me.mattstudios.mfmsg.base.internal.color.MessageColor
 import me.mattstudios.mfmsg.base.internal.components.MessageNode
-import me.mattstudios.mfmsg.base.internal.parser.MessageParser
-import me.mattstudios.mfmsg.base.internal.util.Version
+import me.mattstudios.mfmsg.base.internal.components.TextNode
+import me.mattstudios.mfmsg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.config.bean.objects.Click
 import me.mattstudios.triumphchat.config.bean.objects.Component
+import me.mattstudios.triumphchat.events.DEFAULT_MESSAGE
 import me.mattstudios.triumphchat.func.parsePAPI
 import org.bukkit.entity.Player
-import java.util.*
 
 /**
  * @author Matt
  */
 class ChatComponentBuilder {
 
-    private val finalParts = mutableListOf<MessageNode>()
-    private val current = mutableListOf<MessageNode>()
+    private val finalNodes = mutableListOf<MessageNode>()
+    private val currentNodes = mutableListOf<MessageNode>()
 
     fun append(
         message: String,
-        formats: Set<Format> = EnumSet.allOf(Format::class.java),
+        formats: Set<Format> = Format.ALL,
         defaultColor: MessageColor = FlatColor("white")
     ) {
         save()
-        val parser = MessageParser(MessageOptions.Builder().build(), Version.V1_16_R2)
-        current.addAll(parser.build())
+        val parser = MarkdownParser(MessageOptions.builder(formats).setDefaultColor(defaultColor).build())
+        currentNodes.addAll(parser.parse(message))
+    }
+
+    fun append(nodes: List<MessageNode>, hover: List<String>, click: Click, player: Player) {
+        currentNodes.addAll(nodes)
+        addHover(hover.joinToString("\\n") { it.parsePAPI(player) })
+        addClick(click, player)
     }
 
     fun append(component: Component, player: Player) {
@@ -39,11 +49,20 @@ class ChatComponentBuilder {
 
     fun addHover(hover: String) {
         if (hover.isEmpty()) return
-        //current.forEach { it.actions.add(HoverAction(Message.create().parse(hover).messageLines)) }
+        currentNodes.filterIsInstance(TextNode::class.java).forEach {
+            addAction(it, HoverMessageAction(HoverContent.showText(DEFAULT_MESSAGE.parseToNodes(hover))))
+        }
     }
 
-    fun addClick(type: Format, click: String) {
-        //current.forEach { it.actions.add(ClickAction(type, click)) }
+    private fun addClick(type: Format, click: String) {
+        currentNodes.filterIsInstance(TextNode::class.java).forEach {
+            val clickAction = ClickMessageAction(type, click)
+            if (it.actions == null) {
+                it.actions = mutableListOf<MessageAction>(clickAction)
+            } else {
+                it.actions?.add(clickAction)
+            }
+        }
     }
 
     fun addClick(click: Click, player: Player) {
@@ -56,14 +75,22 @@ class ChatComponentBuilder {
     }
 
     private fun save() {
-        if (current.isEmpty()) return
-        finalParts.addAll(current.toList())
-        current.clear()
+        if (currentNodes.isEmpty()) return
+        finalNodes.addAll(currentNodes.toList())
+        currentNodes.clear()
     }
 
     fun build(): ChatComponent {
         save()
-        return ChatComponent(finalParts)
+        return ChatComponent(finalNodes)
+    }
+
+    private fun addAction(node: TextNode, action: MessageAction) {
+        if (node.actions == null) {
+            node.actions = mutableListOf(action)
+        } else {
+            node.actions?.add(action)
+        }
     }
 
 }
