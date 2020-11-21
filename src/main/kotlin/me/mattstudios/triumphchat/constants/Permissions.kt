@@ -3,9 +3,7 @@ package me.mattstudios.triumphchat.constants
 import me.mattstudios.mfmsg.base.internal.Format
 import org.bukkit.entity.Player
 
-/**
- * @author Matt
- */
+
 enum class Permissions(
     private val permission: String,
     private val format: Format

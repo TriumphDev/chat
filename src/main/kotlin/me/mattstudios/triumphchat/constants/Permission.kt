@@ -1,8 +1,6 @@
 package me.mattstudios.triumphchat.constants
 
-/**
- * @author Matt
- */
+
 enum class Permission(val permission: String) {
 
     FORMAT("${Permission.PERMISSION_CONSTANT}.format.");

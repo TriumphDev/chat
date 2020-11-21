@@ -1,5 +1,6 @@
 package me.mattstudios.triumphchat.component
 
+import me.mattstudios.mfmsg.adventure.AdventureSerializer
 import me.mattstudios.mfmsg.base.MessageOptions
 import me.mattstudios.mfmsg.base.internal.Format
 import me.mattstudios.mfmsg.base.internal.action.ClickMessageAction
@@ -12,14 +13,11 @@ import me.mattstudios.mfmsg.base.internal.components.MessageNode
 import me.mattstudios.mfmsg.base.internal.components.TextNode
 import me.mattstudios.mfmsg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.config.bean.objects.Click
-import me.mattstudios.triumphchat.config.bean.objects.Component
-import me.mattstudios.triumphchat.events.DEFAULT_MESSAGE
+import me.mattstudios.triumphchat.func.DEFAULT_MESSAGE
 import me.mattstudios.triumphchat.func.parsePAPI
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 
-/**
- * @author Matt
- */
 class ChatComponentBuilder {
 
     private val finalNodes = mutableListOf<MessageNode>()
@@ -41,11 +39,11 @@ class ChatComponentBuilder {
         addClick(click, player)
     }
 
-    fun append(component: Component, player: Player) {
-        append(component.text.parsePAPI(player))
-        addHover(component.hover.joinToString("\\n") { it.parsePAPI(player) })
-        addClick(component.click, player)
-    }
+    /*fun append(baseMessageComponent: BaseComponent, player: Player) {
+        append(baseMessageComponent.text.parsePAPI(player))
+        addHover(baseMessageComponent.hover.joinToString("\\n") { it.parsePAPI(player) })
+        addClick(baseMessageComponent.click, player)
+    }*/
 
     fun addHover(hover: String) {
         if (hover.isEmpty()) return
@@ -80,9 +78,9 @@ class ChatComponentBuilder {
         currentNodes.clear()
     }
 
-    fun build(): ChatComponent {
+    fun build(): Component {
         save()
-        return ChatComponent(finalNodes)
+        return AdventureSerializer.toComponent(finalNodes)
     }
 
     private fun addAction(node: TextNode, action: MessageAction) {

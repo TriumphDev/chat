@@ -1,20 +1,24 @@
 package me.mattstudios.triumphchat
 
 import io.papermc.lib.PaperLib
+import me.mattstudios.annotations.BukkitPlugin
 import me.mattstudios.core.TriumphPlugin
 import me.mattstudios.core.func.log
 import me.mattstudios.triumphchat.config.Settings
+import me.mattstudios.triumphchat.config.bean.mapper.ComponentMapper
 import me.mattstudios.triumphchat.listeners.ChatListener
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 
-/**
- * @author Matt
- */
+@BukkitPlugin
 class TriumphChat : TriumphPlugin(), Listener {
 
     override fun enable() {
-        config.load(Settings::class.java)
+        config.load(Settings::class.java, ComponentMapper())
+
+        config[Settings.FORMATS].forEach {
+            println(it)
+        }
 
         displayStartupMessage()
         if (!checkPapi()) return

@@ -1,6 +1,6 @@
 package me.mattstudios.triumphchat.listeners
 
-import me.mattstudios.core.util.Task.async
+import me.mattstudios.core.func.Task.async
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.chat.ChatMessage
 import me.mattstudios.triumphchat.events.TriumphChatEvent
@@ -11,10 +11,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import kotlin.system.measureTimeMillis
 
-
-/**
- * @author Matt
- */
 class ChatListener(private val plugin: TriumphChat) : Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

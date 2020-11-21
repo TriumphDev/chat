@@ -1,29 +1,27 @@
 package me.mattstudios.triumphchat.config
 
-import ch.jalu.configme.SettingsHolder
-import ch.jalu.configme.properties.Property
-import ch.jalu.configme.properties.PropertyBuilder.MapPropertyBuilder
-import ch.jalu.configme.properties.PropertyInitializer.newProperty
-import ch.jalu.configme.properties.types.BeanPropertyType
+import me.mattstudios.config.SettingsHolder
+import me.mattstudios.config.annotations.Comment
+import me.mattstudios.config.annotations.Path
+import me.mattstudios.config.configurationdata.CommentsConfiguration
+import me.mattstudios.config.properties.Property
 import me.mattstudios.triumphchat.config.bean.ChatFormat
-import me.mattstudios.triumphchat.constants.Constant
+import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
 
-/**
- * @author Matt
- */
 object Settings : SettingsHolder {
 
-    val TEST: Property<Boolean> = newProperty(
-        "test", true
-    )
+    @Path("test")
+    val TEST = Property.create(true)
 
-    val FORMATS: Property<Map<String, ChatFormat>> =
-        MapPropertyBuilder(BeanPropertyType.of(ChatFormat::class.java))
-                .path("chat.formats")
-                .defaultEntry("default", Constant.DEFAULT_FORMAT)
-                .build()
+    @Path("chat.formats")
+    val FORMATS = Property.create(ChatFormat::class.java, mutableMapOf("default" to DEFAULT_FORMAT,))
 
-    val CONSOLE_FORMAT: Property<String> =
-        newProperty("chat.console-format", "[%vault_rank%] %player_name% > %message%")
+    @Comment("")
+    @Path("chat.console-format")
+    val CONSOLE_FORMAT = Property.create("[%vault_rank%] %player_name% > %message%")
+
+    override fun registerComments(conf: CommentsConfiguration) {
+        conf.setComment("chat", "")
+    }
 
 }

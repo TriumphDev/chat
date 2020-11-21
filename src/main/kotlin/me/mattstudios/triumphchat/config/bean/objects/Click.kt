@@ -2,9 +2,6 @@ package me.mattstudios.triumphchat.config.bean.objects
 
 import me.mattstudios.mfmsg.base.internal.Format
 
-/**
- * @author Matt
- */
 data class Click(
         var type: String? = null,
         var value: String? = null

@@ -1,15 +1,11 @@
 package me.mattstudios.triumphchat.events
 
-import me.mattstudios.triumphchat.chat.ChatMessage
+import me.mattstudios.triumphchat.chat.TriumphMessage
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-
-/**
- * @author Matt
- */
-class TriumphChatEvent(val chatMessage: ChatMessage) : Event(true), Cancellable {
+class TriumphChatEvent(val message: TriumphMessage) : Event(true), Cancellable {
 
     private var isCancelled = false
 
