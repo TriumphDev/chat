@@ -1,23 +1,22 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.4.10"
+    id "org.jetbrains.kotlin.jvm" version "1.4.20"
     id "com.github.johnrengelman.shadow" version "6.0.0"
-    id "me.mattstudios.triumph" version "0.1.4"
+    id "me.mattstudios.triumph" version "0.1.5"
 }
 
 group "me.mattstudios"
-version "1.0"
+version "1.0.0"
 
 repositories {
-    maven { url = "https://papermc.io/repo/repository/maven-public/" }
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
 }
 
 triumph {
-    spigot = "1.16.4"
-    core = "1.0.11"
-    cmds = "1.4.6"
-    adventureMsgs = "2.0.1"
-    config = "1.0.1-SNAPSHOT"
+    spigot "1.16.4"
+    core "1.0.11"
+    cmds "1.4.6"
+    msgs version: "2.0.1", type: "adventure"
+    config "1.0.1-SNAPSHOT"
 }
 
 dependencies {
@@ -26,9 +25,6 @@ dependencies {
 
     // Adventure platform for the components
     implementation "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
-
-    // Paper
-    implementation "io.papermc:paperlib:1.0.5"
 
     // PAPI
     compileOnly "me.clip:placeholderapi:2.10.9"

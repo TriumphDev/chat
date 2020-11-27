@@ -13,6 +13,7 @@ import kotlin.system.measureTimeMillis
 
 class ChatListener(private val plugin: TriumphChat) : Listener {
 
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun AsyncPlayerChatEvent.onPlayerChat() {
         isCancelled = true
@@ -23,15 +24,13 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
         }
 
         handleChat()
-
-        format
     }
 
     private fun AsyncPlayerChatEvent.handleChat() {
 
         val time = measureTimeMillis {
 
-            val chatMessage = ChatMessage(player, message, recipients, plugin.config)
+            val chatMessage = ChatMessage(this, plugin.config)
 
             val triumphChatEvent = TriumphChatEvent(chatMessage)
             Bukkit.getPluginManager().callEvent(triumphChatEvent)
@@ -42,7 +41,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
 
         }
 
-        //player.sendMessage("Time - ${time}ms")
+        player.sendMessage("Time - ${time}ms")
 
     }
 

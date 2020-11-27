@@ -6,6 +6,7 @@ import me.mattstudios.triumphchat.config.bean.objects.BaseComponent
 import me.mattstudios.triumphchat.config.bean.objects.Click
 import me.mattstudios.triumphchat.config.bean.objects.FormatComponent
 import me.mattstudios.triumphchat.config.bean.objects.MessageComponent
+import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 import java.util.Optional
 
 class ComponentMapper : PropertyMapper {
@@ -38,7 +39,7 @@ class ComponentMapper : PropertyMapper {
             Optional.empty<Click>()
         }
 
-        if ("%message%" in text) return MessageComponent(text, hover, click)
+        if (MESSAGE_PLACEHOLDER in text) return MessageComponent(text, hover, click)
 
         return BaseComponent(text, hover, click)
     }
