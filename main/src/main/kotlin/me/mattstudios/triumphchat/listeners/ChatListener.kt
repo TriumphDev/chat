@@ -9,12 +9,13 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
-import kotlin.system.measureTimeMillis
 
 class ChatListener(private val plugin: TriumphChat) : Listener {
 
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    /**
+     * Listens to the AsyncPlayerChatEvent
+     */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun AsyncPlayerChatEvent.onPlayerChat() {
         isCancelled = true
 
@@ -26,23 +27,18 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
         handleChat()
     }
 
+    /**
+     * Handles the async chat truly async
+     */
     private fun AsyncPlayerChatEvent.handleChat() {
+        val chatMessage = ChatMessage(this, plugin.config)
 
-        val time = measureTimeMillis {
+        val triumphChatEvent = TriumphChatEvent(chatMessage)
+        Bukkit.getPluginManager().callEvent(triumphChatEvent)
 
-            val chatMessage = ChatMessage(this, plugin.config)
+        if (triumphChatEvent.isCancelled) return
 
-            val triumphChatEvent = TriumphChatEvent(chatMessage)
-            Bukkit.getPluginManager().callEvent(triumphChatEvent)
-
-            if (triumphChatEvent.isCancelled) return
-
-            chatMessage.sendMessage()
-
-        }
-
-        player.sendMessage("Time - ${time}ms")
-
+        chatMessage.sendMessage()
     }
 
 }

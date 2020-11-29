@@ -38,10 +38,10 @@ val DEFAULT_FORMAT = ChatFormat(
     1, mutableMapOf(
         "prefix" to BaseComponent("%vault_prefix% ", click = Optional.of(Click("RUN_COMMAND", "ranks"))),
         "name" to BaseComponent(
-            "&f%player_name%",
+            "&f%player_name% ",
             Optional.of(listOf("Click to send a message")),
             Optional.of(Click("SUGGEST_COMMAND", "/msg %player_name% "))
         ),
-        "message" to MessageComponent("&8> $MESSAGE_PLACEHOLDER", Optional.of(listOf("Sent @ %server_time%")))
+        "message" to MessageComponent("&8> &f$MESSAGE_PLACEHOLDER", Optional.of(listOf("Sent @ %server_time%")))
     )
 )
