@@ -5,6 +5,7 @@ import me.mattstudios.config.annotations.Path
 import me.mattstudios.config.configurationdata.CommentsConfiguration
 import me.mattstudios.config.properties.Property
 import me.mattstudios.triumphchat.config.bean.ChatFormat
+import me.mattstudios.triumphchat.config.bean.PingOptions
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 
@@ -18,6 +19,9 @@ object Settings : SettingsHolder {
 
     @Path("console.format")
     val CONSOLE_FORMAT = Property.create("[%vault_prefix%] %player_name% > $MESSAGE_PLACEHOLDER")
+
+    @Path("ping")
+    val PING_OPTIONS = Property.create(PingOptions())
 
     override fun registerComments(conf: CommentsConfiguration) {
         conf.setComment("chat", "")

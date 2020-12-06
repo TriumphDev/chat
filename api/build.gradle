@@ -7,4 +7,7 @@ dependencies {
 
     // Adventure platform for the components
     compileOnly "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
+
+    // Spigot
+    compileOnly "org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT"
 }

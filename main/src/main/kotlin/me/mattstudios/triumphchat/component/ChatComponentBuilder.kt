@@ -1,17 +1,17 @@
 package me.mattstudios.triumphchat.component
 
-import me.mattstudios.mfmsg.adventure.AdventureSerializer
-import me.mattstudios.mfmsg.base.MessageOptions
-import me.mattstudios.mfmsg.base.internal.Format
-import me.mattstudios.mfmsg.base.internal.action.ClickMessageAction
-import me.mattstudios.mfmsg.base.internal.action.HoverMessageAction
-import me.mattstudios.mfmsg.base.internal.action.MessageAction
-import me.mattstudios.mfmsg.base.internal.action.content.HoverContent
-import me.mattstudios.mfmsg.base.internal.color.FlatColor
-import me.mattstudios.mfmsg.base.internal.color.MessageColor
-import me.mattstudios.mfmsg.base.internal.components.MessageNode
-import me.mattstudios.mfmsg.base.internal.components.TextNode
-import me.mattstudios.mfmsg.base.internal.parser.MarkdownParser
+import me.mattstudios.msg.adventure.AdventureSerializer
+import me.mattstudios.msg.base.MessageOptions
+import me.mattstudios.msg.base.internal.Format
+import me.mattstudios.msg.base.internal.action.ClickMessageAction
+import me.mattstudios.msg.base.internal.action.HoverMessageAction
+import me.mattstudios.msg.base.internal.action.MessageAction
+import me.mattstudios.msg.base.internal.action.content.HoverContent
+import me.mattstudios.msg.base.internal.color.FlatColor
+import me.mattstudios.msg.base.internal.color.MessageColor
+import me.mattstudios.msg.base.internal.components.MessageNode
+import me.mattstudios.msg.base.internal.components.TextNode
+import me.mattstudios.msg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.config.bean.objects.Click
 import me.mattstudios.triumphchat.config.bean.objects.FormatComponent
 import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
@@ -86,9 +86,12 @@ class ChatComponentBuilder {
      */
     private fun addHover(hover: String) {
         if (hover.isEmpty()) return
-        currentNodes.filterIsInstance(TextNode::class.java).forEach {
-            addAction(it, HoverMessageAction(HoverContent.showText(GLOBAL_MESSAGE.parseToNodes(hover))))
-        }
+        // TODO make this better
+        currentNodes.filterIsInstance(TextNode::class.java)
+                .filter {  it.actions.isNullOrEmpty() }
+                .forEach {
+                    addAction(it, HoverMessageAction(HoverContent.showText(GLOBAL_MESSAGE.parseToNodes(hover))))
+                }
     }
 
     /**

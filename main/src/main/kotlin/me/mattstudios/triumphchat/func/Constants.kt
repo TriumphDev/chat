@@ -1,11 +1,12 @@
 package me.mattstudios.triumphchat.func
 
-import me.mattstudios.mfmsg.adventure.AdventureMessage
+import me.mattstudios.msg.adventure.AdventureMessage
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.config.bean.ChatFormat
 import me.mattstudios.triumphchat.config.bean.objects.BaseComponent
 import me.mattstudios.triumphchat.config.bean.objects.Click
 import me.mattstudios.triumphchat.config.bean.objects.MessageComponent
+import me.mattstudios.triumphchat.extensions.PingExtension
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.Optional
@@ -20,6 +21,8 @@ const val MESSAGE_PLACEHOLDER = "{message}"
 /**
  * OTHER
  */
+
+val PING_EXTENSION = PingExtension()
 
 // Main permission constant
 const val MAIN_PERMISSION = "triumphchat"

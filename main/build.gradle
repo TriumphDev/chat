@@ -1,6 +1,6 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "6.0.0"
-    id "me.mattstudios.triumph" version "0.1.5"
+    id "me.mattstudios.triumph" version "0.1.6"
 }
 
 group "me.mattstudios"
@@ -14,14 +14,14 @@ triumph {
     spigot "1.16.4"
     core "1.0.11"
     cmds "1.4.6"
-    msgs version: "2.0.1", type: "adventure"
+    msgs version: "2.1.2", type: "adventure"
     config "1.0.1-SNAPSHOT"
 }
 
 dependencies {
     implementation project(":api")
 
-    implementation "me.mattstudios:mf-msg-bukkit:2.0.1"
+    //implementation "me.mattstudios:mf-msg-bukkit:2.0.1"
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -34,6 +34,8 @@ dependencies {
 }
 
 shadowJar {
+    minimize()
+
     relocate("me.mattstudios.core", "me.mattstudios.triumphchat.core")
     relocate("me.mattstudios.mf", "me.mattstudios.triumphchat.mf")
     relocate("me.mattstudios.mfgui", "me.mattstudios.triumphchat.mfgui")

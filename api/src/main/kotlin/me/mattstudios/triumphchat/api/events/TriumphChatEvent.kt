@@ -1,4 +1,4 @@
-package me.mattstudios.triumphchat.events
+package me.mattstudios.triumphchat.api.events
 
 import me.mattstudios.triumphchat.api.chat.TriumphMessage
 import org.bukkit.event.Cancellable

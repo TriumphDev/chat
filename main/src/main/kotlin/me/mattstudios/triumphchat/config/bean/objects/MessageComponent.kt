@@ -1,8 +1,8 @@
 package me.mattstudios.triumphchat.config.bean.objects
 
-import me.mattstudios.mfmsg.base.internal.color.FlatColor
-import me.mattstudios.mfmsg.base.internal.color.MessageColor
-import me.mattstudios.mfmsg.base.internal.components.TextNode
+import me.mattstudios.msg.base.internal.color.FlatColor
+import me.mattstudios.msg.base.internal.color.MessageColor
+import me.mattstudios.msg.base.internal.components.TextNode
 import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 import java.util.Optional
