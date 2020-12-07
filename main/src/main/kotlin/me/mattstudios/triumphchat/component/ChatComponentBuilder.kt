@@ -27,11 +27,14 @@ class ChatComponentBuilder {
     /**
      * Appends a string, hover, and click
      */
-    fun append(text: String, hover: List<String>? = null, click: Click? = null, player: Player): ChatComponentBuilder {
-        append(text.parsePAPI(player))
-        hover?.let { addHover(it.joinToString("\\n") { text -> text.parsePAPI(player) }) }
-        click?.let { addClick(it, player) }
-        return this
+    fun append(
+        text: String,
+        hover: List<String>? = null,
+        click: Click? = null,
+        formats: Set<Format>,
+        player: Player
+    ): ChatComponentBuilder {
+        return append(text.parsePAPI(player), hover, click, player, formats)
     }
 
     /**
@@ -57,7 +60,7 @@ class ChatComponentBuilder {
     }
 
     /**
-     * Creates the final Kyory component
+     * Creates the final Kyori component
      */
     fun build(): Component {
         save()
@@ -67,18 +70,36 @@ class ChatComponentBuilder {
     /**
      * Appends a normal text by generating it's nodes from the lib, required to parse markdown from the config
      */
-    fun append(
+    private fun append(
         message: String,
+        hover: List<String>? = null,
+        click: Click? = null,
+        player: Player,
         formats: Set<Format> = Format.ALL,
         defaultColor: MessageColor = FlatColor("white")
     ): ChatComponentBuilder {
         save()
-        currentNodes.addAll(
+        append(
             MarkdownParser(
                 MessageOptions.builder(formats).setDefaultColor(defaultColor).build()
-            ).parse(message)
+            ).parse(message),
+            hover,
+            click,
+            player
         )
         return this
+    }
+
+    /**
+     * Appends a string, hover, and click
+     */
+    private fun append(
+        text: String,
+        hover: List<String>? = null,
+        click: Click? = null,
+        player: Player
+    ): ChatComponentBuilder {
+        return append(text.parsePAPI(player), hover, click, Format.ALL, player)
     }
 
     /**
@@ -86,12 +107,7 @@ class ChatComponentBuilder {
      */
     private fun addHover(hover: String) {
         if (hover.isEmpty()) return
-        // TODO make this better
-        currentNodes.filterIsInstance(TextNode::class.java)
-                .filter {  it.actions.isNullOrEmpty() }
-                .forEach {
-                    addAction(it, HoverMessageAction(HoverContent.showText(GLOBAL_MESSAGE.parseToNodes(hover))))
-                }
+        addAction(HoverMessageAction(HoverContent.showText(GLOBAL_MESSAGE.parseToNodes(hover))))
     }
 
     /**
@@ -104,21 +120,19 @@ class ChatComponentBuilder {
         if (formatType == null || value == null) return
 
         if (!value.startsWith('/')) value = "/$value"
-        addClick(formatType, value.parsePAPI(player))
+        addAction(ClickMessageAction(formatType, value.parsePAPI(player)))
     }
 
     /**
-     * Adds the click action generated before to the current nodes
+     * Adds the action to all current nodes
      */
-    private fun addClick(type: Format, value: String) {
-        currentNodes.filterIsInstance(TextNode::class.java).forEach {
-            val clickAction = ClickMessageAction(type, value)
-            if (it.actions == null) {
-                it.actions = mutableListOf<MessageAction>(clickAction)
-            } else {
-                it.actions?.add(clickAction)
-            }
-        }
+    private fun addAction(action: MessageAction) {
+        println(action.javaClass)
+        currentNodes.filterIsInstance(TextNode::class.java)
+                .filter { it.actions == null || it.actions?.filterIsInstance(action.javaClass)?.isEmpty() == true }
+                .forEach {
+                    addAction(it, action)
+                }
     }
 
     /**
