@@ -1,82 +1,30 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
-    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id "org.jetbrains.kotlin.jvm" version "1.4.20"
 }
 
-group 'org.example'
-version '1.0'
+allprojects {
+    apply plugin: 'org.jetbrains.kotlin.jvm'
 
-repositories {
-    mavenCentral()
-    mavenLocal()
+    group 'me.mattstudios'
+    version '1.0.0'
 
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
-    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    maven { url = 'https://repo.mattstudios.me/artifactory/public' }
-}
+    repositories {
+        mavenLocal()
+        mavenCentral()
 
-dependencies {
-    // My stuff
-    implementation "me.mattstudios:triumph-core:1.0.6"
-    implementation "me.mattstudios.utils:matt-framework:1.4.6"
-    implementation "me.mattstudios:mf-msg-adventure:1.2.0"
-    implementation "com.github.ipsk:ConfigMe:M-1.0"
-
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
-    // Adventure platform for the components
-    implementation "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
-
-    // Paper
-    implementation "io.papermc:paperlib:1.0.5"
-
-    // Spigot
-    compileOnly "org.spigotmc:spigot-api:1.16.2-R0.1-SNAPSHOT"
-
-    // PAPI
-    compileOnly "me.clip:placeholderapi:2.10.9"
-}
-
-compileJava {
-    options.compilerArgs += ["-parameters"]
-    options.fork = true
-    options.forkOptions.executable = 'javac'
-    options.encoding = 'UTF-8'
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8
-    kotlinOptions.javaParameters = true
-}
-
-shadowJar {
-
-    relocate("me.mattstudios.core", "me.mattstudios.triumphchat.core")
-    relocate("me.mattstudios.mf", "me.mattstudios.triumphchat.mf")
-    relocate("me.mattstudios.mfgui", "me.mattstudios.triumphchat.mfgui")
-
-    relocate("ch.jalu.configme", "me.mattstudios.triumphchat.configme")
-    relocate("io.papermc.lib", "me.mattstudios.triumphchat.paperlib")
-
-    relocate("kotlin", "me.mattstudios.triumphchat.kotlin")
-
-    relocate("org.yaml", "me.mattstudios.triumphchat.yaml")
-
-    archiveFileName = "TriumphChat-${project.version}.jar"
-
-    destinationDir file("C:/Users/xpsyk/Desktop/servers/paper-1.16/plugins")
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-import org.apache.tools.ant.filters.ReplaceTokens
-
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
+        maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     }
+
+    compileJava {
+        options.compilerArgs += ["-parameters"]
+        options.fork = true
+        options.forkOptions.executable = 'javac'
+        options.encoding = 'UTF-8'
+    }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8
+        kotlinOptions.javaParameters = true
+    }
+
 }
