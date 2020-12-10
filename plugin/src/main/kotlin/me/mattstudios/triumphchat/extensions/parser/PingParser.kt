@@ -3,7 +3,7 @@ package me.mattstudios.triumphchat.extensions.parser
 import me.mattstudios.msg.commonmark.internal.inline.ParsedInline
 import me.mattstudios.msg.commonmark.internal.inline.Scanner
 import me.mattstudios.msg.commonmark.internal.inline.triumph.TriggerProcessor
-import me.mattstudios.triumphchat.extensions.nodes.parser.PingNode
+import me.mattstudios.triumphchat.extensions.parser.nodes.PingNode
 
 class PingParser : TriggerProcessor {
 

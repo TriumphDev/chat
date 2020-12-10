@@ -10,7 +10,7 @@ import me.mattstudios.msg.commonmark.node.CustomNode
 import me.mattstudios.msg.commonmark.parser.Parser
 import me.mattstudios.msg.commonmark.parser.ParserExtension
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
-import me.mattstudios.triumphchat.extensions.nodes.parser.PingNode
+import me.mattstudios.triumphchat.extensions.parser.nodes.PingNode
 import me.mattstudios.triumphchat.extensions.parser.PingParser
 import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
 import org.bukkit.Bukkit
