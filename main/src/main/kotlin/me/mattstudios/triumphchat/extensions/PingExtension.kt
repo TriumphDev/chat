@@ -15,9 +15,12 @@ import me.mattstudios.triumphchat.extensions.parser.PingParser
 import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
 import org.bukkit.Bukkit
 
-
+/**
+ * Parser extension to detect pings
+ */
 class PingExtension : ParserExtension, NodeRenderer {
 
+    // Used to make sure
     private var retention = FormatRetention.IGNORE
 
     override fun extend(builder: Parser.Builder) {
@@ -31,7 +34,7 @@ class PingExtension : ParserExtension, NodeRenderer {
         val name = customNode.playerName
 
         val player = Bukkit.getPlayer(name) ?: return emptyNode("@$name")
-
+        
         retention = FormatRetention.IGNORE
 
         val node = PingPlayerNode("@${player.name}", player)

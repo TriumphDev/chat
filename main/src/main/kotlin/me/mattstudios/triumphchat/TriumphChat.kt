@@ -6,7 +6,7 @@ import me.mattstudios.core.func.log
 import me.mattstudios.triumphchat.config.Settings
 import me.mattstudios.triumphchat.config.bean.mapper.ComponentMapper
 import me.mattstudios.triumphchat.config.bean.objects.MessageComponent
-import me.mattstudios.triumphchat.func.isPaper
+import me.mattstudios.triumphchat.func.IS_PAPER
 import me.mattstudios.triumphchat.listeners.ChatListener
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
@@ -45,17 +45,17 @@ class TriumphChat : TriumphPlugin(), Listener {
      * Displays the startup message of the plugin
      */
     private fun displayStartupMessage() {
-        if (isPaper) {
-            """
+        if (!IS_PAPER) {
+            "Go die".log()
+            return
+        }
+
+        """
                 
             &c█▀▀ █░█ ▄▀█ ▀█▀ &8Version: &c${description.version}
             &c█▄▄ █▀█ █▀█ ░█░ &8By: &cMatt
             
-            """.trimIndent().lines().forEach(String::log)
-        } else {
-            "Go die".log()
-        }
-
+        """.trimIndent().lines().forEach(String::log)
     }
 
     /**

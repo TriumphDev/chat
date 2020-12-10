@@ -79,7 +79,7 @@ class ChatComponentBuilder {
         defaultColor: MessageColor = FlatColor("white")
     ): ChatComponentBuilder {
         save()
-        append(
+        return append(
             MarkdownParser(
                 MessageOptions.builder(formats).setDefaultColor(defaultColor).build()
             ).parse(message),
@@ -87,7 +87,6 @@ class ChatComponentBuilder {
             click,
             player
         )
-        return this
     }
 
     /**
@@ -141,9 +140,10 @@ class ChatComponentBuilder {
     private fun addAction(node: TextNode, action: MessageAction) {
         if (node.actions == null) {
             node.actions = mutableListOf(action)
-        } else {
-            node.actions?.add(action)
+            return
         }
+
+        node.actions?.add(action)
     }
 
     /**

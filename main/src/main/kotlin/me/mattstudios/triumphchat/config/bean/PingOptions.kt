@@ -1,11 +1,28 @@
 package me.mattstudios.triumphchat.config.bean
 
-import me.mattstudios.triumphchat.config.bean.objects.Click
+import me.mattstudios.triumphchat.config.bean.objects.PingGroup
 import java.util.Optional
 
 
 class PingOptions(
-    var display: String = "<#378cdb>__{ping}__",
-    var hover: Optional<List<String>> = Optional.empty<List<String>>(),
-    var click: Optional<Click> = Optional.empty()
+    var everyone: PingGroup = PingGroup(
+        true,
+        "&c**@Everyone**",
+        Optional.of("SOUND"),
+        Optional.of("%player% has mentioned everyone")
+    ),
+
+    var user: PingGroup = PingGroup(
+        true,
+        "&a__%username%__",
+        Optional.of("SOUND"),
+        Optional.of("%player% has mentioned you")
+    ),
+
+    var group: PingGroup = PingGroup(
+        true,
+        "&d**@%group%**&r",
+        Optional.of("SOUND"),
+        Optional.of("%player% has mentioned the group %group%")
+    )
 )

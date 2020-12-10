@@ -1,4 +1,4 @@
-package me.mattstudios.triumphchat.extensions.nodes
+package me.mattstudios.triumphchat.extensions.nodes.parser
 
 import me.mattstudios.msg.commonmark.node.CustomNode
 

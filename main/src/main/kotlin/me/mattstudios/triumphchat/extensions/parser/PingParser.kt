@@ -5,7 +5,6 @@ import me.mattstudios.msg.commonmark.internal.inline.Scanner
 import me.mattstudios.msg.commonmark.internal.inline.triumph.TriggerProcessor
 import me.mattstudios.triumphchat.extensions.nodes.parser.PingNode
 
-
 class PingParser : TriggerProcessor {
 
     override fun getTriggerCharacter() = '@'
@@ -35,7 +34,7 @@ class PingParser : TriggerProcessor {
             characters++
         }
 
-        // No node found
+        // No ping found
         return ParsedInline.none()
     }
 

@@ -1,11 +1,11 @@
 package me.mattstudios.triumphchat.chat
 
-import me.mattstudios.core.configuration.Config
 import me.mattstudios.msg.adventure.AdventureMessage
 import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.msg.base.internal.Format
 import me.mattstudios.msg.commonmark.parser.ParserExtension
-import me.mattstudios.triumphchat.api.chat.TriumphMessage
+import me.mattstudios.triumphchat.TriumphChat
+import me.mattstudios.triumphchat.api.chat.Message
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
 import me.mattstudios.triumphchat.component.ChatComponentBuilder
 import me.mattstudios.triumphchat.config.Settings
@@ -25,17 +25,19 @@ import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
-import org.bukkit.event.player.AsyncPlayerChatEvent
 import java.util.EnumSet
 
-class ChatMessage(
-    event: AsyncPlayerChatEvent,
-    private val config: Config
-) : TriumphMessage {
 
-    private val player = event.player
-    private val rawMessage = event.message
-    private val recipients = event.recipients
+
+
+class TriumphMessage(
+    private val player: Player,
+    private val rawMessage: String,
+    private val recipients: Set<Player>,
+    private val plugin: TriumphChat
+) : Message {
+
+    private val config = plugin.config
 
     override val mentionsList = mutableListOf<Player>()
     override val message = createChatMessage()

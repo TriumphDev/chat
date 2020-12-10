@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 /**
  * Taken from PaperLib, just to check if the server is paper or not
  */
-val isPaper = try {
+val IS_PAPER = try {
     Class.forName("com.destroystokyo.paper.PaperConfig")
     true
 } catch (ignored: ClassNotFoundException) {

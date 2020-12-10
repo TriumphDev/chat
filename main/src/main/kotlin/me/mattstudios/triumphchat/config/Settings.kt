@@ -20,7 +20,7 @@ object Settings : SettingsHolder {
     @Path("console.format")
     val CONSOLE_FORMAT = Property.create("[%vault_prefix%] %player_name% > $MESSAGE_PLACEHOLDER")
 
-    @Path("ping")
+    @Path("chat.ping")
     val PING_OPTIONS = Property.create(PingOptions())
 
     override fun registerComments(conf: CommentsConfiguration) {

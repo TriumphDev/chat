@@ -8,6 +8,7 @@ version parent.version
 
 repositories {
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+    maven { url = "https://jitpack.io" }
 }
 
 triumph {
@@ -31,6 +32,8 @@ dependencies {
 
     // PAPI
     compileOnly "me.clip:placeholderapi:2.10.9"
+
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
 }
 
 shadowJar {

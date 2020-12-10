@@ -3,7 +3,7 @@ package me.mattstudios.triumphchat.api.chat
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 
-interface TriumphMessage {
+interface Message {
 
     val message: Component
     val consoleMessage: Component
