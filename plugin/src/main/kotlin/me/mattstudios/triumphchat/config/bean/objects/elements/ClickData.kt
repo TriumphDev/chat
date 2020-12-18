@@ -1,6 +1,6 @@
-package me.mattstudios.triumphchat.config.bean.objects
+package me.mattstudios.triumphchat.config.bean.objects.elements
 
-data class Click(
+data class ClickData(
     var type: String? = null,
     var value: String? = null
 ) {
