@@ -6,12 +6,12 @@ import me.mattstudios.msg.base.internal.Format
 import me.mattstudios.msg.commonmark.parser.ParserExtension
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.chat.Message
+import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
 import me.mattstudios.triumphchat.component.ChatComponentBuilder
 import me.mattstudios.triumphchat.config.Settings
 import me.mattstudios.triumphchat.config.bean.ChatFormat
-import me.mattstudios.triumphchat.config.bean.objects.Click
-import me.mattstudios.triumphchat.config.bean.objects.MessageComponent
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.AUDIENCE
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
@@ -20,15 +20,13 @@ import me.mattstudios.triumphchat.func.PING_EXTENSION
 import me.mattstudios.triumphchat.func.buildComponent
 import me.mattstudios.triumphchat.permissions.ChatPermission
 import me.mattstudios.triumphchat.permissions.Permission
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
 import java.util.EnumSet
-
-
-
 
 class TriumphMessage(
     private val player: Player,
@@ -43,12 +41,14 @@ class TriumphMessage(
     override val message = createChatMessage()
     override val consoleMessage = createConsoleMessage()
 
+    private val audience = BukkitAudiences.create(plugin)
+
     /**
      * Sends the messages to players and console
      */
     fun sendMessage() {
         // Testing mentions list
-        println(mentionsList)
+        //println(mentionsList)
 
         // Sending message to recipients
         recipients.forEach {
@@ -65,7 +65,7 @@ class TriumphMessage(
     private fun createChatMessage(): Component {
         return buildComponent {
             for (component in selectFormat().components.values) {
-                if (component is MessageComponent) {
+                if (component is MessageDisplay) {
                     appendMessage(
                         component,
                         Format.ALL,
@@ -85,7 +85,7 @@ class TriumphMessage(
      */
     private fun createConsoleMessage(): Component {
         return buildComponent {
-            appendMessage(MessageComponent(config[Settings.CONSOLE_FORMAT]), EnumSet.of(Format.COLOR), Format.NONE)
+            appendMessage(MessageDisplay(config[Settings.CONSOLE_FORMAT]), EnumSet.of(Format.COLOR), Format.NONE)
         }
     }
 
@@ -104,7 +104,7 @@ class TriumphMessage(
     private fun ChatComponentBuilder.append(
         message: AdventureMessage,
         formatHover: List<String>? = null,
-        formatClick: Click? = null,
+        formatClick: ClickData? = null,
         player: Player
     ) {
         val nodes = message.parseToNodes(rawMessage)
@@ -121,25 +121,25 @@ class TriumphMessage(
      * Appends a message, either for console or for player
      */
     private fun ChatComponentBuilder.appendMessage(
-        component: MessageComponent,
+        display: MessageDisplay,
         mainFormats: Set<Format> = Format.ALL,
         messageFormats: Set<Format>,
         extensions: List<ParserExtension> = emptyList()
     ) {
-        val parts = component.text.split(MESSAGE_PLACEHOLDER)
+        val parts = display.text.split(MESSAGE_PLACEHOLDER)
         for (i in parts.indices) {
-            append(parts[i], component.formatHover, component.formatClick, mainFormats, player)
+            append(parts[i], display.hover, display.click, mainFormats, player)
 
             if (i != 0) continue
 
             val options = MessageOptions.Builder(messageFormats)
-            options.setDefaultColor(component.defaultColor)
+            options.setDefaultColor(display.formatData.color)
             options.extensions(extensions)
 
             append(
                 AdventureMessage.create(options.build()),
-                component.formatHover,
-                component.formatClick,
+                display.hover,
+                display.click,
                 player
             )
         }

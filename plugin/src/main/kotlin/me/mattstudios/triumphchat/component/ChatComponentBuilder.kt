@@ -12,9 +12,10 @@ import me.mattstudios.msg.base.internal.color.MessageColor
 import me.mattstudios.msg.base.internal.components.MessageNode
 import me.mattstudios.msg.base.internal.components.TextNode
 import me.mattstudios.msg.base.internal.parser.MarkdownParser
-import me.mattstudios.triumphchat.config.bean.objects.Click
-import me.mattstudios.triumphchat.config.bean.objects.FormatComponent
+import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
+import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
+import me.mattstudios.triumphchat.func.getFormat
 import me.mattstudios.triumphchat.func.parsePAPI
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
@@ -30,7 +31,7 @@ class ChatComponentBuilder {
     fun append(
         text: String,
         hover: List<String>? = null,
-        click: Click? = null,
+        click: ClickData? = null,
         formats: Set<Format>,
         player: Player
     ): ChatComponentBuilder {
@@ -43,7 +44,7 @@ class ChatComponentBuilder {
     fun append(
         nodes: List<MessageNode>,
         hover: List<String>? = null,
-        click: Click? = null,
+        click: ClickData? = null,
         player: Player
     ): ChatComponentBuilder {
         currentNodes.addAll(nodes)
@@ -55,8 +56,8 @@ class ChatComponentBuilder {
     /**
      * Appends a config component
      */
-    fun append(component: FormatComponent, player: Player): ChatComponentBuilder {
-        return append(component.text, component.formatHover, component.formatClick, player)
+    fun append(display: FormatDisplay, player: Player): ChatComponentBuilder {
+        return append(display.text, display.hover, display.click, player)
     }
 
     /**
@@ -73,7 +74,7 @@ class ChatComponentBuilder {
     private fun append(
         message: String,
         hover: List<String>? = null,
-        click: Click? = null,
+        click: ClickData? = null,
         player: Player,
         formats: Set<Format> = Format.ALL,
         defaultColor: MessageColor = FlatColor("white")
@@ -95,7 +96,7 @@ class ChatComponentBuilder {
     private fun append(
         text: String,
         hover: List<String>? = null,
-        click: Click? = null,
+        click: ClickData? = null,
         player: Player
     ): ChatComponentBuilder {
         return append(text.parsePAPI(player), hover, click, Format.ALL, player)
@@ -112,7 +113,7 @@ class ChatComponentBuilder {
     /**
      * Adds a click action to the current nodes
      */
-    private fun addClick(click: Click, player: Player) {
+    private fun addClick(click: ClickData, player: Player) {
         var value = click.value
         val formatType = click.getFormat()
 
