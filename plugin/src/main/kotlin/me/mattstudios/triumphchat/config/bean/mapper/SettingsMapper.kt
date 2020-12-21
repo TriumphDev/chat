@@ -4,7 +4,7 @@ import me.mattstudios.config.annotations.TargetObject
 import me.mattstudios.config.beanmapper.PropertyMapper
 import me.mattstudios.triumphchat.config.bean.objects.BaseDisplay
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
-import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
+import me.mattstudios.triumphchat.config.bean.objects.FormatedDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 import java.util.Optional
@@ -22,15 +22,15 @@ class SettingsMapper : PropertyMapper {
         val hover = createHover(data["hover"])
         val click = createClick(data["click"])
 
-        if (MESSAGE_PLACEHOLDER in text) return MessageDisplay(text, hover, click, MESSAGE_PLACEHOLDER)
+        if (MESSAGE_PLACEHOLDER in text) return FormatedDisplay(text, hover, click, MESSAGE_PLACEHOLDER)
         return BaseDisplay(text, hover, click)
     }
 
-    @TargetObject(MessageDisplay::class)
-    fun mapMessageDisplay(path: String, data: Map<String, Any>): MessageDisplay {
+    @TargetObject(FormatedDisplay::class)
+    fun mapMessageDisplay(path: String, data: Map<String, Any>): FormatedDisplay {
         val rawText = data["text"]
         val text = if (rawText is String) rawText else ""
-        return MessageDisplay(text,  createHover(data["hover"]), createClick(data["click"]))
+        return FormatedDisplay(text,  createHover(data["hover"]), createClick(data["click"]))
     }
 
     /**

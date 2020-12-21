@@ -4,7 +4,7 @@ import me.mattstudios.msg.adventure.AdventureMessage
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.config.bean.ChatFormat
 import me.mattstudios.triumphchat.config.bean.objects.BaseDisplay
-import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
+import me.mattstudios.triumphchat.config.bean.objects.FormatedDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.extensions.PingExtension
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
@@ -38,7 +38,7 @@ val DEFAULT_FORMAT = ChatFormat(
             Optional.of(listOf("Click to send a message")),
             Optional.of(ClickData("SUGGEST_COMMAND", "/msg %player_name% "))
         ),
-        "message" to MessageDisplay(
+        "message" to FormatedDisplay(
             "&8> &f$MESSAGE_PLACEHOLDER",
             Optional.of(listOf("Sent @ %server_time%"))
         )

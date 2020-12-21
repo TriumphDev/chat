@@ -9,7 +9,7 @@ import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
 import me.mattstudios.triumphchat.func.copyFormat
 import java.util.Optional
 
-data class MessageDisplay(
+data class FormatedDisplay(
     override var text: String = "",
     @Name("hover") var hoverData: Optional<List<String>> = Optional.empty<List<String>>(),
     @Name("click") var clickData: Optional<ClickData> = Optional.empty(),
