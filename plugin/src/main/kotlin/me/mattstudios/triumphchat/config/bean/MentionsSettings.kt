@@ -1,30 +1,30 @@
 package me.mattstudios.triumphchat.config.bean
 
-import me.mattstudios.triumphchat.config.bean.objects.FormatGroup
 import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.MentionDisplay
+import me.mattstudios.triumphchat.config.bean.objects.elements.SoundData
 import java.util.Optional
 
 
-class MentionsSettings(
+data class MentionsSettings(
     var everyone: MentionDisplay = MentionDisplay(
         true,
         MessageDisplay("&c**@Everyone**"),
-        Optional.of("SOUND"),
+        SoundData(),
         Optional.of("%player% has mentioned everyone")
     ),
 
-    var user: FormatGroup = FormatGroup(
+    var user: MentionDisplay = MentionDisplay(
         true,
-        "&a__%username%__",
-        Optional.of("SOUND"),
+        MessageDisplay("&a__%username%__"),
+        SoundData(),
         Optional.of("%player% has mentioned you")
     ),
 
-    var group: FormatGroup = FormatGroup(
+    var group: MentionDisplay = MentionDisplay(
         true,
-        "&d**@%group%**&r",
-        Optional.of("SOUND"),
+        MessageDisplay("&d**@%group%**"),
+        SoundData(),
         Optional.of("%player% has mentioned the group %group%")
     )
 )

@@ -11,7 +11,7 @@ import me.mattstudios.triumphchat.api.events.PlayerPingEvent
 import me.mattstudios.triumphchat.component.ChatComponentBuilder
 import me.mattstudios.triumphchat.config.Settings
 import me.mattstudios.triumphchat.config.bean.ChatFormat
-import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
+import me.mattstudios.triumphchat.config.bean.objects.FormatedDisplay
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.AUDIENCE
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
@@ -65,7 +65,7 @@ class TriumphMessage(
     private fun createChatMessage(): Component {
         return buildComponent {
             for (component in selectFormat().components.values) {
-                if (component is MessageDisplay) {
+                if (component is FormatedDisplay) {
                     appendMessage(
                         component,
                         Format.ALL,
@@ -85,7 +85,7 @@ class TriumphMessage(
      */
     private fun createConsoleMessage(): Component {
         return buildComponent {
-            appendMessage(MessageDisplay(config[Settings.CONSOLE_FORMAT]), EnumSet.of(Format.COLOR), Format.NONE)
+            appendMessage(FormatedDisplay(config[Settings.CONSOLE_FORMAT]), EnumSet.of(Format.COLOR), Format.NONE)
         }
     }
 
@@ -121,7 +121,7 @@ class TriumphMessage(
      * Appends a message, either for console or for player
      */
     private fun ChatComponentBuilder.appendMessage(
-        display: MessageDisplay,
+        display: FormatedDisplay,
         mainFormats: Set<Format> = Format.ALL,
         messageFormats: Set<Format>,
         extensions: List<ParserExtension> = emptyList()

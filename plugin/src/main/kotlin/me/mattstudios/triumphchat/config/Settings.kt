@@ -7,11 +7,8 @@ import me.mattstudios.config.configurationdata.CommentsConfiguration
 import me.mattstudios.config.properties.Property
 import me.mattstudios.triumphchat.config.bean.ChatFormat
 import me.mattstudios.triumphchat.config.bean.MentionsSettings
-import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
-import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
-import java.util.Optional
 
 object Settings : SettingsHolder {
 
@@ -43,7 +40,7 @@ object Settings : SettingsHolder {
     @Path("mentions")
     val MENTIONS = Property.create(MentionsSettings())
 
-    @Path("chat.private-message.sender-format")
+    /*@Path("chat.private-message.sender-format")
     val DM_SENDER_FORMAT = Property.create(
         MessageDisplay(
             "&7you &e-> &7{receiver} &7:{message}",
@@ -69,7 +66,7 @@ object Settings : SettingsHolder {
             Optional.of(ClickData("RUN_COMMAND", "/r"))
         )
     )
-
+    */
     override fun registerComments(conf: CommentsConfiguration) {
         conf.setComment("chat", "")
         conf.setComment("console", "")

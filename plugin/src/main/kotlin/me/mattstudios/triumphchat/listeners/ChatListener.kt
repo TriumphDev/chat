@@ -4,6 +4,7 @@ import me.mattstudios.core.func.Task.async
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.events.TriumphChatEvent
 import me.mattstudios.triumphchat.chat.TriumphMessage
+import me.mattstudios.triumphchat.config.Settings
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -31,6 +32,9 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
      * Handles chat event truly async
      */
     private fun AsyncPlayerChatEvent.handleChat() {
+
+        println(plugin.config[Settings.MENTIONS].everyone.display.formatData)
+
         val chatMessage = TriumphMessage(player, message, recipients, plugin)
 
         val triumphChatEvent = TriumphChatEvent(chatMessage)

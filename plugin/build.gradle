@@ -16,7 +16,7 @@ triumph {
     core "1.0.11"
     cmds "1.4.6"
     msgs version: "2.1.2", type: "adventure"
-    config "1.0.1-SNAPSHOT"
+    config "1.0.2-SNAPSHOT"
 }
 
 dependencies {
