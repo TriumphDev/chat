@@ -3,25 +3,27 @@ package me.mattstudios.triumphchat
 import me.mattstudios.annotations.BukkitPlugin
 import me.mattstudios.core.TriumphPlugin
 import me.mattstudios.core.func.log
-import me.mattstudios.triumphchat.commands.MessageCommand
-import me.mattstudios.triumphchat.config.Settings
+import me.mattstudios.triumphchat.config.Configs
 import me.mattstudios.triumphchat.config.bean.mapper.SettingsMapper
-import me.mattstudios.triumphchat.config.bean.objects.FormatedDisplay
+import me.mattstudios.triumphchat.config.bean.objects.FormattedDisplay
+import me.mattstudios.triumphchat.config.settings.FormatSettings
+import me.mattstudios.triumphchat.config.settings.Settings
 import me.mattstudios.triumphchat.func.IS_PAPER
 import me.mattstudios.triumphchat.listeners.ChatListener
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
 @BukkitPlugin
 class TriumphChat : TriumphPlugin(), Listener {
 
-    private val temporaryDms = mutableMapOf<Player, Player>()
+    lateinit var configs: Configs
+        private set
 
     /**
      * Enable things
      */
     override fun enable() {
+        configs = Configs(this)
         config.load(Settings::class.java, SettingsMapper())
 
         displayStartupMessage()
@@ -29,7 +31,6 @@ class TriumphChat : TriumphPlugin(), Listener {
         checkMessageComponents()
 
         registerListeners(listOf(ChatListener(this)))
-        registerCommands(listOf(MessageCommand(temporaryDms)))
     }
 
     /**
@@ -67,8 +68,8 @@ class TriumphChat : TriumphPlugin(), Listener {
      * Checks if there is any format without a message component
      */
     private fun checkMessageComponents() {
-        for ((name, format) in config[Settings.FORMATS]) {
-            if (format.components.values.filterIsInstance<FormatedDisplay>().count() == 0) {
+        for ((name, format) in configs.formats[FormatSettings.FORMATS]) {
+            if (format.components.values.filterIsInstance<FormattedDisplay>().count() == 0) {
                 "&6No component with &7%message% &6placeholder was found for format &7\"$name\"&6.".log()
             }
         }

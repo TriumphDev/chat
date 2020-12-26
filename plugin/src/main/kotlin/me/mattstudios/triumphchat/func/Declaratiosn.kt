@@ -1,9 +1,9 @@
+@file:JvmName("Utils")
+
 package me.mattstudios.triumphchat.func
 
 import me.clip.placeholderapi.PlaceholderAPI
-import me.mattstudios.msg.base.internal.Format
-import me.mattstudios.msg.base.internal.components.TextNode
-import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
+import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.triumphchat.component.ChatComponentBuilder
 import me.mattstudios.triumphchat.config.bean.objects.elements.FormatData
 import net.kyori.adventure.text.Component
@@ -21,13 +21,9 @@ internal val IS_PAPER = try {
 
 // Config related
 
-internal fun ClickData.getFormat() = when (type?.toUpperCase()) {
-    "SUGGEST_COMMAND" -> Format.ACTION_SUGGEST
-    "RUN_COMMAND" -> Format.ACTION_COMMAND
-    "COPY_TO_CLIPBOARD" -> Format.ACTION_CLIPBOARD
-    else -> null
-}
-
+/**
+ * Copies the format data from a text node
+ */
 internal fun TextNode.copyFormat() = FormatData(color, isBold, isItalic, isStrike, isUnderlined, isObfuscated)
 
 /**
@@ -39,5 +35,3 @@ internal fun String.parsePAPI(player: Player?) =
 internal inline fun buildComponent(builderAction: ChatComponentBuilder.() -> Unit): Component {
     return ChatComponentBuilder().apply(builderAction).build()
 }
-
-internal fun Player.sendMessage(component: Component) = AUDIENCE.audience(this).sendMessage(component)

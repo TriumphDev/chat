@@ -3,7 +3,7 @@ package me.mattstudios.triumphchat.extensions
 import me.mattstudios.msg.base.internal.action.HoverMessageAction
 import me.mattstudios.msg.base.internal.action.content.HoverContent
 import me.mattstudios.msg.base.internal.color.FlatColor
-import me.mattstudios.msg.base.internal.components.TextNode
+import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.msg.base.internal.renderer.FormatRetention
 import me.mattstudios.msg.base.internal.renderer.NodeRenderer
 import me.mattstudios.msg.commonmark.node.CustomNode

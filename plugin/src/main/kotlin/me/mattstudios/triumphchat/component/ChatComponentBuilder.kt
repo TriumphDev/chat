@@ -3,19 +3,17 @@ package me.mattstudios.triumphchat.component
 import me.mattstudios.msg.adventure.AdventureSerializer
 import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.msg.base.internal.Format
-import me.mattstudios.msg.base.internal.action.ClickMessageAction
 import me.mattstudios.msg.base.internal.action.HoverMessageAction
 import me.mattstudios.msg.base.internal.action.MessageAction
 import me.mattstudios.msg.base.internal.action.content.HoverContent
 import me.mattstudios.msg.base.internal.color.FlatColor
 import me.mattstudios.msg.base.internal.color.MessageColor
-import me.mattstudios.msg.base.internal.components.MessageNode
-import me.mattstudios.msg.base.internal.components.TextNode
+import me.mattstudios.msg.base.internal.nodes.MessageNode
+import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.msg.base.internal.parser.MarkdownParser
-import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
+import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
-import me.mattstudios.triumphchat.func.getFormat
 import me.mattstudios.triumphchat.func.parsePAPI
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
@@ -115,19 +113,18 @@ class ChatComponentBuilder {
      */
     private fun addClick(click: ClickData, player: Player) {
         var value = click.value
-        val formatType = click.getFormat()
+        /*val formatType = click.getFormat()
 
         if (formatType == null || value == null) return
 
         if (!value.startsWith('/')) value = "/$value"
-        addAction(ClickMessageAction(formatType, value.parsePAPI(player)))
+        addAction(ClickMessageAction(formatType, value.parsePAPI(player)))*/
     }
 
     /**
      * Adds the action to all current nodes
      */
     private fun addAction(action: MessageAction) {
-        println(action.javaClass)
         currentNodes.filterIsInstance(TextNode::class.java)
                 .filter { it.actions == null || it.actions?.filterIsInstance(action.javaClass)?.isEmpty() == true }
                 .forEach {

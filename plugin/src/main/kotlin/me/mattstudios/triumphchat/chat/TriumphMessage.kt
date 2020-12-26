@@ -6,42 +6,35 @@ import me.mattstudios.msg.base.internal.Format
 import me.mattstudios.msg.commonmark.parser.ParserExtension
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.chat.Message
-import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
 import me.mattstudios.triumphchat.component.ChatComponentBuilder
-import me.mattstudios.triumphchat.config.Settings
-import me.mattstudios.triumphchat.config.bean.ChatFormat
-import me.mattstudios.triumphchat.config.bean.objects.FormatedDisplay
+import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
+import me.mattstudios.triumphchat.config.bean.objects.FormattedDisplay
+import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.AUDIENCE
-import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 import me.mattstudios.triumphchat.func.PING_EXTENSION
 import me.mattstudios.triumphchat.func.buildComponent
 import me.mattstudios.triumphchat.permissions.ChatPermission
-import me.mattstudios.triumphchat.permissions.Permission
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
-import java.util.EnumSet
 
 class TriumphMessage(
     private val player: Player,
     private val rawMessage: String,
     private val recipients: Set<Player>,
-    private val plugin: TriumphChat
+    private val plugin: TriumphChat,
+    private val components: Collection<FormatDisplay>
 ) : Message {
 
-    private val config = plugin.config
+    private val configs = plugin.configs
 
     override val mentionsList = mutableListOf<Player>()
-    override val message = createChatMessage()
-    override val consoleMessage = createConsoleMessage()
-
-    private val audience = BukkitAudiences.create(plugin)
+    override var message = createChatMessage()
+    //val consoleMessage = createConsoleMessage()
 
     /**
      * Sends the messages to players and console
@@ -52,11 +45,11 @@ class TriumphMessage(
 
         // Sending message to recipients
         recipients.forEach {
-            AUDIENCE.audience(it).sendMessage(message)
+            AUDIENCE.player(it).sendMessage(message)
         }
 
         // Sends console message
-        AUDIENCE.audience(Bukkit.getConsoleSender()).sendMessage(consoleMessage)
+        // AUDIENCE.sender(Bukkit.getConsoleSender()).sendMessage(consoleMessage)
     }
 
     /**
@@ -64,38 +57,19 @@ class TriumphMessage(
      */
     private fun createChatMessage(): Component {
         return buildComponent {
-            for (component in selectFormat().components.values) {
-                if (component is FormatedDisplay) {
-                    appendMessage(
-                        component,
-                        Format.ALL,
+            for (format in components) {
+                if (format is FormattedDisplay) {
+                    append(
+                        format,
                         ChatPermission.formatsForPlayer(player),
                         listOf(PING_EXTENSION)
                     )
                     continue
                 }
 
-                append(component, player)
+                append(format, player)
             }
         }
-    }
-
-    /**
-     * Creates the component to send to the console
-     */
-    private fun createConsoleMessage(): Component {
-        return buildComponent {
-            appendMessage(FormatedDisplay(config[Settings.CONSOLE_FORMAT]), EnumSet.of(Format.COLOR), Format.NONE)
-        }
-    }
-
-    /**
-     * Selects the format to use for the message
-     */
-    private fun selectFormat(): ChatFormat {
-        val formats = config[Settings.FORMATS]
-        return formats.filter { player.hasPermission("${Permission.FORMAT.permission}.${it.key}") }
-                .maxByOrNull { it.value.priority }?.value ?: formats["default"] ?: DEFAULT_FORMAT
     }
 
     /**
@@ -120,11 +94,11 @@ class TriumphMessage(
     /**
      * Appends a message, either for console or for player
      */
-    private fun ChatComponentBuilder.appendMessage(
-        display: FormatedDisplay,
-        mainFormats: Set<Format> = Format.ALL,
+    private fun ChatComponentBuilder.append(
+        display: FormattedDisplay,
         messageFormats: Set<Format>,
-        extensions: List<ParserExtension> = emptyList()
+        extensions: List<ParserExtension> = emptyList(),
+        mainFormats: Set<Format> = Format.ALL
     ) {
         val parts = display.text.split(MESSAGE_PLACEHOLDER)
         for (i in parts.indices) {

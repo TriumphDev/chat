@@ -3,15 +3,16 @@ plugins {
 }
 
 allprojects {
-    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: "org.jetbrains.kotlin.jvm"
 
-    group 'me.mattstudios'
-    version '1.0.0'
+    group "me.mattstudios"
+    version "1.0.0"
 
     repositories {
         mavenLocal()
         mavenCentral()
 
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     }
 

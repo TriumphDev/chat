@@ -2,62 +2,20 @@ package me.mattstudios.triumphchat.config.bean.mapper
 
 import me.mattstudios.config.annotations.TargetObject
 import me.mattstudios.config.beanmapper.PropertyMapper
-import me.mattstudios.triumphchat.config.bean.objects.BaseDisplay
-import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.config.bean.objects.FormatedDisplay
-import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
-import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
-import java.util.Optional
+import me.mattstudios.triumphchat.func.createClick
+import me.mattstudios.triumphchat.func.createHover
 
 class SettingsMapper : PropertyMapper {
 
     /**
-     * Maps a FormatDisplay into the correct implementation
+     * This is used to override the property mapper through setter, to allow the formatter to work
      */
-    @TargetObject(FormatDisplay::class)
-    fun mapFormatDisplay(path: String, data: Map<String, Any>): FormatDisplay {
-        val rawText = data["text"]
-        val text = if (rawText is String) rawText else ""
-
-        val hover = createHover(data["hover"])
-        val click = createClick(data["click"])
-
-        if (MESSAGE_PLACEHOLDER in text) return FormatedDisplay(text, hover, click, MESSAGE_PLACEHOLDER)
-        return BaseDisplay(text, hover, click)
-    }
-
     @TargetObject(FormatedDisplay::class)
     fun mapMessageDisplay(path: String, data: Map<String, Any>): FormatedDisplay {
         val rawText = data["text"]
         val text = if (rawText is String) rawText else ""
         return FormatedDisplay(text,  createHover(data["hover"]), createClick(data["click"]))
-    }
-
-    /**
-     * Creates a hover from the map data
-     */
-    private fun createHover(rawHover: Any?): Optional<List<String>> {
-        return if (rawHover is List<*>) {
-            @Suppress("UNCHECKED_CAST")
-            Optional.of<List<String>>(rawHover as List<String>)
-        } else {
-            Optional.empty<List<String>>()
-        }
-    }
-
-    /**
-     * Creates a click from the map data
-     */
-    private fun createClick(rawClick: Any?): Optional<ClickData> {
-        return if (rawClick is Map<*, *>) {
-            val type = rawClick["type"]
-            val value = rawClick["value"]
-
-            if (type == null || value == null) Optional.empty<ClickData>()
-            else Optional.of(ClickData(type.toString(), value.toString()))
-        } else {
-            Optional.empty<ClickData>()
-        }
     }
 
 }
