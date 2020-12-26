@@ -1,6 +1,6 @@
 package me.mattstudios.triumphchat.config.bean.objects.elements
 
-import net.kyori.adventure.text.event.ClickEvent
+import me.mattstudios.msg.base.internal.Format
 
 data class ClickData(
     var type: String? = null,
@@ -11,7 +11,7 @@ data class ClickData(
 
     // Adds `/` to commands and makes it not nullable
     val finalValue = when {
-        value?.startsWith('/') == false && action == ClickEvent.Action.RUN_COMMAND -> "/$value"
+        value?.startsWith('/') == false && action == Format.ACTION_COMMAND -> "/$value"
         else -> if (value == null) "" else "$value"
     }
 
@@ -19,9 +19,9 @@ data class ClickData(
      * Selects the correct click action
      */
     private fun selectAction() = when (type?.toUpperCase()) {
-        "SUGGEST_COMMAND" -> ClickEvent.Action.SUGGEST_COMMAND
-        "COPY_TO_CLIPBOARD" -> ClickEvent.Action.COPY_TO_CLIPBOARD
-        else -> ClickEvent.Action.RUN_COMMAND
+        "SUGGEST_COMMAND" -> Format.ACTION_SUGGEST
+        "COPY_TO_CLIPBOARD" -> Format.ACTION_CLIPBOARD
+        else -> Format.ACTION_COMMAND
     }
 
 }

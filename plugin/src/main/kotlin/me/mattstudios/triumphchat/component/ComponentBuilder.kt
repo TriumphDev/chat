@@ -1,24 +1,24 @@
 package me.mattstudios.triumphchat.component
 
 import me.mattstudios.msg.adventure.AdventureSerializer
-import me.mattstudios.msg.base.MessageOptions
-import me.mattstudios.msg.base.internal.Format
+import me.mattstudios.msg.base.internal.action.ClickMessageAction
 import me.mattstudios.msg.base.internal.action.HoverMessageAction
 import me.mattstudios.msg.base.internal.action.MessageAction
 import me.mattstudios.msg.base.internal.action.content.HoverContent
-import me.mattstudios.msg.base.internal.color.FlatColor
-import me.mattstudios.msg.base.internal.color.MessageColor
 import me.mattstudios.msg.base.internal.nodes.MessageNode
 import me.mattstudios.msg.base.internal.nodes.TextNode
-import me.mattstudios.msg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
-import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
+import me.mattstudios.triumphchat.func.parseMarkdown
 import me.mattstudios.triumphchat.func.parsePAPI
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 
-class ChatComponentBuilder {
+/**
+ * This is likely not final, until I figure how I would make this using adventure's builder instead
+ * Issues are because of how I handle the extensions
+ */
+class ComponentBuilder {
 
     private val finalNodes = mutableListOf<MessageNode>()
     private val currentNodes = mutableListOf<MessageNode>()
@@ -30,10 +30,9 @@ class ChatComponentBuilder {
         text: String,
         hover: List<String>? = null,
         click: ClickData? = null,
-        formats: Set<Format>,
         player: Player
-    ): ChatComponentBuilder {
-        return append(text.parsePAPI(player), hover, click, player, formats)
+    ): ComponentBuilder {
+        return append(text.parsePAPI(player).parseMarkdown(), hover, click, player)
     }
 
     /**
@@ -44,7 +43,7 @@ class ChatComponentBuilder {
         hover: List<String>? = null,
         click: ClickData? = null,
         player: Player
-    ): ChatComponentBuilder {
+    ): ComponentBuilder {
         currentNodes.addAll(nodes)
         hover?.let { addHover(it.joinToString("\\n") { text -> text.parsePAPI(player) }) }
         click?.let { addClick(it, player) }
@@ -54,7 +53,7 @@ class ChatComponentBuilder {
     /**
      * Appends a config component
      */
-    fun append(display: FormatDisplay, player: Player): ChatComponentBuilder {
+    fun append(display: FormatDisplay, player: Player): ComponentBuilder {
         return append(display.text, display.hover, display.click, player)
     }
 
@@ -67,58 +66,21 @@ class ChatComponentBuilder {
     }
 
     /**
-     * Appends a normal text by generating it's nodes from the lib, required to parse markdown from the config
-     */
-    private fun append(
-        message: String,
-        hover: List<String>? = null,
-        click: ClickData? = null,
-        player: Player,
-        formats: Set<Format> = Format.ALL,
-        defaultColor: MessageColor = FlatColor("white")
-    ): ChatComponentBuilder {
-        save()
-        return append(
-            MarkdownParser(
-                MessageOptions.builder(formats).setDefaultColor(defaultColor).build()
-            ).parse(message),
-            hover,
-            click,
-            player
-        )
-    }
-
-    /**
-     * Appends a string, hover, and click
-     */
-    private fun append(
-        text: String,
-        hover: List<String>? = null,
-        click: ClickData? = null,
-        player: Player
-    ): ChatComponentBuilder {
-        return append(text.parsePAPI(player), hover, click, Format.ALL, player)
-    }
-
-    /**
      * Adds hover action to the current nodes
      */
     private fun addHover(hover: String) {
         if (hover.isEmpty()) return
-        addAction(HoverMessageAction(HoverContent.showText(GLOBAL_MESSAGE.parseToNodes(hover))))
+        addAction(HoverMessageAction(HoverContent.showText(hover.parseMarkdown())))
     }
 
     /**
      * Adds a click action to the current nodes
      */
     private fun addClick(click: ClickData, player: Player) {
-        var value = click.value
-        /*val formatType = click.getFormat()
-
-        if (formatType == null || value == null) return
-
-        if (!value.startsWith('/')) value = "/$value"
-        addAction(ClickMessageAction(formatType, value.parsePAPI(player)))*/
+        with(click) {
+            if (isEmpty) return
+            addAction(ClickMessageAction(action, finalValue.parsePAPI(player)))
+        }
     }
 
     /**

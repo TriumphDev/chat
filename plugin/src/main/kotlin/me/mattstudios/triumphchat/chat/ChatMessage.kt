@@ -1,27 +1,26 @@
 package me.mattstudios.triumphchat.chat
 
 import me.mattstudios.msg.base.MessageOptions
-import me.mattstudios.msg.base.internal.Format
-import me.mattstudios.msg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.chat.Message
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
-import me.mattstudios.triumphchat.component.ChatComponentBuilder
+import me.mattstudios.triumphchat.component.ComponentBuilder
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
-import me.mattstudios.triumphchat.config.bean.objects.FormattedDisplay
+import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.AUDIENCE
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 import me.mattstudios.triumphchat.func.PING_EXTENSION
 import me.mattstudios.triumphchat.func.buildComponent
+import me.mattstudios.triumphchat.func.parseMarkdown
 import me.mattstudios.triumphchat.permissions.ChatPermission
 import net.kyori.adventure.text.Component
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
 
-open class TriumphMessage(
+open class ChatMessage(
     private val player: Player,
     private val rawMessage: String,
     private val recipients: Set<Player>,
@@ -37,7 +36,7 @@ open class TriumphMessage(
     /**
      * Sends the messages to players and console
      */
-    fun sendMessage() {
+    open fun sendMessage() {
         // Sending message to recipients
         recipients.forEach {
             AUDIENCE.sender(it).sendMessage(message)
@@ -50,7 +49,7 @@ open class TriumphMessage(
     private fun createChatMessage(): Component {
         return buildComponent {
             for (format in components) {
-                if (format is FormattedDisplay) {
+                if (format is PlaceholderDisplay) {
                     append(format)
                     continue
                 }
@@ -63,30 +62,33 @@ open class TriumphMessage(
     /**
      * Appends a message, either for console or for player
      */
-    private fun ChatComponentBuilder.append(display: FormattedDisplay) {
-        val parts = display.text.split(MESSAGE_PLACEHOLDER)
-        for (i in parts.indices) {
-            append(parts[i], display.hover, display.click, Format.ALL, player)
-            if (i != 0) continue
+    private fun ComponentBuilder.append(display: PlaceholderDisplay) {
+        with(display) {
+            with(text.split(MESSAGE_PLACEHOLDER)) {
+                for (i in indices) {
+                    append(this[i], hover, click, player)
+                    if (i != 0) continue
 
-            // Creating all the options for the main message
-            val options = MessageOptions.Builder(ChatPermission.formatsForPlayer(player))
-            options.setDefaultColor(display.formatData.color)
-            options.extensions(PING_EXTENSION)
+                    // Creating all the options for the main message
+                    val options = MessageOptions.Builder(ChatPermission.formatsForPlayer(player))
+                    options.setDefaultColor(formatData.color)
+                    options.extensions(PING_EXTENSION)
 
-            append(options.build(), display.hover, display.click)
+                    append(options.build(), hover, click)
+                }
+            }
         }
     }
 
     /**
      * Special append function to handle pinging of players
      */
-    private fun ChatComponentBuilder.append(
+    private fun ComponentBuilder.append(
         options: MessageOptions,
         formatHover: List<String>? = null,
         formatClick: ClickData? = null
     ) {
-        val nodes = MarkdownParser(options).parse(rawMessage)
+        val nodes = rawMessage.parseMarkdown(options)
 
         for (node in nodes) {
             if (node !is PingPlayerNode) continue

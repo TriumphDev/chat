@@ -5,11 +5,11 @@ import me.mattstudios.config.annotations.Name
 import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.config.bean.objects.elements.FormatData
-import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
 import me.mattstudios.triumphchat.func.copyFormat
+import me.mattstudios.triumphchat.func.parseMarkdown
 import java.util.Optional
 
-data class FormattedDisplay(
+data class PlaceholderDisplay(
     override var text: String = "",
     @Name("hover") var hoverData: Optional<List<String>> = Optional.empty<List<String>>(),
     @Name("click") var clickData: Optional<ClickData> = Optional.empty(),
@@ -25,7 +25,7 @@ data class FormattedDisplay(
      * Gathers the format settings from the text node that has the message placeholder
      */
     private fun determineFormatData(): FormatData {
-        val filteredNodes = GLOBAL_MESSAGE.parseToNodes(text).filterIsInstance(TextNode::class.java)
+        val filteredNodes = text.parseMarkdown().filterIsInstance(TextNode::class.java)
 
         if (placeholder.isEmpty()) {
             return filteredNodes.firstOrNull()?.copyFormat() ?: FormatData()

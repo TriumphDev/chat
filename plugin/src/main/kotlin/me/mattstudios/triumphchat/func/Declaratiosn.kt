@@ -3,8 +3,10 @@
 package me.mattstudios.triumphchat.func
 
 import me.clip.placeholderapi.PlaceholderAPI
+import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.msg.base.internal.nodes.TextNode
-import me.mattstudios.triumphchat.component.ChatComponentBuilder
+import me.mattstudios.msg.base.internal.parser.MarkdownParser
+import me.mattstudios.triumphchat.component.ComponentBuilder
 import me.mattstudios.triumphchat.config.bean.objects.elements.FormatData
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
@@ -32,6 +34,9 @@ internal fun TextNode.copyFormat() = FormatData(color, isBold, isItalic, isStrik
 internal fun String.parsePAPI(player: Player?) =
     if (player == null) this else PlaceholderAPI.setPlaceholders(player, this)
 
-internal inline fun buildComponent(builderAction: ChatComponentBuilder.() -> Unit): Component {
-    return ChatComponentBuilder().apply(builderAction).build()
+internal fun String.parseMarkdown() = GLOBAL_PARSER.parse(this)
+internal fun String.parseMarkdown(options: MessageOptions) = MarkdownParser(options).parse(this)
+
+internal inline fun buildComponent(builderAction: ComponentBuilder.() -> Unit): Component {
+    return ComponentBuilder().apply(builderAction).build()
 }

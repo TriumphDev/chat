@@ -4,7 +4,7 @@ import me.mattstudios.config.SettingsHolder
 import me.mattstudios.config.annotations.Comment
 import me.mattstudios.config.annotations.Path
 import me.mattstudios.config.properties.Property
-import me.mattstudios.triumphchat.config.bean.objects.FormattedDisplay
+import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.MentionDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.SoundData
 import java.util.Optional
@@ -19,7 +19,7 @@ object MentionSettings : SettingsHolder {
     val EVERYONE = Property.create(
         MentionDisplay(
             true,
-            FormattedDisplay("&c**@Everyone**"),
+            PlaceholderDisplay("&c**@Everyone**"),
             SoundData(),
             Optional.of("%player% has mentioned everyone")
         )
@@ -32,7 +32,7 @@ object MentionSettings : SettingsHolder {
     val GROUP = Property.create(
         MentionDisplay(
             true,
-            FormattedDisplay("&d**@%group%**"),
+            PlaceholderDisplay("&d**@%group%**"),
             SoundData(),
             Optional.of("%player% has mentioned the group %group%")
         )
@@ -45,7 +45,7 @@ object MentionSettings : SettingsHolder {
     val PLAYER = Property.create(
         MentionDisplay(
             true,
-            FormattedDisplay("&a__%username%__"),
+            PlaceholderDisplay("&a__%username%__"),
             SoundData(),
             Optional.of("%player% has mentioned you")
         )

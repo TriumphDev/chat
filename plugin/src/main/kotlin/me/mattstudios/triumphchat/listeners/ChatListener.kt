@@ -3,14 +3,13 @@ package me.mattstudios.triumphchat.listeners
 import me.mattstudios.core.func.Task.async
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.events.TriumphChatEvent
-import me.mattstudios.triumphchat.chat.TriumphMessage
+import me.mattstudios.triumphchat.chat.ChatMessage
+import me.mattstudios.triumphchat.chat.ConsoleMessage
 import me.mattstudios.triumphchat.config.bean.ChatFormat
-import me.mattstudios.triumphchat.config.bean.objects.FormattedDisplay
+import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
 import me.mattstudios.triumphchat.config.settings.FormatSettings
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
-import me.mattstudios.triumphchat.func.sendMessage
 import me.mattstudios.triumphchat.permissions.Permission
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -39,20 +38,13 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
      * Handles chat event truly async
      */
     private fun AsyncPlayerChatEvent.handleChat() {
-        val chatMessage = TriumphMessage(
+        val chatMessage = ChatMessage(player, message, recipients, plugin, selectFormat(player).components.values)
+        val consoleMessage = ConsoleMessage(
             player,
             message,
             recipients,
             plugin,
-            selectFormat(player).components.values
-        )
-
-        val consoleMessage = TriumphMessage(
-            player,
-            message,
-            recipients,
-            plugin,
-            listOf(FormattedDisplay(plugin.configs.formats[FormatSettings.CONSOLE_FORMAT]))
+            listOf(PlaceholderDisplay(plugin.configs.formats[FormatSettings.CONSOLE_FORMAT]))
         )
 
         val triumphChatEvent = TriumphChatEvent(chatMessage)
@@ -60,9 +52,8 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
 
         if (triumphChatEvent.isCancelled) return
 
-        player.sendMessage(chatMessage.message)
-
-        Bukkit.getConsoleSender().sendMessage(PlainComponentSerializer.INSTANCE.serialize(consoleMessage.message))
+        chatMessage.sendMessage()
+        consoleMessage.sendMessage()
     }
 
     /**
