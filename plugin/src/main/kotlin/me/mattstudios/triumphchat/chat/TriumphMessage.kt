@@ -1,9 +1,8 @@
 package me.mattstudios.triumphchat.chat
 
-import me.mattstudios.msg.adventure.AdventureMessage
 import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.msg.base.internal.Format
-import me.mattstudios.msg.commonmark.parser.ParserExtension
+import me.mattstudios.msg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.chat.Message
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
@@ -22,7 +21,7 @@ import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
 
-class TriumphMessage(
+open class TriumphMessage(
     private val player: Player,
     private val rawMessage: String,
     private val recipients: Set<Player>,
@@ -34,36 +33,25 @@ class TriumphMessage(
 
     override val mentionsList = mutableListOf<Player>()
     override var message = createChatMessage()
-    //val consoleMessage = createConsoleMessage()
 
     /**
      * Sends the messages to players and console
      */
     fun sendMessage() {
-        // Testing mentions list
-        //println(mentionsList)
-
         // Sending message to recipients
         recipients.forEach {
-            AUDIENCE.player(it).sendMessage(message)
+            AUDIENCE.sender(it).sendMessage(message)
         }
-
-        // Sends console message
-        // AUDIENCE.sender(Bukkit.getConsoleSender()).sendMessage(consoleMessage)
     }
 
     /**
-     * Creates the chat component to send to the players
+     * Creates the chat component
      */
     private fun createChatMessage(): Component {
         return buildComponent {
             for (format in components) {
                 if (format is FormattedDisplay) {
-                    append(
-                        format,
-                        ChatPermission.formatsForPlayer(player),
-                        listOf(PING_EXTENSION)
-                    )
+                    append(format)
                     continue
                 }
 
@@ -73,15 +61,32 @@ class TriumphMessage(
     }
 
     /**
+     * Appends a message, either for console or for player
+     */
+    private fun ChatComponentBuilder.append(display: FormattedDisplay) {
+        val parts = display.text.split(MESSAGE_PLACEHOLDER)
+        for (i in parts.indices) {
+            append(parts[i], display.hover, display.click, Format.ALL, player)
+            if (i != 0) continue
+
+            // Creating all the options for the main message
+            val options = MessageOptions.Builder(ChatPermission.formatsForPlayer(player))
+            options.setDefaultColor(display.formatData.color)
+            options.extensions(PING_EXTENSION)
+
+            append(options.build(), display.hover, display.click)
+        }
+    }
+
+    /**
      * Special append function to handle pinging of players
      */
     private fun ChatComponentBuilder.append(
-        message: AdventureMessage,
+        options: MessageOptions,
         formatHover: List<String>? = null,
-        formatClick: ClickData? = null,
-        player: Player
+        formatClick: ClickData? = null
     ) {
-        val nodes = message.parseToNodes(rawMessage)
+        val nodes = MarkdownParser(options).parse(rawMessage)
 
         for (node in nodes) {
             if (node !is PingPlayerNode) continue
@@ -89,34 +94,6 @@ class TriumphMessage(
         }
 
         append(nodes, formatHover, formatClick, player)
-    }
-
-    /**
-     * Appends a message, either for console or for player
-     */
-    private fun ChatComponentBuilder.append(
-        display: FormattedDisplay,
-        messageFormats: Set<Format>,
-        extensions: List<ParserExtension> = emptyList(),
-        mainFormats: Set<Format> = Format.ALL
-    ) {
-        val parts = display.text.split(MESSAGE_PLACEHOLDER)
-        for (i in parts.indices) {
-            append(parts[i], display.hover, display.click, mainFormats, player)
-
-            if (i != 0) continue
-
-            val options = MessageOptions.Builder(messageFormats)
-            options.setDefaultColor(display.formatData.color)
-            options.extensions(extensions)
-
-            append(
-                AdventureMessage.create(options.build()),
-                display.hover,
-                display.click,
-                player
-            )
-        }
     }
 
     /**
