@@ -5,26 +5,30 @@ import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.Completion
 import me.mattstudios.mf.annotations.Default
 import me.mattstudios.mf.base.CommandBase
+import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.ChatPlayer
-import me.mattstudios.triumphchat.data.PlayerManager
-import me.mattstudios.triumphchat.message.MessageManager
 import org.bukkit.entity.Player
 
 @Command("msg")
 @Alias("m")
-class MessageCommand(
-    private val playerManager: PlayerManager,
-    private val messageManager: MessageManager
-) : CommandBase() {
+class MessageCommand(plugin: TriumphChat) : CommandBase() {
+
+    private val playerManager = plugin.playerManager
+    private val messageManager = plugin.messageManager
+    private val config = plugin.config
 
     @Default
-    fun sendMessage(player: Player, @Completion("#players") to: ChatPlayer?, @Completion("#empty") args: Array<String>) {
-        val author = playerManager.getPlayer(player)
+    fun sendMessage(
+        sender: Player,
+        @Completion("#players") to: ChatPlayer?,
+        @Completion("#empty") args: Array<String>
+    ) {
         if (to == null) {
-            player.sendMessage("Temp error")
+            sender.sendMessage("Temp error")
             return
         }
 
+        val author = playerManager.getPlayer(sender)
         println(to)
     }
 

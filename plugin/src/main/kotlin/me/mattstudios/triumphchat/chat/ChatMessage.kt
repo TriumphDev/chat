@@ -28,7 +28,7 @@ open class ChatMessage(
     private val components: Collection<FormatDisplay>
 ) : Message {
 
-    private val configs = plugin.configs
+    private val config = plugin.config
 
     override val mentionsList = mutableListOf<Player>()
     override var message = createChatMessage()

@@ -1,4 +1,4 @@
-package me.mattstudios.triumphchat.data.impl
+package me.mattstudios.triumphchat.data.storage
 
 import me.mattstudios.triumphchat.data.Database
 
