@@ -2,7 +2,8 @@ package me.mattstudios.triumphchat.chat
 
 import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.triumphchat.TriumphChat
-import me.mattstudios.triumphchat.api.chat.Message
+import me.mattstudios.triumphchat.api.ChatPlayer
+import me.mattstudios.triumphchat.api.Message
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
 import me.mattstudios.triumphchat.component.ComponentBuilder
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
@@ -14,14 +15,13 @@ import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 import me.mattstudios.triumphchat.func.PING_EXTENSION
 import me.mattstudios.triumphchat.func.buildComponent
 import me.mattstudios.triumphchat.func.parseMarkdown
-import me.mattstudios.triumphchat.permissions.ChatPermission
 import net.kyori.adventure.text.Component
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
 
 open class ChatMessage(
-    private val player: Player,
+    override val author: ChatPlayer,
     private val rawMessage: String,
     private val recipients: Set<Player>,
     private val plugin: TriumphChat,
@@ -54,7 +54,7 @@ open class ChatMessage(
                     continue
                 }
 
-                append(format, player)
+                append(format, author)
             }
         }
     }
@@ -66,11 +66,11 @@ open class ChatMessage(
         with(display) {
             with(text.split(MESSAGE_PLACEHOLDER)) {
                 for (i in indices) {
-                    append(this[i], hover, click, player)
+                    append(this[i], hover, click, author)
                     if (i != 0) continue
 
                     // Creating all the options for the main message
-                    val options = MessageOptions.Builder(ChatPermission.formatsForPlayer(player))
+                    val options = MessageOptions.Builder(author.getFormats())
                     options.setDefaultColor(formatData.color)
                     options.extensions(PING_EXTENSION)
 
@@ -95,7 +95,7 @@ open class ChatMessage(
             handlePing(node)
         }
 
-        append(nodes, formatHover, formatClick, player)
+        append(nodes, formatHover, formatClick, author)
     }
 
     /**

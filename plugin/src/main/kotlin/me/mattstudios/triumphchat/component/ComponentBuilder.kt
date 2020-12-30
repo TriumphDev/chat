@@ -7,12 +7,12 @@ import me.mattstudios.msg.base.internal.action.MessageAction
 import me.mattstudios.msg.base.internal.action.content.HoverContent
 import me.mattstudios.msg.base.internal.nodes.MessageNode
 import me.mattstudios.msg.base.internal.nodes.TextNode
+import me.mattstudios.triumphchat.api.ChatPlayer
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.func.parseMarkdown
 import me.mattstudios.triumphchat.func.parsePAPI
 import net.kyori.adventure.text.Component
-import org.bukkit.entity.Player
 
 /**
  * This is likely not final, until I figure how I would make this using adventure's builder instead
@@ -30,7 +30,7 @@ class ComponentBuilder {
         text: String,
         hover: List<String>? = null,
         click: ClickData? = null,
-        player: Player
+        player: ChatPlayer
     ): ComponentBuilder {
         return append(text.parsePAPI(player).parseMarkdown(), hover, click, player)
     }
@@ -42,7 +42,7 @@ class ComponentBuilder {
         nodes: List<MessageNode>,
         hover: List<String>? = null,
         click: ClickData? = null,
-        player: Player
+        player: ChatPlayer
     ): ComponentBuilder {
         currentNodes.addAll(nodes)
         hover?.let { addHover(it.joinToString("\\n") { text -> text.parsePAPI(player) }) }
@@ -53,7 +53,7 @@ class ComponentBuilder {
     /**
      * Appends a config component
      */
-    fun append(display: FormatDisplay, player: Player): ComponentBuilder {
+    fun append(display: FormatDisplay, player: ChatPlayer): ComponentBuilder {
         return append(display.text, display.hover, display.click, player)
     }
 
@@ -76,7 +76,7 @@ class ComponentBuilder {
     /**
      * Adds a click action to the current nodes
      */
-    private fun addClick(click: ClickData, player: Player) {
+    private fun addClick(click: ClickData, player: ChatPlayer) {
         with(click) {
             if (isEmpty) return
             addAction(ClickMessageAction(action, finalValue.parsePAPI(player)))

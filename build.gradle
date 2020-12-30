@@ -1,9 +1,11 @@
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.4.20"
+    id "me.mattstudios.triumph" version "0.1.6"
 }
 
 allprojects {
     apply plugin: "org.jetbrains.kotlin.jvm"
+    apply plugin: "me.mattstudios.triumph"
 
     group "me.mattstudios"
     version "1.0.0"

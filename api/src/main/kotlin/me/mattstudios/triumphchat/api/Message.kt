@@ -1,10 +1,10 @@
-package me.mattstudios.triumphchat.api.chat
+package me.mattstudios.triumphchat.api
 
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 
 interface Message {
+    val author: ChatPlayer
     var message: Component
-    //val consoleMessage: Component
-    val mentionsList: List<Player>
+    val mentionsList: MutableList<Player>
 }

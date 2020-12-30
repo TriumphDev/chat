@@ -2,9 +2,9 @@ package me.mattstudios.triumphchat.config.bean.objects
 
 import me.mattstudios.config.annotations.Ignore
 import me.mattstudios.config.annotations.Name
+import me.mattstudios.msg.base.FormatData
 import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
-import me.mattstudios.triumphchat.config.bean.objects.elements.FormatData
 import me.mattstudios.triumphchat.func.copyFormat
 import me.mattstudios.triumphchat.func.parseMarkdown
 import java.util.Optional
