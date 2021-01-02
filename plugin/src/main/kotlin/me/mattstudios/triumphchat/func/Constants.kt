@@ -4,9 +4,9 @@ import me.mattstudios.msg.adventure.AdventureMessage
 import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.msg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.TriumphChat
-import me.mattstudios.triumphchat.config.bean.ChatFormat
+import me.mattstudios.triumphchat.config.bean.ChatFormatSettings
 import me.mattstudios.triumphchat.config.bean.objects.BaseDisplay
-import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.extensions.PingExtension
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
@@ -33,7 +33,7 @@ val AUDIENCE = BukkitAudiences.create(JavaPlugin.getPlugin(TriumphChat::class.ja
  * CONFIG
  */
 
-val DEFAULT_FORMAT = ChatFormat(
+val DEFAULT_FORMAT = ChatFormatSettings(
     1, mutableMapOf(
         "prefix" to BaseDisplay("%vault_prefix% ", clickData = Optional.of(ClickData("RUN_COMMAND", "ranks"))),
         "name" to BaseDisplay(
@@ -41,7 +41,7 @@ val DEFAULT_FORMAT = ChatFormat(
             Optional.of(listOf("Click to send a message")),
             Optional.of(ClickData("SUGGEST_COMMAND", "/msg %player_name% "))
         ),
-        "message" to PlaceholderDisplay(
+        "message" to MessageDisplay(
             "&8> &f$MESSAGE_PLACEHOLDER",
             Optional.of(listOf("Sent @ %server_time%"))
         )

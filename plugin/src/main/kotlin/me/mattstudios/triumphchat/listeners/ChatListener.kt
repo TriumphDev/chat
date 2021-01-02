@@ -5,9 +5,9 @@ import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.events.TriumphChatEvent
 import me.mattstudios.triumphchat.chat.ChatMessage
 import me.mattstudios.triumphchat.chat.ConsoleMessage
-import me.mattstudios.triumphchat.config.bean.ChatFormat
-import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
-import me.mattstudios.triumphchat.config.settings.Settings
+import me.mattstudios.triumphchat.config.Settings
+import me.mattstudios.triumphchat.config.bean.ChatFormatSettings
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
 import me.mattstudios.triumphchat.permissions.Permission
 import org.bukkit.Bukkit
@@ -47,7 +47,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
             message,
             recipients,
             plugin,
-            listOf(PlaceholderDisplay(config[Settings.CONSOLE_FORMAT]))
+            listOf(MessageDisplay(config[Settings.CONSOLE_FORMAT]))
         )
 
         val triumphChatEvent = TriumphChatEvent(chatMessage)
@@ -62,7 +62,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
     /**
      * Selects the format to use for the message
      */
-    private fun selectFormat(player: Player): ChatFormat {
+    private fun selectFormat(player: Player): ChatFormatSettings {
         val formats = config[Settings.FORMATS]
         return formats.filter { player.hasPermission("${Permission.FORMAT.permission}.${it.key}") }
                 .maxByOrNull { it.value.priority }?.value ?: formats["default"] ?: DEFAULT_FORMAT

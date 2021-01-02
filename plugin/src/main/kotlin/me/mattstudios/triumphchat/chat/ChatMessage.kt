@@ -7,7 +7,7 @@ import me.mattstudios.triumphchat.api.Message
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
 import me.mattstudios.triumphchat.component.ComponentBuilder
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
-import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.AUDIENCE
@@ -49,7 +49,7 @@ open class ChatMessage(
     private fun createChatMessage(): Component {
         return buildComponent {
             for (format in components) {
-                if (format is PlaceholderDisplay) {
+                if (format is MessageDisplay) {
                     append(format)
                     continue
                 }
@@ -62,7 +62,7 @@ open class ChatMessage(
     /**
      * Appends a message, either for console or for player
      */
-    private fun ComponentBuilder.append(display: PlaceholderDisplay) {
+    private fun ComponentBuilder.append(display: MessageDisplay) {
         with(display) {
             with(text.split(MESSAGE_PLACEHOLDER)) {
                 for (i in indices) {

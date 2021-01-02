@@ -26,7 +26,9 @@ dependencies {
     // PAPI
     compileOnly "me.clip:placeholderapi:2.10.9"
 
-    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    compileOnly ("com.github.MilkBowl:VaultAPI:1.7") {
+        transitive = false
+    }
 }
 
 shadowJar {

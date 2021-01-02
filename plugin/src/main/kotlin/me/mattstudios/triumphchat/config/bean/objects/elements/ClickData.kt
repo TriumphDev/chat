@@ -2,6 +2,9 @@ package me.mattstudios.triumphchat.config.bean.objects.elements
 
 import me.mattstudios.msg.base.internal.Format
 
+/**
+ * Holds the click data, also makes sure the values are correct, like adding `/` to commands
+ */
 data class ClickData(
     var type: String? = null,
     var value: String? = null

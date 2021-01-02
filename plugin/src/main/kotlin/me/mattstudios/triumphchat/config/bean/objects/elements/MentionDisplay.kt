@@ -1,11 +1,12 @@
 package me.mattstudios.triumphchat.config.bean.objects.elements
 
-import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
-import java.util.Optional
+import me.mattstudios.triumphchat.config.bean.objects.BaseDisplay
 
+/**
+ * Holds the data of how the mentions should be displayed
+ */
 data class MentionDisplay(
     var enabled: Boolean = true,
-    var display: PlaceholderDisplay = PlaceholderDisplay(),
-    var sound: SoundData = SoundData(),
-    var actionbar: Optional<String> = Optional.empty()
+    var display: BaseDisplay = BaseDisplay(),
+    var notification: SubNotificationSettings = SubNotificationSettings()
 )

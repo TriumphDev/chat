@@ -6,9 +6,9 @@ import me.mattstudios.core.func.log
 import me.mattstudios.mf.base.components.TypeResult
 import me.mattstudios.triumphchat.api.ChatPlayer
 import me.mattstudios.triumphchat.commands.MessageCommand
+import me.mattstudios.triumphchat.config.Settings
 import me.mattstudios.triumphchat.config.bean.mapper.SettingsMapper
-import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
-import me.mattstudios.triumphchat.config.settings.Settings
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.data.PlayerManager
 import me.mattstudios.triumphchat.func.IS_PAPER
 import me.mattstudios.triumphchat.listeners.ChatListener
@@ -74,7 +74,7 @@ class TriumphChat : TriumphPlugin(), Listener {
      */
     private fun checkMessageComponents() {
         for ((name, format) in config[Settings.FORMATS]) {
-            if (format.components.values.filterIsInstance<PlaceholderDisplay>().count() == 0) {
+            if (format.components.values.filterIsInstance<MessageDisplay>().count() == 0) {
                 "&6No component with &7%message% &6placeholder was found for format &7\"$name\"&6.".log()
             }
         }
