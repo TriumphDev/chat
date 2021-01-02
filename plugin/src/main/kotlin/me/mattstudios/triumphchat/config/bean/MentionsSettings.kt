@@ -1,30 +1,27 @@
 package me.mattstudios.triumphchat.config.bean
 
-import me.mattstudios.triumphchat.config.bean.objects.PlaceholderDisplay
+import me.mattstudios.triumphchat.config.bean.objects.BaseDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.MentionDisplay
-import me.mattstudios.triumphchat.config.bean.objects.elements.SoundData
+import me.mattstudios.triumphchat.config.bean.objects.elements.SubNotificationSettings
 import java.util.Optional
 
-
-data class MentionsData(
+/**
+ * Holds settings regarding mentions
+ */
+data class MentionsSettings(
     var everyone: MentionDisplay = MentionDisplay(
         true,
-        PlaceholderDisplay("&c**@Everyone**"),
-        SoundData(),
-        Optional.of("%player% has mentioned everyone")
+        BaseDisplay("&c**@Everyone**"),
+        SubNotificationSettings(optionalActions = Optional.of(listOf("[actionbar] &c%player_name% mentioned everyone!")))
     ),
-
     var user: MentionDisplay = MentionDisplay(
         true,
-        PlaceholderDisplay("&a__%username%__"),
-        SoundData(),
-        Optional.of("%player% has mentioned you")
+        BaseDisplay("&a__%username%__"),
+        SubNotificationSettings(optionalActions = Optional.of(listOf("[actionbar] &c%player_name% mentioned you!")))
     ),
-
     var group: MentionDisplay = MentionDisplay(
         true,
-        PlaceholderDisplay("&d**@%group%**"),
-        SoundData(),
-        Optional.of("%player% has mentioned the group %group%")
+        BaseDisplay("&d**@%group%**"),
+        SubNotificationSettings(optionalActions = Optional.of(listOf("[actionbar] &c%player_name% mention the group %group%!")))
     )
 )
