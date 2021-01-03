@@ -1,14 +1,12 @@
-package me.mattstudios.triumphchat.config
+package me.mattstudios.triumphchat.config.settings
 
 import me.mattstudios.config.SettingsHolder
 import me.mattstudios.config.annotations.Comment
 import me.mattstudios.config.annotations.Path
 import me.mattstudios.config.properties.Property
-import me.mattstudios.triumphchat.config.bean.ChatFormatSettings
 import me.mattstudios.triumphchat.config.bean.MentionsSettings
 import me.mattstudios.triumphchat.config.bean.NotificationSettings
 import me.mattstudios.triumphchat.config.bean.PrivateMessageSettings
-import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 
 /**
@@ -16,7 +14,7 @@ import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
  */
 object Settings : SettingsHolder {
 
-    @Comment(
+    /*@Comment(
         "You can list as many formats as you want.",
         "Formats have specific components, the components can be anything you want and will be displayed in the order they are declared.",
         "You can use any placeholder from PlaceholderAPI.",
@@ -26,7 +24,7 @@ object Settings : SettingsHolder {
         "The priority is..."
     )
     @Path("formats")
-    val FORMATS = Property.create(ChatFormatSettings::class.java, mutableMapOf("default" to DEFAULT_FORMAT))
+    val FORMATS = Property.create(ChatFormatSettings::class.java, mutableMapOf("default" to DEFAULT_FORMAT))*/
 
     @Comment(
         "",

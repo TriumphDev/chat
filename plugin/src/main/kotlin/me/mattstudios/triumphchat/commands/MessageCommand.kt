@@ -7,6 +7,11 @@ import me.mattstudios.mf.annotations.Default
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.ChatPlayer
+import me.mattstudios.triumphchat.config.settings.Settings
+import me.mattstudios.triumphchat.func.RECIPIENT_PLACEHOLDER
+import me.mattstudios.triumphchat.func.SENDER_PLACEHOLDER
+import me.mattstudios.triumphchat.func.parsePAPI
+import org.apache.commons.lang.StringUtils
 import org.bukkit.entity.Player
 
 @Command("msg")
@@ -29,7 +34,15 @@ class MessageCommand(plugin: TriumphChat) : CommandBase() {
         }
 
         val author = playerManager.getPlayer(sender)
-        println(to)
+        val temp = config[Settings.PRIVATE_MESSAGES]
+        temp.recipientFormat.text.parsePAPI(author, to)
+        //sender.sendMessage(temp.senderFormat.text)
     }
+
+    private fun String.parsePAPI(sender: ChatPlayer, recipient: ChatPlayer) {
+        val replaced = remove(SENDER_PLACEHOLDER).parsePAPI(sender).remove(RECIPIENT_PLACEHOLDER).parsePAPI(recipient)
+    }
+
+    fun String.remove(oldValue: String): String = StringUtils.replace(this, oldValue, "")
 
 }

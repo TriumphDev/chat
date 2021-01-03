@@ -43,6 +43,10 @@ open class ChatMessage(
         }
     }
 
+    open fun sendMessage(string: String) {
+
+    }
+
     /**
      * Creates the chat component
      */

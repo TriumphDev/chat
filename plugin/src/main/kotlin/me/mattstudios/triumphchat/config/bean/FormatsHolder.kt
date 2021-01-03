@@ -1,11 +1,11 @@
 package me.mattstudios.triumphchat.config.bean
 
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
+import me.mattstudios.triumphchat.func.DEFAULT_FORMAT_MAP
 
 /**
  * Holds the chat formats with a priority and it's components
  */
-data class ChatFormatSettings(
-    var priority: Int = 1,
-    var components: Map<String, FormatDisplay> = emptyMap()
+data class FormatsHolder(
+    var formats: MutableMap<String, MutableMap<String, FormatDisplay>> = DEFAULT_FORMAT_MAP
 )

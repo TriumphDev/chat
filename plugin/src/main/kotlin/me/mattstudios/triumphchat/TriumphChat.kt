@@ -6,11 +6,11 @@ import me.mattstudios.core.func.log
 import me.mattstudios.mf.base.components.TypeResult
 import me.mattstudios.triumphchat.api.ChatPlayer
 import me.mattstudios.triumphchat.commands.MessageCommand
-import me.mattstudios.triumphchat.config.Settings
-import me.mattstudios.triumphchat.config.bean.mapper.SettingsMapper
-import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
+import me.mattstudios.triumphchat.config.FormatsConfig
+import me.mattstudios.triumphchat.config.settings.Settings
 import me.mattstudios.triumphchat.data.PlayerManager
 import me.mattstudios.triumphchat.func.IS_PAPER
+import me.mattstudios.triumphchat.func.PROPERTY_MAPPER
 import me.mattstudios.triumphchat.listeners.ChatListener
 import me.mattstudios.triumphchat.message.MessageManager
 import org.bukkit.Bukkit
@@ -22,20 +22,26 @@ class TriumphChat : TriumphPlugin(), Listener {
     val playerManager = PlayerManager()
     val messageManager = MessageManager()
 
+    lateinit var formatsConfig: FormatsConfig
+        private set
+
     override fun enable() {
-        config.load(Settings::class.java, SettingsMapper())
+        config.load(Settings::class.java, PROPERTY_MAPPER)
+        formatsConfig = FormatsConfig(this)
 
         displayStartupMessage()
         if (!checkPapi()) return
         checkMessageComponents()
 
         registerParamType(ChatPlayer::class.java) { arg ->
-            val player = Bukkit.getPlayer(arg.toString()) ?: return@registerParamType null
+            val player = Bukkit.getPlayer(arg.toString()) ?: return@registerParamType TypeResult(null, arg)
             return@registerParamType TypeResult(playerManager.getPlayer(player), arg)
         }
 
         registerCommands(MessageCommand(this))
         registerListeners(ChatListener(this))
+
+        println(formatsConfig.getFormats())
     }
 
     /**
@@ -73,11 +79,11 @@ class TriumphChat : TriumphPlugin(), Listener {
      * Checks if there is any format without a message component
      */
     private fun checkMessageComponents() {
-        for ((name, format) in config[Settings.FORMATS]) {
+        /*for ((name, format) in config[Settings.FORMATS]) {
             if (format.components.values.filterIsInstance<MessageDisplay>().count() == 0) {
                 "&6No component with &7%message% &6placeholder was found for format &7\"$name\"&6.".log()
             }
-        }
+        }*/
     }
 
 }
