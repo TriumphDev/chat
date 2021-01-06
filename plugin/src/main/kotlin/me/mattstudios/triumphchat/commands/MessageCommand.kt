@@ -7,16 +7,17 @@ import me.mattstudios.mf.annotations.Default
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.ChatPlayer
+import me.mattstudios.triumphchat.chat.ChatMessage
 import me.mattstudios.triumphchat.config.settings.Settings
-import me.mattstudios.triumphchat.func.RECIPIENT_PLACEHOLDER
-import me.mattstudios.triumphchat.func.SENDER_PLACEHOLDER
-import me.mattstudios.triumphchat.func.parsePAPI
-import org.apache.commons.lang.StringUtils
+import me.mattstudios.triumphchat.func.DEFAULT_PM_RECIPIENT
+import me.mattstudios.triumphchat.func.DEFAULT_PM_SENDER
+import me.mattstudios.triumphchat.func.selectFormat
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 @Command("msg")
 @Alias("m")
-class MessageCommand(plugin: TriumphChat) : CommandBase() {
+class MessageCommand(private val plugin: TriumphChat) : CommandBase() {
 
     private val playerManager = plugin.playerManager
     private val messageManager = plugin.messageManager
@@ -25,24 +26,43 @@ class MessageCommand(plugin: TriumphChat) : CommandBase() {
     @Default
     fun sendMessage(
         sender: Player,
-        @Completion("#players") to: ChatPlayer?,
+        @Completion("#players") recipient: ChatPlayer?,
         @Completion("#empty") args: Array<String>
     ) {
-        if (to == null) {
+        if (recipient == null) {
             sender.sendMessage("Temp error")
             return
         }
 
+        val temp = Bukkit.getPlayer(recipient.uuid) ?: return
+
+        val message = args.joinToString(" ")
         val author = playerManager.getPlayer(sender)
-        val temp = config[Settings.PRIVATE_MESSAGES]
-        //temp.recipientFormat.text.parsePAPI(author, to)
-        //sender.sendMessage(temp.senderFormat.text)
-    }
 
-    private fun String.parsePAPI(sender: ChatPlayer, recipient: ChatPlayer) {
-        val replaced = remove(SENDER_PLACEHOLDER).parsePAPI(sender).remove(RECIPIENT_PLACEHOLDER).parsePAPI(recipient)
-    }
+        val senderMessage = ChatMessage(
+            author,
+            recipient,
+            message,
+            author.selectFormat(
+                config[Settings.PRIVATE_MESSAGES].senderFormats,
+                plugin.formatsConfig,
+                DEFAULT_PM_SENDER
+            )
+        )
 
-    fun String.remove(oldValue: String): String = StringUtils.replace(this, oldValue, "")
+        val recipientMessage = ChatMessage(
+            author,
+            recipient,
+            message,
+            recipient.selectFormat(
+                config[Settings.PRIVATE_MESSAGES].recipientFormats,
+                plugin.formatsConfig,
+                DEFAULT_PM_RECIPIENT
+            )
+        )
+
+        author.sendMessage(senderMessage)
+        recipient.sendMessage(recipientMessage)
+    }
 
 }

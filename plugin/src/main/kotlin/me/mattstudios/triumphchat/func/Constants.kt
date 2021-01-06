@@ -28,7 +28,7 @@ val GLOBAL_MESSAGE = AdventureMessage.create()
 val GLOBAL_PARSER = MarkdownParser(MessageOptions.builder().build())
 
 // Global Audience to be used to send messages
-val AUDIENCE = BukkitAudiences.create(JavaPlugin.getPlugin(TriumphChat::class.java))
+val AUDIENCES = BukkitAudiences.create(JavaPlugin.getPlugin(TriumphChat::class.java))
 
 /**
  * CONFIG

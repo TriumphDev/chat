@@ -9,8 +9,10 @@ import me.mattstudios.msg.base.internal.nodes.MessageNode
 import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.msg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.api.ChatPlayer
-import me.mattstudios.triumphchat.component.ComponentBuilder
-import net.kyori.adventure.text.Component
+import me.mattstudios.triumphchat.config.FormatsConfig
+import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
+import me.mattstudios.triumphchat.permissions.Permission
+import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
 
 /**
@@ -22,8 +24,6 @@ internal val IS_PAPER = try {
 } catch (ignored: ClassNotFoundException) {
     false
 }
-
-// Config related
 
 /**
  * Copies the format data from a text node
@@ -44,11 +44,33 @@ internal fun String.parsePAPI(player: ChatPlayer? = null): String {
     return if (player == null) this else PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(player.uuid), this)
 }
 
+fun String.parsePAPI(sender: ChatPlayer?, recipient: ChatPlayer?): String {
+    if (recipient == null) return parsePAPI(sender)
+    return remove(SENDER_PLACEHOLDER).parsePAPI(sender).remove(RECIPIENT_PLACEHOLDER).parsePAPI(recipient)
+}
+
+fun String.remove(oldValue: String): String = StringUtils.replace(this, oldValue, "")
+
 internal fun String.parseMarkdown(messageOptions: MessageOptions? = null): List<MessageNode> {
     val options = messageOptions ?: MessageOptions.builder().build()
     return MarkdownParser(options).parse(this)
 }
 
-internal inline fun buildComponent(builderAction: ComponentBuilder.() -> Unit): Component {
-    return ComponentBuilder().apply(builderAction).build()
+/**
+ * Selects the format to use for the message
+ */
+fun ChatPlayer.selectFormat(
+    keys: Set<String>,
+    formatsConfig: FormatsConfig,
+    default: Map<String, FormatDisplay>
+): Collection<FormatDisplay> {
+    val player = Bukkit.getPlayer(uuid) ?: return default.values
+
+    val formats = formatsConfig.getFormats()
+    for (keyFormat in keys) {
+        if (!player.hasPermission("${Permission.FORMAT.permission}.$keyFormat")) continue
+        return formats[keyFormat]?.values ?: continue
+    }
+
+    return default.values
 }

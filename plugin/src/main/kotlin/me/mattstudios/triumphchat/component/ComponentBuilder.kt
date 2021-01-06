@@ -28,11 +28,12 @@ class ComponentBuilder {
      */
     fun append(
         text: String,
-        hover: List<String>? = null,
-        click: ClickData? = null,
-        player: ChatPlayer
+        hover: List<String>?,
+        click: ClickData?,
+        sender: ChatPlayer?,
+        recipient: ChatPlayer?
     ): ComponentBuilder {
-        return append(text.parsePAPI(player).parseMarkdown(), hover, click, player)
+        return append(text.parsePAPI(sender, recipient).parseMarkdown(), hover, click, sender, recipient)
     }
 
     /**
@@ -40,21 +41,22 @@ class ComponentBuilder {
      */
     fun append(
         nodes: List<MessageNode>,
-        hover: List<String>? = null,
-        click: ClickData? = null,
-        player: ChatPlayer
+        hover: List<String>?,
+        click: ClickData?,
+        sender: ChatPlayer?,
+        recipient: ChatPlayer?
     ): ComponentBuilder {
         currentNodes.addAll(nodes)
-        hover?.let { addHover(it.joinToString("\\n") { text -> text.parsePAPI(player) }) }
-        click?.let { addClick(it, player) }
+        hover?.let { addHover(it.joinToString("\\n") { text -> text.parsePAPI(sender, recipient) }) }
+        click?.let { addClick(it, sender, recipient) }
         return this
     }
 
     /**
      * Appends a config component
      */
-    fun append(display: FormatDisplay, player: ChatPlayer): ComponentBuilder {
-        return append(display.text, display.hover, display.click, player)
+    fun append(display: FormatDisplay, player: ChatPlayer?, recipient: ChatPlayer?): ComponentBuilder {
+        return append(display.text, display.hover, display.click, player, recipient)
     }
 
     /**
@@ -76,10 +78,10 @@ class ComponentBuilder {
     /**
      * Adds a click action to the current nodes
      */
-    private fun addClick(click: ClickData, player: ChatPlayer) {
+    private fun addClick(click: ClickData, sender: ChatPlayer?, recipient: ChatPlayer?) {
         with(click) {
             if (isEmpty) return
-            addAction(ClickMessageAction(action, finalValue.parsePAPI(player)))
+            addAction(ClickMessageAction(action, finalValue.parsePAPI(sender, recipient)))
         }
     }
 
