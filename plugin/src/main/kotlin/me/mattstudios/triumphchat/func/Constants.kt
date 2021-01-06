@@ -47,6 +47,20 @@ val DEFAULT_FORMAT = mutableMapOf(
     )
 )
 
+val DEFAULT_PM_SENDER = mutableMapOf(
+    "you" to BaseDisplay("&7you &e-> "),
+    "recipient" to BaseDisplay("&7%recipient_player_name% ", Optional.of(listOf("Recipient information!"))),
+    "message" to MessageDisplay("&7: &f$MESSAGE_PLACEHOLDER", Optional.of(listOf("Sent @ %server_time%")))
+)
+
+val DEFAULT_PM_RECIPIENT = mutableMapOf(
+    "sender" to BaseDisplay("&7%sender_player_name% ", Optional.of(listOf("Sender information!"))),
+    "you" to BaseDisplay("&e-> &7you "),
+    "message" to MessageDisplay("&8> &f$MESSAGE_PLACEHOLDER", Optional.of(listOf("Sent @ %server_time%")))
+)
+
 val DEFAULT_FORMAT_MAP = mutableMapOf(
-    "default" to DEFAULT_FORMAT
+    "default" to DEFAULT_FORMAT,
+    "default-pm-sender" to DEFAULT_PM_SENDER,
+    "default-pm-recipient" to DEFAULT_PM_RECIPIENT
 )

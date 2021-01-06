@@ -18,7 +18,7 @@ import org.bukkit.event.Listener
 
 @BukkitPlugin
 class TriumphChat : TriumphPlugin(), Listener {
-    
+
     val playerManager = PlayerManager()
     val messageManager = MessageManager()
 
@@ -31,7 +31,7 @@ class TriumphChat : TriumphPlugin(), Listener {
 
         displayStartupMessage()
         if (!checkPapi()) return
-        checkMessageComponents()
+        validateFormats()
 
         registerParamType(ChatPlayer::class.java) { arg ->
             val player = Bukkit.getPlayer(arg.toString()) ?: return@registerParamType TypeResult(null, arg)
@@ -40,8 +40,6 @@ class TriumphChat : TriumphPlugin(), Listener {
 
         registerCommands(MessageCommand(this))
         registerListeners(ChatListener(this))
-
-        println(formatsConfig.getFormats())
     }
 
     /**
@@ -78,7 +76,24 @@ class TriumphChat : TriumphPlugin(), Listener {
     /**
      * Checks if there is any format without a message component
      */
-    private fun checkMessageComponents() {
+    private fun validateFormats() {
+        val formats = formatsConfig.getFormats()
+
+        val invalidChatFormats = config[Settings.CHAT_FORMATS].formats.filter { it !in formats.keys }
+        if (invalidChatFormats.isNotEmpty()) {
+            "&6The following &7chat &6formats: &c${invalidChatFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
+        }
+
+        val invalidSenderFormats = config[Settings.PRIVATE_MESSAGES].senderFormats.filter { it !in formats.keys }
+        if (invalidSenderFormats.isNotEmpty()) {
+            "&6The following &7sender &6formats: &c${invalidSenderFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
+        }
+
+        val invalidRecipientFormats = config[Settings.PRIVATE_MESSAGES].recipientFormats.filter { it !in formats.keys }
+        if (invalidRecipientFormats.isNotEmpty()) {
+            "&6The following &7recipient &6formats: &c${invalidRecipientFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
+        }
+
         /*for ((name, format) in config[Settings.FORMATS]) {
             if (format.components.values.filterIsInstance<MessageDisplay>().count() == 0) {
                 "&6No component with &7%message% &6placeholder was found for format &7\"$name\"&6.".log()

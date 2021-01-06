@@ -8,7 +8,7 @@ import java.util.Optional
 /**
  * Holds settings regarding mentions
  */
-data class MentionsSettings(
+data class MentionsHolder(
     var everyone: MentionDisplay = MentionDisplay(
         true,
         BaseDisplay("&c**@Everyone**"),

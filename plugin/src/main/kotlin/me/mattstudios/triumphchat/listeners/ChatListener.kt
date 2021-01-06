@@ -2,14 +2,17 @@ package me.mattstudios.triumphchat.listeners
 
 import me.mattstudios.core.func.Task.async
 import me.mattstudios.triumphchat.TriumphChat
+import me.mattstudios.triumphchat.api.ChatPlayer
 import me.mattstudios.triumphchat.api.events.TriumphChatEvent
 import me.mattstudios.triumphchat.chat.ChatMessage
 import me.mattstudios.triumphchat.chat.ConsoleMessage
-import me.mattstudios.triumphchat.config.bean.FormatsHolder
+import me.mattstudios.triumphchat.config.FormatsConfig
+import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.config.settings.Settings
+import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
+import me.mattstudios.triumphchat.permissions.Permission
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -39,7 +42,15 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
      */
     private fun AsyncPlayerChatEvent.handleChat() {
         val chatPlayer = plugin.playerManager.getPlayer(player)
-        val chatMessage = ChatMessage(chatPlayer, message, recipients, plugin,  listOf(MessageDisplay(config[Settings.CONSOLE_FORMAT])))
+
+        val chatMessage = ChatMessage(
+            chatPlayer,
+            message,
+            recipients,
+            plugin,
+            chatPlayer.selectFormat(config[Settings.CHAT_FORMATS].formats, plugin.formatsConfig, DEFAULT_FORMAT)
+        )
+
         val consoleMessage = ConsoleMessage(
             chatPlayer,
             message,
@@ -60,11 +71,20 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
     /**
      * Selects the format to use for the message
      */
-    private fun selectFormat(player: Player): FormatsHolder {
-        /*val formats = plugin.formatsConfig.getFormats().
-        return formats.filter { player.hasPermission("${Permission.FORMAT.permission}.${it.key}") }
-                .maxByOrNull { it.value.priority }?.value ?: formats["default"] ?: DEFAULT_FORMAT*/
-        return FormatsHolder()
+    private fun ChatPlayer.selectFormat(
+        keys: Set<String>,
+        formatsConfig: FormatsConfig,
+        default: Map<String, FormatDisplay>
+    ): Collection<FormatDisplay> {
+        val player = Bukkit.getPlayer(uuid) ?: return default.values
+
+        val formats = formatsConfig.getFormats()
+        for (keyFormat in keys) {
+            if (!player.hasPermission("${Permission.FORMAT.permission}.$keyFormat")) continue
+            return formats[keyFormat]?.values ?: continue
+        }
+
+        return default.values
     }
 
 }

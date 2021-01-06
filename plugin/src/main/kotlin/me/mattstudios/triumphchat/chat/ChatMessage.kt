@@ -12,7 +12,6 @@ import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.AUDIENCE
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
-import me.mattstudios.triumphchat.func.PING_EXTENSION
 import me.mattstudios.triumphchat.func.buildComponent
 import me.mattstudios.triumphchat.func.parseMarkdown
 import net.kyori.adventure.text.Component
@@ -41,10 +40,6 @@ open class ChatMessage(
         recipients.forEach {
             AUDIENCE.sender(it).sendMessage(message)
         }
-    }
-
-    open fun sendMessage(string: String) {
-
     }
 
     /**
@@ -76,7 +71,7 @@ open class ChatMessage(
                     // Creating all the options for the main message
                     val options = MessageOptions.Builder(author.getFormats())
                     options.setDefaultColor(formatData.color)
-                    options.extensions(PING_EXTENSION)
+                    //options.extensions(PING_EXTENSION)
 
                     append(options.build(), hover, click)
                 }

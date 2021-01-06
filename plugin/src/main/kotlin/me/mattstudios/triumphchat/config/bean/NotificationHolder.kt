@@ -5,7 +5,7 @@ import me.mattstudios.triumphchat.config.bean.objects.elements.SoundData
 /**
  * Holds settings regarding notifications
  */
-data class NotificationSettings(
+data class NotificationHolder(
     var enabled: Boolean = true,
     var sound: SoundData = SoundData()
 )

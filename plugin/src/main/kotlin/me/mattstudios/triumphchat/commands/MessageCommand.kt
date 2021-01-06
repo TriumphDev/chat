@@ -35,7 +35,7 @@ class MessageCommand(plugin: TriumphChat) : CommandBase() {
 
         val author = playerManager.getPlayer(sender)
         val temp = config[Settings.PRIVATE_MESSAGES]
-        temp.recipientFormat.text.parsePAPI(author, to)
+        //temp.recipientFormat.text.parsePAPI(author, to)
         //sender.sendMessage(temp.senderFormat.text)
     }
 

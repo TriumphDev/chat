@@ -4,9 +4,10 @@ import me.mattstudios.config.SettingsHolder
 import me.mattstudios.config.annotations.Comment
 import me.mattstudios.config.annotations.Path
 import me.mattstudios.config.properties.Property
-import me.mattstudios.triumphchat.config.bean.MentionsSettings
-import me.mattstudios.triumphchat.config.bean.NotificationSettings
-import me.mattstudios.triumphchat.config.bean.PrivateMessageSettings
+import me.mattstudios.triumphchat.config.bean.ChatHolder
+import me.mattstudios.triumphchat.config.bean.MentionsHolder
+import me.mattstudios.triumphchat.config.bean.NotificationHolder
+import me.mattstudios.triumphchat.config.bean.PrivateMessageHolder
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 
 /**
@@ -14,17 +15,8 @@ import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
  */
 object Settings : SettingsHolder {
 
-    /*@Comment(
-        "You can list as many formats as you want.",
-        "Formats have specific components, the components can be anything you want and will be displayed in the order they are declared.",
-        "You can use any placeholder from PlaceholderAPI.",
-        "Make sure the message placeholder ($MESSAGE_PLACEHOLDER) is present in one of the components!",
-        // TODO priority comment
-        // TODO Add link to the wiki explaining this better
-        "The priority is..."
-    )
-    @Path("formats")
-    val FORMATS = Property.create(ChatFormatSettings::class.java, mutableMapOf("default" to DEFAULT_FORMAT))*/
+    @Path("chat")
+    val CHAT_FORMATS = Property.create(ChatHolder())
 
     @Comment(
         "",
@@ -41,7 +33,7 @@ object Settings : SettingsHolder {
         // TODO add more
     )
     @Path("notification")
-    val NOTIFICATION = Property.create(NotificationSettings())
+    val NOTIFICATION = Property.create(NotificationHolder())
 
     @Comment(
         "",
@@ -49,13 +41,13 @@ object Settings : SettingsHolder {
         "Settings customizing the mentions."
     )
     @Path("mentions")
-    val MENTIONS = Property.create(MentionsSettings())
+    val MENTIONS = Property.create(MentionsHolder())
 
     @Comment(
         "",
         "Customize your private messages."
     )
     @Path("private-messages")
-    val PRIVATE_MESSAGES = Property.create(PrivateMessageSettings())
+    val PRIVATE_MESSAGES = Property.create(PrivateMessageHolder())
 
 }
