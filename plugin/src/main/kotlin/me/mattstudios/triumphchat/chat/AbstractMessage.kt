@@ -15,7 +15,6 @@ import me.mattstudios.triumphchat.func.parseMarkdown
 import net.kyori.adventure.text.Component
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
-import org.bukkit.entity.Player
 
 abstract class AbstractMessage(
     override val author: ChatPlayer,
@@ -26,7 +25,7 @@ abstract class AbstractMessage(
 
     //private val config = plugin.config
 
-    override val mentionsList = mutableListOf<Player>()
+    override val mentionsList = mutableListOf<ChatPlayer>()
     override var message = createChatMessage()
 
     /**
@@ -92,7 +91,7 @@ abstract class AbstractMessage(
 
         val nodePlayer = node.player
         nodePlayer.playSound(nodePlayer.location, Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.MASTER, 1f, 1f)
-        mentionsList.add(nodePlayer)
+        //mentionsList.add(nodePlayer)
     }
 
 }

@@ -2,7 +2,7 @@ group "me.mattstudios"
 version parent.version
 
 triumph {
-    msgs version: "2.2.0-SNAPSHOT", type: "adventure", scope: "api"
+    msgs version: "2.2.1-SNAPSHOT", type: "adventure", scope: "api"
 }
 
 dependencies {

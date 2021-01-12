@@ -8,7 +8,7 @@ allprojects {
     apply plugin: "me.mattstudios.triumph"
 
     group "me.mattstudios"
-    version "1.0.0"
+    version "1.0.0-SNAPSHOT"
 
     repositories {
         mavenLocal()

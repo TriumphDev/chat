@@ -44,16 +44,24 @@ internal fun String.parsePAPI(player: ChatPlayer? = null): String {
     return if (player == null) this else PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(player.uuid), this)
 }
 
+/**
+ * Requires 2 players instead, for parsing sender and recipient placeholders
+ */
 fun String.parsePAPI(sender: ChatPlayer?, recipient: ChatPlayer?): String {
     if (recipient == null) return parsePAPI(sender)
     return remove(SENDER_PLACEHOLDER).parsePAPI(sender).remove(RECIPIENT_PLACEHOLDER).parsePAPI(recipient)
 }
 
-fun String.remove(oldValue: String): String = StringUtils.replace(this, oldValue, "")
+/**
+ * Helper function to remove the current placeholder used by [parsePAPI]
+ */
+private fun String.remove(oldValue: String): String = StringUtils.replace(this, oldValue, "")
 
+/**
+ * Function to parse all the Markdown into a list of [MessageNode]s
+ */
 internal fun String.parseMarkdown(messageOptions: MessageOptions? = null): List<MessageNode> {
-    val options = messageOptions ?: MessageOptions.builder().build()
-    return MarkdownParser(options).parse(this)
+    return MarkdownParser(messageOptions ?: MessageOptions.builder().build()).parse(this)
 }
 
 /**

@@ -1,10 +1,23 @@
 package me.mattstudios.triumphchat.api
 
 import net.kyori.adventure.text.Component
-import org.bukkit.entity.Player
 
+/**
+ *
+ */
 interface Message {
+    /**
+     * The author of this [Message]
+     */
     val author: ChatPlayer
-    var message: Component
-    val mentionsList: MutableList<Player>
+
+    /**
+     * The message's [Component] that was generated
+     */
+    val message: Component
+
+    /**
+     * Contains a list of the mentioned [ChatPlayer]s
+     */
+    val mentionsList: List<ChatPlayer>
 }
