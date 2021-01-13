@@ -1,7 +1,6 @@
 package me.mattstudios.triumphchat.component
 
 import me.mattstudios.msg.adventure.AdventureSerializer
-import me.mattstudios.msg.base.internal.action.ClickMessageAction
 import me.mattstudios.msg.base.internal.action.HoverMessageAction
 import me.mattstudios.msg.base.internal.action.MessageAction
 import me.mattstudios.msg.base.internal.action.content.HoverContent
@@ -80,8 +79,8 @@ class ComponentBuilder {
      */
     private fun addClick(click: ClickData, sender: ChatPlayer?, recipient: ChatPlayer?) {
         with(click) {
-            if (isEmpty) return
-            addAction(ClickMessageAction(action, finalValue.parsePAPI(sender, recipient)))
+            if (isNotEmpty) return
+            //addAction(ClickMessageAction(action, finalValue.parsePAPI(sender, recipient)))
         }
     }
 
@@ -89,11 +88,11 @@ class ComponentBuilder {
      * Adds the action to all current nodes
      */
     private fun addAction(action: MessageAction) {
-        currentNodes.filterIsInstance(TextNode::class.java)
+        /*currentNodes.filterIsInstance(TextNode::class.java)
                 .filter { it.actions == null || it.actions?.filterIsInstance(action.javaClass)?.isEmpty() == true }
                 .forEach {
                     addAction(it, action)
-                }
+                }*/
     }
 
     /**

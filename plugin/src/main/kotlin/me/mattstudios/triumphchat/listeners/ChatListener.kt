@@ -7,6 +7,7 @@ import me.mattstudios.triumphchat.chat.ChatMessage
 import me.mattstudios.triumphchat.chat.ConsoleMessage
 import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.config.settings.Settings
+import me.mattstudios.triumphchat.func.AUDIENCES
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
 import me.mattstudios.triumphchat.func.selectFormat
 import org.bukkit.Bukkit
@@ -57,7 +58,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
 
         if (triumphChatEvent.isCancelled) return
 
-
+        recipients.forEach { AUDIENCES.player(it).sendMessage(chatMessage.message) }
     }
 
 }

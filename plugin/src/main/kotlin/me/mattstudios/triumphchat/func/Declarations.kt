@@ -5,12 +5,14 @@ package me.mattstudios.triumphchat.func
 import me.clip.placeholderapi.PlaceholderAPI
 import me.mattstudios.msg.base.FormatData
 import me.mattstudios.msg.base.MessageOptions
+import me.mattstudios.msg.base.internal.action.MessageAction
 import me.mattstudios.msg.base.internal.nodes.MessageNode
 import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.msg.base.internal.parser.MarkdownParser
 import me.mattstudios.triumphchat.api.ChatPlayer
 import me.mattstudios.triumphchat.config.FormatsConfig
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
+import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.permissions.Permission
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
@@ -47,7 +49,7 @@ internal fun String.parsePAPI(player: ChatPlayer? = null): String {
 /**
  * Requires 2 players instead, for parsing sender and recipient placeholders
  */
-fun String.parsePAPI(sender: ChatPlayer?, recipient: ChatPlayer?): String {
+internal fun String.parsePAPI(sender: ChatPlayer?, recipient: ChatPlayer?): String {
     if (recipient == null) return parsePAPI(sender)
     return remove(SENDER_PLACEHOLDER).parsePAPI(sender).remove(RECIPIENT_PLACEHOLDER).parsePAPI(recipient)
 }
@@ -64,10 +66,29 @@ internal fun String.parseMarkdown(messageOptions: MessageOptions? = null): List<
     return MarkdownParser(messageOptions ?: MessageOptions.builder().build()).parse(this)
 }
 
+internal fun List<String>.toHover(author: ChatPlayer?, recipient: ChatPlayer?): MessageAction {
+    return MessageAction.from(joinToString("\\n").parsePAPI(author, recipient).parseMarkdown())
+}
+
+internal fun createFormatData(hover: List<String>, click: ClickData, author: ChatPlayer?, recipient: ChatPlayer?): FormatData {
+    val actions = mutableListOf<MessageAction>()
+    if (hover.isNotEmpty()) {
+        actions.add(hover.toHover(author, recipient))
+    }
+
+    if (click.isNotEmpty) {
+        actions.add(click.createClick(author, recipient))
+    }
+
+    return FormatData().apply {
+        if (actions.isNotEmpty()) this.actions = actions
+    }
+}
+
 /**
  * Selects the format to use for the message
  */
-fun ChatPlayer.selectFormat(
+internal fun ChatPlayer.selectFormat(
     keys: Set<String>,
     formatsConfig: FormatsConfig,
     default: Map<String, FormatDisplay>
