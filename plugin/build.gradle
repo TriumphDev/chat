@@ -1,43 +1,38 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "6.0.0"
-    id "me.mattstudios.triumph" version "0.1.6"
 }
 
 group "me.mattstudios"
 version parent.version
 
 repositories {
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
     maven { url = "https://jitpack.io" }
 }
 
 triumph {
     spigot "1.16.4"
-    core "1.0.11"
+    core "1.0.14"
     cmds "1.4.6"
-    msgs version: "2.1.2", type: "adventure"
-    config "1.0.1-SNAPSHOT"
+    config "1.0.3-SNAPSHOT"
 }
 
 dependencies {
     implementation project(":api")
 
-    //implementation "me.mattstudios:mf-msg-bukkit:2.0.1"
-
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
-    // Adventure platform for the components
-    implementation "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
+    //implementation "com.zaxxer:HikariCP:3.4.5"
 
     // PAPI
     compileOnly "me.clip:placeholderapi:2.10.9"
 
-    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    compileOnly ("com.github.MilkBowl:VaultAPI:1.7") {
+        transitive = false
+    }
 }
 
 shadowJar {
-    minimize()
+    //minimize()
 
     relocate("me.mattstudios.core", "me.mattstudios.triumphchat.core")
     relocate("me.mattstudios.mf", "me.mattstudios.triumphchat.mf")

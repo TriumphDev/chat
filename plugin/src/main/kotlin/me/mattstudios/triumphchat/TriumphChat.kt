@@ -3,28 +3,43 @@ package me.mattstudios.triumphchat
 import me.mattstudios.annotations.BukkitPlugin
 import me.mattstudios.core.TriumphPlugin
 import me.mattstudios.core.func.log
-import me.mattstudios.triumphchat.config.Settings
-import me.mattstudios.triumphchat.config.bean.mapper.ComponentMapper
-import me.mattstudios.triumphchat.config.bean.objects.MessageComponent
+import me.mattstudios.mf.base.components.TypeResult
+import me.mattstudios.triumphchat.api.ChatPlayer
+import me.mattstudios.triumphchat.commands.MessageCommand
+import me.mattstudios.triumphchat.config.FormatsConfig
+import me.mattstudios.triumphchat.config.settings.Settings
+import me.mattstudios.triumphchat.data.PlayerManager
 import me.mattstudios.triumphchat.func.IS_PAPER
+import me.mattstudios.triumphchat.func.PROPERTY_MAPPER
 import me.mattstudios.triumphchat.listeners.ChatListener
+import me.mattstudios.triumphchat.message.MessageManager
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 
 @BukkitPlugin
 class TriumphChat : TriumphPlugin(), Listener {
 
-    /**
-     * Enable things
-     */
+    val playerManager = PlayerManager()
+    val messageManager = MessageManager()
+
+    lateinit var formatsConfig: FormatsConfig
+        private set
+
     override fun enable() {
-        config.load(Settings::class.java, ComponentMapper())
+        config.load(Settings::class.java, PROPERTY_MAPPER)
+        formatsConfig = FormatsConfig(this)
 
         displayStartupMessage()
         if (!checkPapi()) return
-        checkMessageComponents()
+        validateFormats()
 
-        registerListeners(listOf(ChatListener(this)))
+        registerParamType(ChatPlayer::class.java) { arg ->
+            val player = Bukkit.getPlayer(arg.toString()) ?: return@registerParamType TypeResult(null, arg)
+            return@registerParamType TypeResult(playerManager.getPlayer(player), arg)
+        }
+
+        registerCommands(MessageCommand(this))
+        registerListeners(ChatListener(this))
     }
 
     /**
@@ -61,12 +76,29 @@ class TriumphChat : TriumphPlugin(), Listener {
     /**
      * Checks if there is any format without a message component
      */
-    private fun checkMessageComponents() {
-        for ((name, format) in config[Settings.FORMATS]) {
-            if (format.components.values.filterIsInstance<MessageComponent>().count() == 0) {
+    private fun validateFormats() {
+        val formats = formatsConfig.getFormats()
+
+        val invalidChatFormats = config[Settings.CHAT_FORMATS].formats.filter { it !in formats.keys }
+        if (invalidChatFormats.isNotEmpty()) {
+            "&6The following &7chat &6formats: &c${invalidChatFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
+        }
+
+        val invalidSenderFormats = config[Settings.PRIVATE_MESSAGES].senderFormats.filter { it !in formats.keys }
+        if (invalidSenderFormats.isNotEmpty()) {
+            "&6The following &7sender &6formats: &c${invalidSenderFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
+        }
+
+        val invalidRecipientFormats = config[Settings.PRIVATE_MESSAGES].recipientFormats.filter { it !in formats.keys }
+        if (invalidRecipientFormats.isNotEmpty()) {
+            "&6The following &7recipient &6formats: &c${invalidRecipientFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
+        }
+
+        /*for ((name, format) in config[Settings.FORMATS]) {
+            if (format.components.values.filterIsInstance<MessageDisplay>().count() == 0) {
                 "&6No component with &7%message% &6placeholder was found for format &7\"$name\"&6.".log()
             }
-        }
+        }*/
     }
 
 }
