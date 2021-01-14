@@ -6,6 +6,7 @@ import me.mattstudios.core.func.log
 import me.mattstudios.mf.base.components.TypeResult
 import me.mattstudios.triumphchat.api.ChatPlayer
 import me.mattstudios.triumphchat.commands.MessageCommand
+import me.mattstudios.triumphchat.commands.ReplyCommand
 import me.mattstudios.triumphchat.config.FormatsConfig
 import me.mattstudios.triumphchat.config.settings.Settings
 import me.mattstudios.triumphchat.data.PlayerManager
@@ -38,7 +39,7 @@ class TriumphChat : TriumphPlugin(), Listener {
             return@registerParamType TypeResult(playerManager.getPlayer(player), arg)
         }
 
-        registerCommands(MessageCommand(this))
+        registerCommands(MessageCommand(this), ReplyCommand(this))
         registerListeners(ChatListener(this))
     }
 
