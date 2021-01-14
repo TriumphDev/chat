@@ -23,4 +23,16 @@ class PlayerManager {
         players.add(TriumphChatPlayer(uuid))
     }
 
+    // Recipient storage
+
+    private val recipientReplies: MutableMap<UUID, ChatPlayer> = mutableMapOf()
+
+    fun addRecipientEntry(receiver: UUID, sender: ChatPlayer) {
+        recipientReplies[receiver] = sender
+    }
+
+    fun getRecipientEntry(recipient: UUID): ChatPlayer? {
+        return recipientReplies[recipient]
+    }
+
 }
