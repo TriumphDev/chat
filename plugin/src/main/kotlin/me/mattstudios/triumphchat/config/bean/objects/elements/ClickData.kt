@@ -1,10 +1,9 @@
-package me.mattstudios.triumphchat.config.bean.objects.elements
+package me.mattstudios.triumphchat.api.config.elements
 
 import me.mattstudios.msg.base.internal.Format
 import me.mattstudios.msg.base.internal.action.ClickMessageAction
-import me.mattstudios.triumphchat.api.ChatPlayer
-import me.mattstudios.triumphchat.func.parsePAPI
-import net.kyori.adventure.text.event.ClickEvent
+import me.mattstudios.triumphchat.api.ChatUser
+import me.mattstudios.triumphchat.api.func.parsePAPI
 
 /**
  * Holds the click data, also makes sure the values are correct, like adding `/` to commands
@@ -18,16 +17,12 @@ data class ClickData(
     private val action = selectAction()
 
     // Adds `/` to commands and makes it not nullable
-    val finalValue = when {
+    private val finalValue = when {
         value?.startsWith('/') == false && action == Format.ACTION_COMMAND -> "/$value"
         else -> if (value == null) "" else "$value"
     }
 
-    fun createAdventureClick(sender: ChatPlayer? = null, recipient: ChatPlayer? = null): ClickEvent {
-        return ClickEvent.clickEvent(formatToAdventure(), finalValue.parsePAPI(sender, recipient))
-    }
-
-    fun createClick(sender: ChatPlayer? = null, recipient: ChatPlayer? = null): ClickMessageAction {
+    fun createClick(sender: ChatUser? = null, recipient: ChatUser? = null): ClickMessageAction {
         return ClickMessageAction(action, finalValue.parsePAPI(sender, recipient))
     }
 
@@ -38,12 +33,6 @@ data class ClickData(
         "SUGGEST_COMMAND" -> Format.ACTION_SUGGEST
         "COPY_TO_CLIPBOARD" -> Format.ACTION_CLIPBOARD
         else -> Format.ACTION_COMMAND
-    }
-
-    private fun formatToAdventure() = when (action) {
-        Format.ACTION_SUGGEST -> ClickEvent.Action.SUGGEST_COMMAND
-        Format.ACTION_CLIPBOARD -> ClickEvent.Action.COPY_TO_CLIPBOARD
-        else -> ClickEvent.Action.RUN_COMMAND
     }
 
 }

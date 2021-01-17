@@ -9,7 +9,7 @@ import me.mattstudios.msg.base.internal.action.MessageAction
 import me.mattstudios.msg.base.internal.nodes.MessageNode
 import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.msg.base.internal.parser.MarkdownParser
-import me.mattstudios.triumphchat.api.ChatPlayer
+import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.config.FormatsConfig
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
@@ -40,55 +40,9 @@ internal fun TextNode.copyFormat() = FormatData().also {
 }
 
 /**
- * Simple fun to parse PAPI placeholders
- */
-internal fun String.parsePAPI(player: ChatPlayer? = null): String {
-    return if (player == null) this else PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(player.uuid), this)
-}
-
-/**
- * Requires 2 players instead, for parsing sender and recipient placeholders
- */
-internal fun String.parsePAPI(sender: ChatPlayer?, recipient: ChatPlayer?): String {
-    if (recipient == null) return parsePAPI(sender)
-    return remove(SENDER_PLACEHOLDER).parsePAPI(sender).remove(RECIPIENT_PLACEHOLDER).parsePAPI(recipient)
-}
-
-/**
- * Helper function to remove the current placeholder used by [parsePAPI]
- */
-private fun String.remove(oldValue: String): String = StringUtils.replace(this, oldValue, "")
-
-/**
- * Function to parse all the Markdown into a list of [MessageNode]s
- */
-internal fun String.parseMarkdown(messageOptions: MessageOptions? = null): List<MessageNode> {
-    return MarkdownParser(messageOptions ?: MessageOptions.builder().build()).parse(this)
-}
-
-internal fun List<String>.toHover(author: ChatPlayer?, recipient: ChatPlayer?): MessageAction {
-    return MessageAction.from(joinToString("\\n").parsePAPI(author, recipient).parseMarkdown())
-}
-
-internal fun createFormatData(hover: List<String>, click: ClickData, author: ChatPlayer?, recipient: ChatPlayer?): FormatData {
-    val actions = mutableListOf<MessageAction>()
-    if (hover.isNotEmpty()) {
-        actions.add(hover.toHover(author, recipient))
-    }
-
-    if (click.isNotEmpty) {
-        actions.add(click.createClick(author, recipient))
-    }
-
-    return FormatData().apply {
-        if (actions.isNotEmpty()) this.actions = actions
-    }
-}
-
-/**
  * Selects the format to use for the message
  */
-internal fun ChatPlayer.selectFormat(
+internal fun ChatUser.selectMessageFormat(
     keys: Set<String>,
     formatsConfig: FormatsConfig,
     default: Map<String, FormatDisplay>
@@ -102,4 +56,56 @@ internal fun ChatPlayer.selectFormat(
     }
 
     return default.values
+}
+
+/**
+ * Simple fun to parse PAPI placeholders
+ */
+fun String.parsePAPI(user: ChatUser? = null): String {
+    return if (user == null) this else PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(user.uuid), this)
+}
+
+/**
+ * Requires 2 players instead, for parsing sender and recipient placeholders
+ */
+fun String.parsePAPI(sender: ChatUser?, recipient: ChatUser?): String {
+    if (recipient == null) return parsePAPI(sender)
+    return remove(SENDER_PLACEHOLDER).parsePAPI(sender).remove(RECIPIENT_PLACEHOLDER).parsePAPI(recipient)
+}
+
+/**
+ * Helper function to remove the current placeholder used by [parsePAPI]
+ */
+private fun String.remove(oldValue: String): String = StringUtils.replace(this, oldValue, "")
+
+/**
+ * Function to parse all the Markdown into a list of [MessageNode]s
+ */
+fun String.parseMarkdown(messageOptions: MessageOptions? = null): List<MessageNode> {
+    return MarkdownParser(messageOptions ?: MessageOptions.builder().build()).parse(this)
+}
+
+/**
+ * Creates a hover event from [String] [List]
+ */
+fun List<String>.toHover(author: ChatUser?, recipient: ChatUser?): MessageAction {
+    return MessageAction.from(joinToString("\\n").parsePAPI(author, recipient).parseMarkdown())
+}
+
+/**
+ * TODO This
+ */
+fun createFormatData(hover: List<String>, click: ClickData, author: ChatUser?, recipient: ChatUser?): FormatData {
+    val actions = mutableListOf<MessageAction>()
+    if (hover.isNotEmpty()) {
+        actions.add(hover.toHover(author, recipient))
+    }
+
+    if (click.isNotEmpty) {
+        actions.add(click.createClick(author, recipient))
+    }
+
+    return FormatData().apply {
+        if (actions.isNotEmpty()) this.actions = actions
+    }
 }

@@ -1,7 +1,7 @@
 package me.mattstudios.triumphchat.chat
 
 import me.mattstudios.msg.base.MessageOptions
-import me.mattstudios.triumphchat.api.ChatPlayer
+import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.api.Message
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
@@ -11,38 +11,35 @@ import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 import me.mattstudios.triumphchat.func.PING_EXTENSION
 import me.mattstudios.triumphchat.func.append
-import me.mattstudios.triumphchat.func.buildTemp
+import me.mattstudios.triumphchat.func.buildComponent
 import me.mattstudios.triumphchat.func.createFormatData
 import me.mattstudios.triumphchat.func.parseMarkdown
+import me.mattstudios.triumphchat.func.toComponent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 
 abstract class AbstractMessage(
-    override val author: ChatPlayer,
-    private val recipient: ChatPlayer?,
+    override val author: ChatUser,
+    private val recipient: ChatUser?,
     private val rawMessage: String,
     private val components: Collection<FormatDisplay>
 ) : Message {
 
     //private val config = plugin.config
 
-    override val mentionsList = mutableListOf<ChatPlayer>()
+    override val mentionsList = mutableListOf<ChatUser>()
     override var message = createChatMessage()
 
     /**
      * Creates the chat component
      */
     private fun createChatMessage(): Component {
-        return buildTemp {
-            for (format in components) {
-                if (format is MessageDisplay) {
-                    append(format)
-                    continue
-                }
-
-                append(format.toComponent(author, recipient))
+        return buildComponent {
+            components.forEach {
+                if (it is MessageDisplay) append(it)
+                else append(it.toComponent(author, recipient))
             }
         }
     }
@@ -60,7 +57,7 @@ abstract class AbstractMessage(
      * Special append function to handle pinging of players
      */
     private fun TextComponent.Builder.append(hover: List<String>, click: ClickData) {
-        val options = MessageOptions.Builder(author.getFormats())
+        val options = MessageOptions.Builder(author.getChatFormats())
         options.setDefaultFormatData(createFormatData(hover, click, author, recipient))
         options.extensions(PING_EXTENSION)
         val nodes = rawMessage.parseMarkdown(options.build())

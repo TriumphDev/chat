@@ -5,11 +5,11 @@ import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.events.TriumphChatEvent
 import me.mattstudios.triumphchat.chat.ChatMessage
 import me.mattstudios.triumphchat.chat.ConsoleMessage
-import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.config.settings.Settings
 import me.mattstudios.triumphchat.func.AUDIENCES
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
-import me.mattstudios.triumphchat.func.selectFormat
+import me.mattstudios.triumphchat.func.selectMessageFormat
+import me.mattstudios.triumphchat.func.sendMessage
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -39,19 +39,13 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
      * Handles chat event truly async
      */
     private fun AsyncPlayerChatEvent.handleChat() {
-        val chatPlayer = plugin.playerManager.getPlayer(player)
+        val user = plugin.userManager.getPlayer(player)
 
-        val chatMessage = ChatMessage(
-            chatPlayer,
-            message,
-            chatPlayer.selectFormat(config[Settings.CHAT_FORMATS].formats, plugin.formatsConfig, DEFAULT_FORMAT)
-        )
+        val chatFormat =
+            user.selectMessageFormat(config[Settings.CHAT_FORMATS].formats, plugin.formatsConfig, DEFAULT_FORMAT)
 
-        val consoleMessage = ConsoleMessage(
-            chatPlayer,
-            message,
-            listOf(MessageDisplay(config[Settings.CONSOLE_FORMAT]))
-        )
+        val chatMessage = ChatMessage(user, message, chatFormat)
+        val consoleMessage = ConsoleMessage(plugin, user, message)
 
         val triumphChatEvent = TriumphChatEvent(chatMessage)
         Bukkit.getPluginManager().callEvent(triumphChatEvent)
@@ -59,6 +53,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
         if (triumphChatEvent.isCancelled) return
 
         recipients.forEach { AUDIENCES.player(it).sendMessage(chatMessage.message) }
+        Bukkit.getConsoleSender().sendMessage(consoleMessage)
     }
 
 }

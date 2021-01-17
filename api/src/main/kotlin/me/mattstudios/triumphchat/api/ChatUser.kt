@@ -3,8 +3,9 @@ package me.mattstudios.triumphchat.api
 import me.mattstudios.msg.base.internal.Format
 import java.util.UUID
 
-interface ChatPlayer {
+interface ChatUser {
     val uuid: UUID
+    var replyTarget: UUID?
 
     /**
      * Sends a [Message] to the player
@@ -14,5 +15,6 @@ interface ChatPlayer {
     /**
      * Gets the available [Format] the player has, based on permissions
      */
-    fun getFormats(): Set<Format>
+    fun getChatFormats(): Set<Format>
+
 }

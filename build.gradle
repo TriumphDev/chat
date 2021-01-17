@@ -18,6 +18,13 @@ allprojects {
         maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     }
 
+    dependencies {
+        // PAPI
+        compileOnly "me.clip:placeholderapi:2.10.9"
+        // Spigot
+        compileOnly "org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT"
+    }
+
     compileJava {
         options.compilerArgs += ["-parameters"]
         options.fork = true

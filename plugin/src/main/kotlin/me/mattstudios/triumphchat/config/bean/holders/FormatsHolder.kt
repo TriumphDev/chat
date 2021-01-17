@@ -1,4 +1,4 @@
-package me.mattstudios.triumphchat.config.bean
+package me.mattstudios.triumphchat.config.bean.holders
 
 import me.mattstudios.config.annotations.Comment
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay

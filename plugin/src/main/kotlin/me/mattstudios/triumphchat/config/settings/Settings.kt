@@ -4,10 +4,10 @@ import me.mattstudios.config.SettingsHolder
 import me.mattstudios.config.annotations.Comment
 import me.mattstudios.config.annotations.Path
 import me.mattstudios.config.properties.Property
-import me.mattstudios.triumphchat.config.bean.ChatHolder
-import me.mattstudios.triumphchat.config.bean.MentionsHolder
-import me.mattstudios.triumphchat.config.bean.NotificationHolder
-import me.mattstudios.triumphchat.config.bean.PrivateMessageHolder
+import me.mattstudios.triumphchat.config.bean.holders.ChatHolder
+import me.mattstudios.triumphchat.config.bean.holders.MentionsHolder
+import me.mattstudios.triumphchat.config.bean.holders.NotificationHolder
+import me.mattstudios.triumphchat.config.bean.holders.PrivateMessageHolder
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 
 /**

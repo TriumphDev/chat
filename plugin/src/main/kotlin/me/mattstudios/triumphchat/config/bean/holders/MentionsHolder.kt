@@ -1,4 +1,4 @@
-package me.mattstudios.triumphchat.config.bean
+package me.mattstudios.triumphchat.config.bean.holders
 
 import me.mattstudios.triumphchat.config.bean.objects.BaseDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.MentionDisplay

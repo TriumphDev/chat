@@ -27,9 +27,11 @@ data class MessageDisplay(
     /**
      * Gathers the format settings from the text node that has the message placeholder
      */
-    private fun determineFormatData() =
-        text.parseMarkdown().filterIsInstance(TextNode::class.java).find { MESSAGE_PLACEHOLDER in it.text }
+    private fun determineFormatData(): FormatData {
+        return text.parseMarkdown()
+                .filterIsInstance(TextNode::class.java)
+                .find { MESSAGE_PLACEHOLDER in it.text }
                 ?.copyFormat() ?: FormatData()
-
+    }
 
 }

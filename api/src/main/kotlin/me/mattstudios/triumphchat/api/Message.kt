@@ -9,7 +9,7 @@ interface Message {
     /**
      * The author of this [Message]
      */
-    val author: ChatPlayer
+    val author: ChatUser
 
     /**
      * The message's [Component] that was generated
@@ -17,7 +17,8 @@ interface Message {
     val message: Component
 
     /**
-     * Contains a list of the mentioned [ChatPlayer]s
+     * Contains a list of the mentioned [ChatUser]s
      */
-    val mentionsList: List<ChatPlayer>
+    val mentionsList: List<ChatUser>
+    
 }

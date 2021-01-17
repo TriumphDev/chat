@@ -4,12 +4,12 @@ import me.mattstudios.annotations.BukkitPlugin
 import me.mattstudios.core.TriumphPlugin
 import me.mattstudios.core.func.log
 import me.mattstudios.mf.base.components.TypeResult
-import me.mattstudios.triumphchat.api.ChatPlayer
+import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.commands.MessageCommand
 import me.mattstudios.triumphchat.commands.ReplyCommand
 import me.mattstudios.triumphchat.config.FormatsConfig
 import me.mattstudios.triumphchat.config.settings.Settings
-import me.mattstudios.triumphchat.data.PlayerManager
+import me.mattstudios.triumphchat.data.UserManager
 import me.mattstudios.triumphchat.func.IS_PAPER
 import me.mattstudios.triumphchat.func.PROPERTY_MAPPER
 import me.mattstudios.triumphchat.listeners.ChatListener
@@ -20,8 +20,10 @@ import org.bukkit.event.Listener
 @BukkitPlugin
 class TriumphChat : TriumphPlugin(), Listener {
 
-    val playerManager = PlayerManager()
     val messageManager = MessageManager()
+
+    lateinit var userManager: UserManager
+        private set
 
     lateinit var formatsConfig: FormatsConfig
         private set
@@ -30,13 +32,15 @@ class TriumphChat : TriumphPlugin(), Listener {
         config.load(Settings::class.java, PROPERTY_MAPPER)
         formatsConfig = FormatsConfig(this)
 
+        userManager = UserManager(this)
+
         displayStartupMessage()
         if (!checkPapi()) return
         validateFormats()
 
-        registerParamType(ChatPlayer::class.java) { arg ->
+        registerParamType(ChatUser::class.java) { arg ->
             val player = Bukkit.getPlayer(arg.toString()) ?: return@registerParamType TypeResult(null, arg)
-            return@registerParamType TypeResult(playerManager.getPlayer(player), arg)
+            return@registerParamType TypeResult(userManager.getPlayer(player), arg)
         }
 
         registerCommands(MessageCommand(this), ReplyCommand(this))

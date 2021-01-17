@@ -3,7 +3,7 @@ package me.mattstudios.triumphchat.config.settings
 import me.mattstudios.config.SettingsHolder
 import me.mattstudios.config.annotations.Path
 import me.mattstudios.config.properties.Property
-import me.mattstudios.triumphchat.config.bean.FormatsHolder
+import me.mattstudios.triumphchat.config.bean.holders.FormatsHolder
 
 /**
  * Setting holder for the formats config

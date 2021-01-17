@@ -1,10 +1,12 @@
 package me.mattstudios.triumphchat.chat
 
-import me.mattstudios.triumphchat.api.ChatPlayer
-import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
+import me.mattstudios.triumphchat.TriumphChat
+import me.mattstudios.triumphchat.api.ChatUser
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
+import me.mattstudios.triumphchat.config.settings.Settings
 
 class ConsoleMessage(
-    author: ChatPlayer,
-    rawMessage: String,
-    components: Collection<FormatDisplay>
-) : AbstractMessage(author, null, rawMessage, components)
+    plugin: TriumphChat,
+    author: ChatUser,
+    rawMessage: String
+) : AbstractMessage(author, null, rawMessage, listOf(MessageDisplay(plugin.config[Settings.CONSOLE_FORMAT])))
