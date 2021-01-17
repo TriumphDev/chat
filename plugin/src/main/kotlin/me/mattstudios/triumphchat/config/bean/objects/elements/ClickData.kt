@@ -1,9 +1,9 @@
-package me.mattstudios.triumphchat.api.config.elements
+package me.mattstudios.triumphchat.config.bean.objects.elements
 
 import me.mattstudios.msg.base.internal.Format
 import me.mattstudios.msg.base.internal.action.ClickMessageAction
 import me.mattstudios.triumphchat.api.ChatUser
-import me.mattstudios.triumphchat.api.func.parsePAPI
+import me.mattstudios.triumphchat.func.parsePAPI
 
 /**
  * Holds the click data, also makes sure the values are correct, like adding `/` to commands
