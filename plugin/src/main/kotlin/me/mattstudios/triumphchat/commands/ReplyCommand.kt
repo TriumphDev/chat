@@ -24,8 +24,8 @@ class ReplyCommand(private val plugin: TriumphChat) : CommandBase() {
         sender: Player,
         args: Array<String>
     ) {
-        val author = playerManager.getPlayer(sender)
-        println(author)
+        val author = playerManager.getUser(sender)
+
         val replyTarget = author.replyTarget
 
         if (replyTarget == null) {
@@ -33,7 +33,7 @@ class ReplyCommand(private val plugin: TriumphChat) : CommandBase() {
             return
         }
 
-        val recipient = playerManager.getPlayer(replyTarget)
+        val recipient = playerManager.getUser(replyTarget)
 
         val messageString = args.joinToString(" ")
 

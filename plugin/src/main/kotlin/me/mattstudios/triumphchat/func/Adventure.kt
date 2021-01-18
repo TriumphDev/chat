@@ -3,6 +3,7 @@
 package me.mattstudios.triumphchat.func
 
 import me.mattstudios.msg.adventure.AdventureSerializer
+import me.mattstudios.msg.base.FormatData
 import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.msg.base.internal.nodes.MessageNode
 import me.mattstudios.triumphchat.api.ChatUser
@@ -33,14 +34,7 @@ internal fun TextComponent.Builder.append(
     author: ChatUser?,
     recipient: ChatUser?
 ) {
-    append(
-        text.parsePAPI(author, recipient).parseMarkdown(
-            MessageOptions
-                    .builder()
-                    .setDefaultFormatData(createFormatData(hover, click, author, recipient))
-                    .build()
-        )
-    )
+    append(text.parsePAPI(author, recipient).parseMarkdown(createDefaultOptions(hover, click, author, recipient)))
 }
 
 /**
@@ -66,7 +60,7 @@ internal fun ConsoleCommandSender.sendMessage(component: Component) {
  * Adds a sendMessage for [ConsoleCommandSender] that takes in a [Component] instead
  */
 internal fun ConsoleCommandSender.sendMessage(message: Message) {
-    sendMessage(message.message)
+    sendMessage(message.component)
 }
 
 /**
@@ -80,10 +74,18 @@ internal fun List<MessageNode>.toComponent() = AdventureSerializer.toComponent(t
 internal fun FormatDisplay.toComponent(author: ChatUser? = null, recipient: ChatUser? = null): Component {
     return text
             .parsePAPI(author, recipient)
-            .parseMarkdown(
-                MessageOptions
-                        .builder()
-                        .setDefaultFormatData(createFormatData(hover, click, author, recipient))
-                        .build()
-            ).toComponent()
+            .parseMarkdown(createDefaultOptions(hover, click, author, recipient))
+            .toComponent()
+}
+
+private fun createDefaultOptions(
+    hover: List<String>,
+    click: ClickData,
+    author: ChatUser?,
+    recipient: ChatUser?
+): MessageOptions? {
+    return MessageOptions
+            .builder()
+            .setDefaultFormatData(FormatData().addActions(hover, click, author, recipient))
+            .build()
 }

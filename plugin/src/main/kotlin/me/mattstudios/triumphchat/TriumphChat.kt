@@ -13,6 +13,7 @@ import me.mattstudios.triumphchat.data.UserManager
 import me.mattstudios.triumphchat.func.IS_PAPER
 import me.mattstudios.triumphchat.func.PROPERTY_MAPPER
 import me.mattstudios.triumphchat.listeners.ChatListener
+import me.mattstudios.triumphchat.listeners.PlayerListener
 import me.mattstudios.triumphchat.message.MessageManager
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
@@ -40,11 +41,11 @@ class TriumphChat : TriumphPlugin(), Listener {
 
         registerParamType(ChatUser::class.java) { arg ->
             val player = Bukkit.getPlayer(arg.toString()) ?: return@registerParamType TypeResult(null, arg)
-            return@registerParamType TypeResult(userManager.getPlayer(player), arg)
+            return@registerParamType TypeResult(userManager.getUser(player), arg)
         }
 
         registerCommands(MessageCommand(this), ReplyCommand(this))
-        registerListeners(ChatListener(this))
+        registerListeners(ChatListener(this), PlayerListener(userManager))
     }
 
     /**

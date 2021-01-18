@@ -6,13 +6,11 @@ import me.mattstudios.triumphchat.api.Message
 import me.mattstudios.triumphchat.api.events.PlayerPingEvent
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
-import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 import me.mattstudios.triumphchat.func.PING_EXTENSION
 import me.mattstudios.triumphchat.func.append
 import me.mattstudios.triumphchat.func.buildComponent
-import me.mattstudios.triumphchat.func.createFormatData
 import me.mattstudios.triumphchat.func.parseMarkdown
 import me.mattstudios.triumphchat.func.toComponent
 import net.kyori.adventure.text.Component
@@ -30,7 +28,7 @@ abstract class AbstractMessage(
     //private val config = plugin.config
 
     override val mentionsList = mutableListOf<ChatUser>()
-    override var message = createChatMessage()
+    override var component = createChatMessage()
 
     /**
      * Creates the chat component
@@ -48,7 +46,7 @@ abstract class AbstractMessage(
         text.split(MESSAGE_PLACEHOLDER).forEachIndexed { index, text ->
             append(text, hover, click, author, recipient)
             if (index == 0) {
-                append(hover, click)
+                appendMessage(this)
             }
         }
     }
@@ -56,10 +54,11 @@ abstract class AbstractMessage(
     /**
      * Special append function to handle pinging of players
      */
-    private fun TextComponent.Builder.append(hover: List<String>, click: ClickData) {
+    private fun TextComponent.Builder.appendMessage(display: MessageDisplay) {
         val options = MessageOptions.Builder(author.getChatFormats())
-        options.setDefaultFormatData(createFormatData(hover, click, author, recipient))
+        options.setDefaultFormatData(display.createFormatData(author, recipient))
         options.extensions(PING_EXTENSION)
+
         val nodes = rawMessage.parseMarkdown(options.build())
 
         for (node in nodes) {

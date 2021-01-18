@@ -8,17 +8,19 @@ import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.chat.ChatMessage
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.config.settings.Settings
 import me.mattstudios.triumphchat.func.DEFAULT_PM_RECIPIENT
 import me.mattstudios.triumphchat.func.DEFAULT_PM_SENDER
 import me.mattstudios.triumphchat.func.selectMessageFormat
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 @Command("msg")
 @Alias("m")
 class MessageCommand(private val plugin: TriumphChat) : CommandBase() {
 
-    private val playerManager = plugin.userManager
+    private val userManager = plugin.userManager
     private val messageManager = plugin.messageManager
     private val config = plugin.config
 
@@ -34,7 +36,7 @@ class MessageCommand(private val plugin: TriumphChat) : CommandBase() {
         }
 
         val message = args.joinToString(" ")
-        val author = playerManager.getPlayer(sender)
+        val author = userManager.getUser(sender)
 
         val senderMessage = ChatMessage(
             author,
@@ -58,11 +60,21 @@ class MessageCommand(private val plugin: TriumphChat) : CommandBase() {
             )
         )
 
+        val socialSpyMessage = ChatMessage(
+            author,
+            recipient,
+            message,
+            listOf(MessageDisplay(config[Settings.PRIVATE_MESSAGES].socialSpyFormat))
+        )
+
         author.sendMessage(senderMessage)
         recipient.sendMessage(recipientMessage)
 
+        Bukkit.getOnlinePlayers()
+                .filter { it.hasPermission("triumphchat.socialspy") }
+                .forEach { userManager.getUser(it.uniqueId).sendMessage(socialSpyMessage) }
+
         recipient.replyTarget = author.uuid
-        println(recipient)
     }
 
 }

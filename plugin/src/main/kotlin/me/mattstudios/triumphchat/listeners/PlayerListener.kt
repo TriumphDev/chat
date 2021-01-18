@@ -9,7 +9,7 @@ class PlayerListener(private val userManager: UserManager) : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.onPlayerJoin() {
-        userManager.addPlayer(player)
+        userManager.getUser(player)
     }
 
 }

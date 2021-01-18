@@ -14,7 +14,7 @@ interface Message {
     /**
      * The message's [Component] that was generated
      */
-    val message: Component
+    val component: Component
 
     /**
      * Contains a list of the mentioned [ChatUser]s

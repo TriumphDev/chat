@@ -22,7 +22,7 @@ data class ClickData(
         else -> if (value == null) "" else "$value"
     }
 
-    fun createClick(sender: ChatUser? = null, recipient: ChatUser? = null): ClickMessageAction {
+    fun toClick(sender: ChatUser? = null, recipient: ChatUser? = null): ClickMessageAction {
         return ClickMessageAction(action, finalValue.parsePAPI(sender, recipient))
     }
 

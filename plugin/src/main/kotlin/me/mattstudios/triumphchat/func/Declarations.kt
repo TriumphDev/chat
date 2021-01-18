@@ -95,17 +95,22 @@ fun List<String>.toHover(author: ChatUser?, recipient: ChatUser?): MessageAction
 /**
  * TODO This
  */
-fun createFormatData(hover: List<String>, click: ClickData, author: ChatUser?, recipient: ChatUser?): FormatData {
+fun FormatData.addActions(
+    hover: List<String>,
+    click: ClickData,
+    author: ChatUser?,
+    recipient: ChatUser?
+): FormatData {
     val actions = mutableListOf<MessageAction>()
     if (hover.isNotEmpty()) {
         actions.add(hover.toHover(author, recipient))
     }
 
     if (click.isNotEmpty) {
-        actions.add(click.createClick(author, recipient))
+        actions.add(click.toClick(author, recipient))
     }
 
-    return FormatData().apply {
+    return apply {
         if (actions.isNotEmpty()) this.actions = actions
     }
 }

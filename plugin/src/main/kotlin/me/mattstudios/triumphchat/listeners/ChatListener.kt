@@ -39,7 +39,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
      * Handles chat event truly async
      */
     private fun AsyncPlayerChatEvent.handleChat() {
-        val user = plugin.userManager.getPlayer(player)
+        val user = plugin.userManager.getUser(player)
 
         val chatFormat =
             user.selectMessageFormat(config[Settings.CHAT_FORMATS].formats, plugin.formatsConfig, DEFAULT_FORMAT)
@@ -52,7 +52,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
 
         if (triumphChatEvent.isCancelled) return
 
-        recipients.forEach { AUDIENCES.player(it).sendMessage(chatMessage.message) }
+        recipients.forEach { AUDIENCES.player(it).sendMessage(chatMessage.component) }
         Bukkit.getConsoleSender().sendMessage(consoleMessage)
     }
 

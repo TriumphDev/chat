@@ -17,7 +17,7 @@ data class PlayerUser(
 ) : ChatUser {
 
     override fun sendMessage(message: Message) {
-        Bukkit.getPlayer(uuid)?.sendMessage(Identity.identity(message.author.uuid), message.message)
+        Bukkit.getPlayer(uuid)?.sendMessage(Identity.identity(message.author.uuid), message.component)
     }
 
     override fun getChatFormats(): Set<Format> {

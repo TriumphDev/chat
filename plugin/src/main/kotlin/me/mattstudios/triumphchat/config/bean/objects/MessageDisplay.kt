@@ -3,8 +3,10 @@ package me.mattstudios.triumphchat.config.bean.objects
 import me.mattstudios.config.annotations.Name
 import me.mattstudios.msg.base.FormatData
 import me.mattstudios.msg.base.internal.nodes.TextNode
+import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
+import me.mattstudios.triumphchat.func.addActions
 import me.mattstudios.triumphchat.func.copyFormat
 import me.mattstudios.triumphchat.func.parseMarkdown
 import java.util.Optional
@@ -22,16 +24,16 @@ data class MessageDisplay(
     override val hover: List<String> = hoverData.orElseGet { emptyList() }
     override val click: ClickData = clickData.orElseGet { ClickData() }
 
-    val formatData = determineFormatData()
-
     /**
      * Gathers the format settings from the text node that has the message placeholder
      */
-    private fun determineFormatData(): FormatData {
-        return text.parseMarkdown()
+    fun createFormatData(author: ChatUser?, recipient: ChatUser?): FormatData {
+        val data = text.parseMarkdown()
                 .filterIsInstance(TextNode::class.java)
                 .find { MESSAGE_PLACEHOLDER in it.text }
                 ?.copyFormat() ?: FormatData()
+
+        return data.addActions(hover, click, author, recipient)
     }
 
 }

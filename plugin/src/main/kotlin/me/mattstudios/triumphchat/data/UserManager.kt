@@ -7,24 +7,22 @@ import java.util.UUID
 
 class UserManager(private val plugin: TriumphChat) {
 
-    private val players = mutableSetOf<ChatUser>()
+    private val users = mutableMapOf<UUID, ChatUser>()
 
     init {
         // load all players
     }
 
-    fun getPlayer(uuid: UUID): ChatUser {
-        return players.find { it.uuid == uuid } ?: addPlayer(uuid)
+    fun getUser(uuid: UUID): ChatUser {
+        return users[uuid] ?: addUser(uuid)
     }
 
-    fun getPlayer(player: Player) = getPlayer(player.uniqueId)
+    fun getUser(player: Player) = getUser(player.uniqueId)
 
-    fun addPlayer(player: Player) = addPlayer(player.uniqueId)
-
-    fun addPlayer(uuid: UUID): ChatUser {
-        val user = PlayerUser(plugin, uuid)
-        players.add(user)
-        return user
+    private fun addUser(uuid: UUID): ChatUser {
+        return PlayerUser(plugin, uuid).apply {
+            users[uuid] = this
+        }
     }
 
 }
