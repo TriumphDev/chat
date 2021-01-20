@@ -13,8 +13,9 @@ repositories {
 
 triumph {
     spigot "1.16.4"
-    core "1.0.14"
+    core "1.0.17"
     cmds "1.4.6"
+    config "1.0.5-SNAPSHOT"
 }
 
 dependencies {

@@ -1,4 +1,4 @@
-package me.mattstudios.triumphchat.chat
+package me.mattstudios.triumphchat.message
 
 import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.triumphchat.api.ChatUser

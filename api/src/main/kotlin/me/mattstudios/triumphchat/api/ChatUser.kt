@@ -8,7 +8,7 @@ interface ChatUser {
     var replyTarget: UUID?
 
     /**
-     * Sends a [Message] to the player
+     * Sends a [Message] to the user
      */
     fun sendMessage(message: Message)
 

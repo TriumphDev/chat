@@ -2,47 +2,56 @@ package me.mattstudios.triumphchat.commands
 
 import me.mattstudios.mf.annotations.Alias
 import me.mattstudios.mf.annotations.Command
+import me.mattstudios.mf.annotations.Completion
 import me.mattstudios.mf.annotations.Default
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphchat.TriumphChat
-import me.mattstudios.triumphchat.chat.ChatMessage
-import me.mattstudios.triumphchat.config.settings.Settings
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
+import me.mattstudios.triumphchat.config.settings.Setting
 import me.mattstudios.triumphchat.func.DEFAULT_PM_RECIPIENT
 import me.mattstudios.triumphchat.func.DEFAULT_PM_SENDER
 import me.mattstudios.triumphchat.func.selectMessageFormat
+import me.mattstudios.triumphchat.func.sendTo
+import me.mattstudios.triumphchat.locale.Messages
+import me.mattstudios.triumphchat.message.ChatMessage
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 @Command("reply")
 @Alias("r")
 class ReplyCommand(private val plugin: TriumphChat) : CommandBase() {
 
-    private val playerManager = plugin.userManager
+    private val userManager = plugin.userManager
     private val config = plugin.config
 
     @Default
     fun sendReply(
         sender: Player,
-        args: Array<String>
+        @Completion("#empty") args: Array<String>
     ) {
-        val author = playerManager.getUser(sender)
 
-        val replyTarget = author.replyTarget
-
-        if (replyTarget == null) {
-            sender.sendMessage("No reply recipient")
+        if (args.isEmpty()) {
+            sendMessage("cmd.wrong.usage", sender)
             return
         }
 
-        val recipient = playerManager.getUser(replyTarget)
+        val author = userManager.getUser(sender)
 
-        val messageString = args.joinToString(" ")
+        val replyTarget = author.replyTarget ?: run {
+            plugin.locale[Messages.REPLY_NO_REPLY_TARGET].sendTo(sender)
+            return
+        }
+
+        val recipient = userManager.getUser(replyTarget)
+
+        val message = args.joinToString(" ")
 
         val senderMessage = ChatMessage(
             author,
             recipient,
-            messageString,
+            message,
             author.selectMessageFormat(
-                config[Settings.PRIVATE_MESSAGES].senderFormats,
+                config[Setting.PRIVATE_MESSAGES].senderFormats,
                 plugin.formatsConfig,
                 DEFAULT_PM_SENDER
             )
@@ -51,18 +60,29 @@ class ReplyCommand(private val plugin: TriumphChat) : CommandBase() {
         val recipientMessage = ChatMessage(
             author,
             recipient,
-            messageString,
+            message,
             recipient.selectMessageFormat(
-                config[Settings.PRIVATE_MESSAGES].recipientFormats,
+                config[Setting.PRIVATE_MESSAGES].recipientFormats,
                 plugin.formatsConfig,
                 DEFAULT_PM_RECIPIENT
             )
         )
 
+        val socialSpyMessage = ChatMessage(
+            author,
+            recipient,
+            message,
+            listOf(MessageDisplay(config[Setting.PRIVATE_MESSAGES].socialSpyFormat))
+        )
+
         author.sendMessage(senderMessage)
         recipient.sendMessage(recipientMessage)
 
-        author.replyTarget = recipient.uuid
+        Bukkit.getOnlinePlayers()
+                .filter { it.hasPermission("triumphchat.socialspy") }
+                .forEach { userManager.getUser(it.uniqueId).sendMessage(socialSpyMessage) }
+
+        recipient.replyTarget = author.uuid
     }
 
 }

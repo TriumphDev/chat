@@ -3,14 +3,12 @@ version parent.version
 
 triumph {
     msgs version: "2.2.2-SNAPSHOT", type: "adventure", scope: "api"
-    config version: "1.0.3-SNAPSHOT", scope: "api"
+    platform version: "4.0.0-SNAPSHOT", scope: "api"
 }
 
 dependencies {
     // Kotlin
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    api "net.kyori:adventure-api:4.3.0"
-    api "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
     api "net.kyori:text-serializer-plain:4.0.0-SNAPSHOT"
 }

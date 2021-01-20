@@ -1,4 +1,4 @@
-package me.mattstudios.triumphchat.chat
+package me.mattstudios.triumphchat.message
 
 import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay

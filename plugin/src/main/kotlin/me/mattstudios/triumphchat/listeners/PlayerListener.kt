@@ -1,6 +1,6 @@
 package me.mattstudios.triumphchat.listeners
 
-import me.mattstudios.triumphchat.data.UserManager
+import me.mattstudios.triumphchat.managers.UserManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent

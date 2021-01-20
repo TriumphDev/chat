@@ -8,7 +8,7 @@ import me.mattstudios.triumphchat.config.bean.holders.FormatsHolder
 /**
  * Setting holder for the formats config
  */
-object FormatSettings : SettingsHolder {
+object FormatSetting : SettingsHolder {
 
     /**
      * This property is left without a path to allow for a map of a map

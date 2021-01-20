@@ -13,7 +13,7 @@ import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
 /**
  * Main setting holder for all the config related settings
  */
-object Settings : SettingsHolder {
+object Setting : SettingsHolder {
 
     @Path("chat")
     val CHAT_FORMATS = Property.create(ChatHolder())

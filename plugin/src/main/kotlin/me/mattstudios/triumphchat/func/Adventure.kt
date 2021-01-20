@@ -14,6 +14,7 @@ import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
+import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 
@@ -52,7 +53,12 @@ internal fun Player.sendMessage(identity: Identity, component: Component) {
 /**
  * Adds a sendMessage for [ConsoleCommandSender] that takes in a [Component] instead
  */
-internal fun ConsoleCommandSender.sendMessage(component: Component) {
+internal fun CommandSender.sendMessage(identity: Identity, component: Component) {
+    if (this is Player) {
+        sendMessage(identity, component)
+        return
+    }
+
     sendMessage(PlainComponentSerializer.INSTANCE.serialize(component))
 }
 
@@ -60,7 +66,7 @@ internal fun ConsoleCommandSender.sendMessage(component: Component) {
  * Adds a sendMessage for [ConsoleCommandSender] that takes in a [Component] instead
  */
 internal fun ConsoleCommandSender.sendMessage(message: Message) {
-    sendMessage(message.component)
+    sendMessage(Identity.identity(message.author.uuid), message.component)
 }
 
 /**

@@ -5,6 +5,7 @@ import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.api.Message
 import me.mattstudios.triumphchat.func.sendMessage
+import me.mattstudios.triumphchat.func.toPlayer
 import me.mattstudios.triumphchat.permissions.ChatPermission
 import net.kyori.adventure.identity.Identity
 import org.bukkit.Bukkit
@@ -17,7 +18,7 @@ data class PlayerUser(
 ) : ChatUser {
 
     override fun sendMessage(message: Message) {
-        Bukkit.getPlayer(uuid)?.sendMessage(Identity.identity(message.author.uuid), message.component)
+        uuid.toPlayer()?.sendMessage(Identity.identity(message.author.uuid), message.component)
     }
 
     override fun getChatFormats(): Set<Format> {

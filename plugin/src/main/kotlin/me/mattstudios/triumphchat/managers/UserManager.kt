@@ -1,7 +1,8 @@
-package me.mattstudios.triumphchat.data
+package me.mattstudios.triumphchat.managers
 
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.ChatUser
+import me.mattstudios.triumphchat.data.PlayerUser
 import org.bukkit.entity.Player
 import java.util.UUID
 

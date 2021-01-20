@@ -14,8 +14,11 @@ import me.mattstudios.triumphchat.config.FormatsConfig
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
 import me.mattstudios.triumphchat.permissions.Permission
+import net.kyori.adventure.identity.Identity
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
+import java.util.UUID
 
 /**
  * Taken from PaperLib, just to check if the server is paper or not
@@ -61,14 +64,14 @@ internal fun ChatUser.selectMessageFormat(
 /**
  * Simple fun to parse PAPI placeholders
  */
-fun String.parsePAPI(user: ChatUser? = null): String {
+internal fun String.parsePAPI(user: ChatUser? = null): String {
     return if (user == null) this else PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(user.uuid), this)
 }
 
 /**
  * Requires 2 players instead, for parsing sender and recipient placeholders
  */
-fun String.parsePAPI(sender: ChatUser?, recipient: ChatUser?): String {
+internal fun String.parsePAPI(sender: ChatUser?, recipient: ChatUser?): String {
     if (recipient == null) return parsePAPI(sender)
     return remove(SENDER_PLACEHOLDER).parsePAPI(sender).remove(RECIPIENT_PLACEHOLDER).parsePAPI(recipient)
 }
@@ -81,21 +84,28 @@ private fun String.remove(oldValue: String): String = StringUtils.replace(this, 
 /**
  * Function to parse all the Markdown into a list of [MessageNode]s
  */
-fun String.parseMarkdown(messageOptions: MessageOptions? = null): List<MessageNode> {
+internal fun String.parseMarkdown(messageOptions: MessageOptions? = null): List<MessageNode> {
     return MarkdownParser(messageOptions ?: MessageOptions.builder().build()).parse(this)
 }
 
 /**
  * Creates a hover event from [String] [List]
  */
-fun List<String>.toHover(author: ChatUser?, recipient: ChatUser?): MessageAction {
+internal fun List<String>.toHover(author: ChatUser?, recipient: ChatUser?): MessageAction {
     return MessageAction.from(joinToString("\\n").parsePAPI(author, recipient).parseMarkdown())
 }
 
 /**
+ * Util to get player from UUID
+ */
+internal fun UUID.toPlayer() = Bukkit.getPlayer(this)
+
+internal fun String.sendTo(sender: CommandSender) = sender.sendMessage(Identity.nil(), GLOBAL_MESSAGE.parse(this))
+
+/**
  * TODO This
  */
-fun FormatData.addActions(
+internal fun FormatData.addActions(
     hover: List<String>,
     click: ClickData,
     author: ChatUser?,

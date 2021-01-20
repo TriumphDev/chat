@@ -8,20 +8,18 @@ import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.commands.MessageCommand
 import me.mattstudios.triumphchat.commands.ReplyCommand
 import me.mattstudios.triumphchat.config.FormatsConfig
-import me.mattstudios.triumphchat.config.settings.Settings
-import me.mattstudios.triumphchat.data.UserManager
+import me.mattstudios.triumphchat.config.settings.Setting
 import me.mattstudios.triumphchat.func.IS_PAPER
 import me.mattstudios.triumphchat.func.PROPERTY_MAPPER
+import me.mattstudios.triumphchat.func.sendTo
 import me.mattstudios.triumphchat.listeners.ChatListener
 import me.mattstudios.triumphchat.listeners.PlayerListener
-import me.mattstudios.triumphchat.message.MessageManager
+import me.mattstudios.triumphchat.locale.Messages
+import me.mattstudios.triumphchat.managers.UserManager
 import org.bukkit.Bukkit
-import org.bukkit.event.Listener
 
 @BukkitPlugin
-class TriumphChat : TriumphPlugin(), Listener {
-
-    val messageManager = MessageManager()
+class TriumphChat : TriumphPlugin() {
 
     lateinit var userManager: UserManager
         private set
@@ -30,7 +28,8 @@ class TriumphChat : TriumphPlugin(), Listener {
         private set
 
     override fun enable() {
-        config.load(Settings::class.java, PROPERTY_MAPPER)
+        config.create(Setting::class.java, PROPERTY_MAPPER)
+        locale.setHolder(Messages::class.java).create()
         formatsConfig = FormatsConfig(this)
 
         userManager = UserManager(this)
@@ -39,10 +38,14 @@ class TriumphChat : TriumphPlugin(), Listener {
         if (!checkPapi()) return
         validateFormats()
 
+        // Temporary
         registerParamType(ChatUser::class.java) { arg ->
             val player = Bukkit.getPlayer(arg.toString()) ?: return@registerParamType TypeResult(null, arg)
             return@registerParamType TypeResult(userManager.getUser(player), arg)
         }
+        registerCompletion("#empty") { emptyList() }
+        registerMessage("cmd.no.permission") { locale[Messages.COMMAND_NO_PERMISSION].sendTo(it) }
+        registerMessage("cmd.wrong.usage") { locale[Messages.COMMAND_WRONG_USAGE].sendTo(it) }
 
         registerCommands(MessageCommand(this), ReplyCommand(this))
         registerListeners(ChatListener(this), PlayerListener(userManager))
@@ -85,26 +88,20 @@ class TriumphChat : TriumphPlugin(), Listener {
     private fun validateFormats() {
         val formats = formatsConfig.getFormats()
 
-        val invalidChatFormats = config[Settings.CHAT_FORMATS].formats.filter { it !in formats.keys }
+        val invalidChatFormats = config[Setting.CHAT_FORMATS].formats.filter { it !in formats.keys }
         if (invalidChatFormats.isNotEmpty()) {
             "&6The following &7chat &6formats: &c${invalidChatFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
         }
 
-        val invalidSenderFormats = config[Settings.PRIVATE_MESSAGES].senderFormats.filter { it !in formats.keys }
+        val invalidSenderFormats = config[Setting.PRIVATE_MESSAGES].senderFormats.filter { it !in formats.keys }
         if (invalidSenderFormats.isNotEmpty()) {
             "&6The following &7sender &6formats: &c${invalidSenderFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
         }
 
-        val invalidRecipientFormats = config[Settings.PRIVATE_MESSAGES].recipientFormats.filter { it !in formats.keys }
+        val invalidRecipientFormats = config[Setting.PRIVATE_MESSAGES].recipientFormats.filter { it !in formats.keys }
         if (invalidRecipientFormats.isNotEmpty()) {
             "&6The following &7recipient &6formats: &c${invalidRecipientFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
         }
-
-        /*for ((name, format) in config[Settings.FORMATS]) {
-            if (format.components.values.filterIsInstance<MessageDisplay>().count() == 0) {
-                "&6No component with &7%message% &6placeholder was found for format &7\"$name\"&6.".log()
-            }
-        }*/
     }
 
 }

@@ -1,6 +1,6 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.4.30-M1"
-    id "me.mattstudios.triumph" version "0.1.6"
+    id "org.jetbrains.kotlin.jvm" version "1.4.30-RC"
+    id "me.mattstudios.triumph" version "0.1.8"
 }
 
 allprojects {
@@ -15,14 +15,12 @@ allprojects {
         mavenCentral()
 
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+        maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     }
 
-    dependencies {
-        // PAPI
-        compileOnly "me.clip:placeholderapi:2.10.9"
-        // Spigot
-        compileOnly "org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT"
+    triumph {
+        spigot "1.16.4"
+        papi "2.10.9"
     }
 
     compileJava {

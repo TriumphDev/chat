@@ -3,13 +3,13 @@ package me.mattstudios.triumphchat.listeners
 import me.mattstudios.core.func.Task.async
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.events.TriumphChatEvent
-import me.mattstudios.triumphchat.chat.ChatMessage
-import me.mattstudios.triumphchat.chat.ConsoleMessage
-import me.mattstudios.triumphchat.config.settings.Settings
+import me.mattstudios.triumphchat.config.settings.Setting
 import me.mattstudios.triumphchat.func.AUDIENCES
 import me.mattstudios.triumphchat.func.DEFAULT_FORMAT
 import me.mattstudios.triumphchat.func.selectMessageFormat
 import me.mattstudios.triumphchat.func.sendMessage
+import me.mattstudios.triumphchat.message.ChatMessage
+import me.mattstudios.triumphchat.message.ConsoleMessage
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -42,7 +42,7 @@ class ChatListener(private val plugin: TriumphChat) : Listener {
         val user = plugin.userManager.getUser(player)
 
         val chatFormat =
-            user.selectMessageFormat(config[Settings.CHAT_FORMATS].formats, plugin.formatsConfig, DEFAULT_FORMAT)
+            user.selectMessageFormat(config[Setting.CHAT_FORMATS].formats, plugin.formatsConfig, DEFAULT_FORMAT)
 
         val chatMessage = ChatMessage(user, message, chatFormat)
         val consoleMessage = ConsoleMessage(plugin, user, message)
