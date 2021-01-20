@@ -2,7 +2,6 @@ package me.mattstudios.triumphchat.permissions
 
 import me.mattstudios.msg.base.internal.Format
 import me.mattstudios.triumphchat.func.MAIN_PERMISSION
-import org.bukkit.entity.Player
 
 object ChatPermission {
     private const val FORMAT = "${MAIN_PERMISSION}.chat.format"
@@ -11,7 +10,7 @@ object ChatPermission {
     private const val MARKDOWN = "${FORMAT}.markdown"
     private const val LEGACY = "${FORMAT}.legacy"
 
-    private val formats = mapOf(
+    val formats = mapOf(
         // Markdown permissions
         "${MARKDOWN}.bold" to Format.BOLD,
         "${MARKDOWN}.italic" to Format.ITALIC,
@@ -32,12 +31,5 @@ object ChatPermission {
         "${COLOR}.gradient" to Format.GRADIENT,
         "${COLOR}.rainbow" to Format.RAINBOW
     )
-
-    /**
-     * Creates a set with the formats a player has based on it's permissions
-     */
-    fun formatsForPlayer(player: Player): Set<Format> {
-        return formats.filter { player.hasPermission(it.key) }.values.toSet()
-    }
 
 }

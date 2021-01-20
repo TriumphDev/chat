@@ -3,16 +3,15 @@ package me.mattstudios.triumphchat.extensions
 import me.mattstudios.msg.base.internal.action.HoverMessageAction
 import me.mattstudios.msg.base.internal.action.content.HoverContent
 import me.mattstudios.msg.base.internal.color.FlatColor
-import me.mattstudios.msg.base.internal.components.TextNode
+import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.msg.base.internal.renderer.FormatRetention
 import me.mattstudios.msg.base.internal.renderer.NodeRenderer
 import me.mattstudios.msg.commonmark.node.CustomNode
 import me.mattstudios.msg.commonmark.parser.Parser
 import me.mattstudios.msg.commonmark.parser.ParserExtension
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
-import me.mattstudios.triumphchat.extensions.parser.nodes.PingNode
 import me.mattstudios.triumphchat.extensions.parser.PingParser
-import me.mattstudios.triumphchat.func.GLOBAL_MESSAGE
+import me.mattstudios.triumphchat.extensions.parser.nodes.PingNode
 import org.bukkit.Bukkit
 
 /**
@@ -42,7 +41,7 @@ class PingExtension : ParserExtension, NodeRenderer {
         node.color = FlatColor("#378cdb")
         node.isUnderlined = true
 
-        node.actions = listOf(HoverMessageAction(HoverContent.showText(GLOBAL_MESSAGE.parseToNodes("LichtHund\\n\\nCustomizable data here!"))))
+        node.actions = listOf(HoverMessageAction(HoverContent.showText("LichtHund\\n\\nCustomizable data here!")))
 
         return node
     }

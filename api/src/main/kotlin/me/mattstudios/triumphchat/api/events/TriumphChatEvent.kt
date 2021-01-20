@@ -1,6 +1,6 @@
 package me.mattstudios.triumphchat.api.events
 
-import me.mattstudios.triumphchat.api.chat.Message
+import me.mattstudios.triumphchat.api.Message
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
