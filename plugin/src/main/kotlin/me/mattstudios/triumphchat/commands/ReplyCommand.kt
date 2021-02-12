@@ -14,6 +14,7 @@ import me.mattstudios.triumphchat.func.selectMessageFormat
 import me.mattstudios.triumphchat.func.sendTo
 import me.mattstudios.triumphchat.locale.Messages
 import me.mattstudios.triumphchat.message.ChatMessage
+import me.mattstudios.triumphchat.permissions.Permission
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
@@ -68,6 +69,18 @@ class ReplyCommand(private val plugin: TriumphChat) : CommandBase() {
             )
         )
 
+        author.sendMessage(senderMessage)
+        recipient.sendMessage(recipientMessage)
+        recipient.replyTarget = author.uuid
+
+        if (sender.hasPermission(Permission.SOCIAL_SPY__BYPASS)) {
+            return
+        }
+
+        if (Bukkit.getPlayer(replyTarget)!!.hasPermission(Permission.SOCIAL_SPY__BYPASS)) {
+            return
+        }
+
         val socialSpyMessage = ChatMessage(
             author,
             recipient,
@@ -75,14 +88,10 @@ class ReplyCommand(private val plugin: TriumphChat) : CommandBase() {
             listOf(MessageDisplay(config[Setting.PRIVATE_MESSAGES].socialSpyFormat))
         )
 
-        author.sendMessage(senderMessage)
-        recipient.sendMessage(recipientMessage)
-
         Bukkit.getOnlinePlayers()
-                .filter { it.hasPermission("triumphchat.socialspy") }
-                .forEach { userManager.getUser(it.uniqueId).sendMessage(socialSpyMessage) }
-
-        recipient.replyTarget = author.uuid
+            .filter { it.uniqueId != sender.uniqueId && it.uniqueId != recipient.uuid }
+            .filter { it.hasPermission(Permission.SOCIAL_SPY) }
+            .forEach { userManager.getUser(it.uniqueId).sendMessage(socialSpyMessage) }
     }
 
 }
