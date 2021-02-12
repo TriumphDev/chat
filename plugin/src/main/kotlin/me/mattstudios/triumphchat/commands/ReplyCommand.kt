@@ -4,6 +4,7 @@ import me.mattstudios.mf.annotations.Alias
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.Completion
 import me.mattstudios.mf.annotations.Default
+import me.mattstudios.mf.annotations.Permission
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
@@ -25,6 +26,7 @@ class ReplyCommand(private val plugin: TriumphChat) : CommandBase() {
     private val config = plugin.config
 
     @Default
+    @Permission("triumphchat.reply")
     fun sendReply(
         sender: Player,
         @Completion("#empty") args: Array<String>

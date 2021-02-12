@@ -4,6 +4,7 @@ import me.mattstudios.mf.annotations.Alias
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.Completion
 import me.mattstudios.mf.annotations.Default
+import me.mattstudios.mf.annotations.Permission
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.ChatUser
@@ -27,6 +28,7 @@ class MessageCommand(private val plugin: TriumphChat) : CommandBase() {
     private val locale = plugin.locale
 
     @Default
+    @Permission("triumphchat.msg")
     fun sendMessage(
         sender: Player,
         @Completion("#players") recipient: ChatUser?,

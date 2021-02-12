@@ -6,6 +6,7 @@ import me.mattstudios.core.func.log
 import me.mattstudios.mf.base.components.TypeResult
 import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.commands.MessageCommand
+import me.mattstudios.triumphchat.commands.ReloadCommand
 import me.mattstudios.triumphchat.commands.ReplyCommand
 import me.mattstudios.triumphchat.config.FormatsConfig
 import me.mattstudios.triumphchat.config.settings.Setting
@@ -47,8 +48,9 @@ class TriumphChat : TriumphPlugin() {
         registerMessage("cmd.no.permission") { locale[Messages.COMMAND_NO_PERMISSION].sendTo(it) }
         registerMessage("cmd.wrong.usage") { locale[Messages.COMMAND_WRONG_USAGE].sendTo(it) }
 
-        registerCommands(MessageCommand(this), ReplyCommand(this))
+        registerCommands(MessageCommand(this), ReplyCommand(this), ReloadCommand(this))
         registerListeners(ChatListener(this), PlayerListener(userManager))
+
     }
 
     /**

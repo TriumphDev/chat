@@ -8,7 +8,6 @@ import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
 import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.extensions.nodes.PingPlayerNode
 import me.mattstudios.triumphchat.func.MESSAGE_PLACEHOLDER
-import me.mattstudios.triumphchat.func.PING_EXTENSION
 import me.mattstudios.triumphchat.func.append
 import me.mattstudios.triumphchat.func.buildComponent
 import me.mattstudios.triumphchat.func.parseMarkdown
@@ -57,7 +56,7 @@ abstract class AbstractMessage(
     private fun TextComponent.Builder.appendMessage(display: MessageDisplay) {
         val options = MessageOptions.Builder(author.getChatFormats())
         options.setDefaultFormatData(display.createFormatData(author, recipient))
-        options.extensions(PING_EXTENSION)
+        //options.extensions(PING_EXTENSION)
 
         val nodes = rawMessage.parseMarkdown(options.build())
 
