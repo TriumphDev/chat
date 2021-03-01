@@ -21,7 +21,7 @@ triumph {
 dependencies {
     implementation project(":api")
 
-    implementation "cloud.commandframework:cloud-PLATFORM:1.4.0"
+    //implementation "cloud.commandframework:cloud-PLATFORM:1.4.0"
 
     //implementation "com.zaxxer:HikariCP:3.4.5"
 
@@ -45,7 +45,7 @@ shadowJar {
             'org.yaml'            : 'yaml'
     ].each { relocate(it.key, 'me.mattstudios.triumphchat.' + it.value) }
 
-    destinationDir file("C:/Users/xpsyk/Desktop/servers/paper-1.16/plugins")
+    //destinationDir file("C:/Users/xpsyk/Desktop/servers/paper-1.16/plugins")
 }
 
 bukkit {
