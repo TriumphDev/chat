@@ -21,11 +21,11 @@ triumph {
 dependencies {
     implementation project(":api")
 
-    implementation "cloud.commandframework:cloud-PLATFORM:1.4.0"
+    //implementation "cloud.commandframework:cloud-PLATFORM:1.4.0"
 
     //implementation "com.zaxxer:HikariCP:3.4.5"
 
-    compileOnly ("com.github.MilkBowl:VaultAPI:1.7") {
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         transitive = false
     }
 }
@@ -33,20 +33,19 @@ dependencies {
 shadowJar {
     //minimize()
 
-    relocate("me.mattstudios.core", "me.mattstudios.triumphchat.core")
-    relocate("me.mattstudios.mf", "me.mattstudios.triumphchat.mf")
-    relocate("me.mattstudios.mfgui", "me.mattstudios.triumphchat.mfgui")
-
-    relocate("ch.jalu.configme", "me.mattstudios.triumphchat.configme")
-    relocate("io.papermc.lib", "me.mattstudios.triumphchat.paperlib")
-
-    relocate("kotlin", "me.mattstudios.triumphchat.kotlin")
-
-    relocate("org.yaml", "me.mattstudios.triumphchat.yaml")
-
     archiveFileName = "TriumphChat-${project.version}.jar"
 
-    destinationDir file("C:/Users/xpsyk/Desktop/servers/paper-1.16/plugins")
+    [
+            'me.mattstudios.core' : 'core',
+            'me.mattstudios.mf'   : 'mf',
+            'me.mattstudios.mfgui': 'mfgui',
+            'ch.jalu.configme'    : 'configme',
+            'io.papermc.lib'      : 'paperlib',
+            'kotlin'              : 'kotlin',
+            'org.yaml'            : 'yaml'
+    ].each { relocate(it.key, 'me.mattstudios.triumphchat.' + it.value) }
+
+    //destinationDir file("C:/Users/xpsyk/Desktop/servers/paper-1.16/plugins")
 }
 
 bukkit {

@@ -25,4 +25,5 @@ data class PlayerUser(
         val player = Bukkit.getPlayer(uuid) ?: return Format.NONE
         return ChatPermission.formats.filter { player.hasPermission(it.key) }.values.toSet()
     }
+
 }

@@ -3,16 +3,21 @@
 package me.mattstudios.triumphchat.func
 
 import me.clip.placeholderapi.PlaceholderAPI
+import me.mattstudios.core.configuration.Config
 import me.mattstudios.msg.base.FormatData
 import me.mattstudios.msg.base.MessageOptions
 import me.mattstudios.msg.base.internal.action.MessageAction
 import me.mattstudios.msg.base.internal.nodes.MessageNode
 import me.mattstudios.msg.base.internal.nodes.TextNode
 import me.mattstudios.msg.base.internal.parser.MarkdownParser
+import me.mattstudios.triumphchat.TriumphChat
 import me.mattstudios.triumphchat.api.ChatUser
 import me.mattstudios.triumphchat.config.FormatsConfig
 import me.mattstudios.triumphchat.config.bean.objects.FormatDisplay
+import me.mattstudios.triumphchat.config.bean.objects.MessageDisplay
 import me.mattstudios.triumphchat.config.bean.objects.elements.ClickData
+import me.mattstudios.triumphchat.config.settings.Setting
+import me.mattstudios.triumphchat.message.ChatMessage
 import me.mattstudios.triumphchat.permissions.Permission
 import net.kyori.adventure.identity.Identity
 import org.apache.commons.lang.StringUtils
@@ -54,7 +59,7 @@ internal fun ChatUser.selectMessageFormat(
 
     val formats = formatsConfig.getFormats()
     for (keyFormat in keys) {
-        if (!player.hasPermission("${Permission.FORMAT.permission}.$keyFormat")) continue
+        if (!player.hasPermission(Permission.FORMAT.plus(keyFormat))) continue
         return formats[keyFormat]?.values ?: continue
     }
 
@@ -123,4 +128,53 @@ internal fun FormatData.addActions(
     return apply {
         if (actions.isNotEmpty()) this.actions = actions
     }
+}
+
+fun ChatUser.sendPrivateMessage(sender: ChatUser, message: String, plugin: TriumphChat) {
+    val senderMessage = ChatMessage(
+        sender,
+        this,
+        message,
+        this.selectMessageFormat(
+            plugin.config[Setting.PRIVATE_MESSAGES].senderFormats,
+            plugin.formatsConfig,
+            DEFAULT_PM_SENDER
+        )
+    )
+
+    val recipientMessage = ChatMessage(
+        this,
+        sender,
+        message,
+        sender.selectMessageFormat(
+            plugin.config[Setting.PRIVATE_MESSAGES].recipientFormats,
+            plugin.formatsConfig,
+            DEFAULT_PM_RECIPIENT
+        )
+    )
+
+    this.sendMessage(recipientMessage)
+    sender.sendMessage(senderMessage)
+    this.replyTarget = sender.uuid
+    sender.replyTarget = uuid
+
+    if (uuid.toPlayer()?.hasPermission(Permission.SOCIAL_SPY__BYPASS) != false) {
+        return
+    }
+
+    if (sender.uuid.toPlayer()?.hasPermission(Permission.SOCIAL_SPY__BYPASS) != false) {
+        return
+    }
+
+    val socialSpyMessage = ChatMessage(
+        sender,
+        this,
+        message,
+        listOf(MessageDisplay(plugin.config[Setting.PRIVATE_MESSAGES].socialSpyFormat))
+    )
+
+    Bukkit.getOnlinePlayers()
+        .filter { it.uniqueId != uuid && it.uniqueId != sender.uuid }
+        .filter { it.hasPermission(Permission.SOCIAL_SPY) }
+        .forEach { plugin.userManager.getUser(it.uniqueId).sendMessage(socialSpyMessage) }
 }
