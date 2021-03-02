@@ -155,6 +155,7 @@ fun ChatUser.sendPrivateMessage(sender: ChatUser, message: String, plugin: Trium
 
     this.sendMessage(recipientMessage)
     sender.sendMessage(senderMessage)
+    this.replyTarget = sender.uuid
     sender.replyTarget = uuid
 
     if (uuid.toPlayer()?.hasPermission(Permission.SOCIAL_SPY__BYPASS) != false) {
