@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.4.30-RC"
+    id "org.jetbrains.kotlin.jvm" version "1.4.31"
     id "me.mattstudios.triumph" version "0.1.8"
 }
 
