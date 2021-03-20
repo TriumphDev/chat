@@ -1,4 +1,4 @@
 rootProject.name = "triumph-chat"
 
-include "plugin"
-include "api"
+include("plugin")
+include("api")

@@ -1,13 +1,8 @@
 package dev.triumphteam.triumphchat
 
 import dev.triumphteam.core.TriumphPlugin
-import dev.triumphteam.core.func.commands
-import dev.triumphteam.core.func.config
-import dev.triumphteam.core.func.listeners
-import dev.triumphteam.core.func.locale
 import dev.triumphteam.core.func.log
 import dev.triumphteam.core.locale.Language
-import dev.triumphteam.triumphchat.api.ChatUser
 import dev.triumphteam.triumphchat.commands.MessageCommand
 import dev.triumphteam.triumphchat.commands.ReloadCommand
 import dev.triumphteam.triumphchat.commands.ReplyCommand
@@ -15,13 +10,14 @@ import dev.triumphteam.triumphchat.config.FormatsConfig
 import dev.triumphteam.triumphchat.config.settings.Setting
 import dev.triumphteam.triumphchat.func.IS_PAPER
 import dev.triumphteam.triumphchat.func.PROPERTY_MAPPER
-import dev.triumphteam.triumphchat.func.sendTo
+import dev.triumphteam.triumphchat.init.Arguments
+import dev.triumphteam.triumphchat.init.Completions
+import dev.triumphteam.triumphchat.init.Messages
 import dev.triumphteam.triumphchat.listeners.ChatListener
 import dev.triumphteam.triumphchat.listeners.PlayerListener
 import dev.triumphteam.triumphchat.locale.Message
 import dev.triumphteam.triumphchat.managers.UserManager
 import me.mattstudios.annotations.BukkitPlugin
-import me.mattstudios.mf.base.components.TypeResult
 import org.bukkit.Bukkit
 
 @BukkitPlugin
@@ -44,25 +40,23 @@ class TriumphChat : TriumphPlugin() {
         if (!checkPapi()) return
         validateFormats()
 
-        // TODO clean this up
         commands {
-            parameter(ChatUser::class.java) { arg ->
-                val player = Bukkit.getPlayer(arg.toString()) ?: return@parameter TypeResult(null, arg)
-                return@parameter TypeResult(userManager.getUser(player), arg)
-            }
-            completion("#empty") { emptyList() }
-            message("cmd.no.permission") { locale[Message.COMMAND_NO_PERMISSION].sendTo(it) }
-            message("cmd.wrong.usage") { locale[Message.COMMAND_WRONG_USAGE].sendTo(it) }
+            initialize(Arguments)
+            initialize(Completions)
+            initialize(Messages)
 
-            add(MessageCommand(this@TriumphChat))
-            add(ReplyCommand(this@TriumphChat))
-            add(ReloadCommand(this@TriumphChat))
-
+            register(
+                MessageCommand(plugin),
+                ReplyCommand(plugin),
+                ReloadCommand(plugin)
+            )
         }
 
         listeners {
-            add(ChatListener(this@TriumphChat))
-            add(PlayerListener(userManager))
+            register(
+                ChatListener(this@TriumphChat),
+                PlayerListener(userManager)
+            )
         }
 
     }
