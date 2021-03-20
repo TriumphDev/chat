@@ -48,14 +48,14 @@ class TriumphChat : TriumphPlugin() {
             register(
                 MessageCommand(plugin),
                 ReplyCommand(plugin),
-                ReloadCommand(plugin)
+                ReloadCommand(plugin),
             )
         }
 
         listeners {
             register(
                 ChatListener(this@TriumphChat),
-                PlayerListener(userManager)
+                PlayerListener(userManager),
             )
         }
 
