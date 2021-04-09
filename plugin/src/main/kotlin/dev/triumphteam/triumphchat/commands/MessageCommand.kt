@@ -1,6 +1,7 @@
 package dev.triumphteam.triumphchat.commands
 
 import dev.triumphteam.triumphchat.api.ChatUser
+import dev.triumphteam.triumphchat.config.MainConfig
 import dev.triumphteam.triumphchat.func.sendPrivateMessage
 import dev.triumphteam.triumphchat.func.sendTo
 import dev.triumphteam.triumphchat.locale.Message
@@ -18,7 +19,7 @@ import org.bukkit.entity.Player
 class MessageCommand(private val plugin: dev.triumphteam.triumphchat.TriumphChat) : CommandBase() {
 
     private val userManager = plugin.userManager
-    private val config = plugin.config
+    private val config = plugin.config<MainConfig>()
     private val locale = plugin.locale
 
     @Default

@@ -1,12 +1,11 @@
-package dev.triumphteam.triumphchat.init
+package dev.triumphteam.triumphchat.init.command
 
 import dev.triumphteam.core.func.Initializer
 import dev.triumphteam.triumphchat.TriumphChat
 import dev.triumphteam.triumphchat.func.sendTo
 import dev.triumphteam.triumphchat.locale.Message
 
-object Messages : Initializer<TriumphChat> {
-
+object CommandMessages : Initializer<TriumphChat> {
 
     override fun initialize(plugin: TriumphChat) {
         with(plugin) {
@@ -16,4 +15,5 @@ object Messages : Initializer<TriumphChat> {
             }
         }
     }
+
 }

@@ -4,6 +4,7 @@ package dev.triumphteam.triumphchat.func
 
 import dev.triumphteam.triumphchat.api.ChatUser
 import dev.triumphteam.triumphchat.config.FormatsConfig
+import dev.triumphteam.triumphchat.config.MainConfig
 import dev.triumphteam.triumphchat.config.bean.objects.FormatDisplay
 import dev.triumphteam.triumphchat.config.bean.objects.MessageDisplay
 import dev.triumphteam.triumphchat.config.bean.objects.elements.ClickData
@@ -134,8 +135,8 @@ fun ChatUser.sendPrivateMessage(sender: ChatUser, message: String, plugin: dev.t
         this,
         message,
         this.selectMessageFormat(
-            plugin.config[Setting.PRIVATE_MESSAGES].senderFormats,
-            plugin.formatsConfig,
+            plugin.config<MainConfig>()[Setting.PRIVATE_MESSAGES].senderFormats,
+            plugin.config<FormatsConfig>(),
             DEFAULT_PM_SENDER
         )
     )
@@ -145,8 +146,8 @@ fun ChatUser.sendPrivateMessage(sender: ChatUser, message: String, plugin: dev.t
         sender,
         message,
         sender.selectMessageFormat(
-            plugin.config[Setting.PRIVATE_MESSAGES].recipientFormats,
-            plugin.formatsConfig,
+            plugin.config<MainConfig>()[Setting.PRIVATE_MESSAGES].recipientFormats,
+            plugin.config<FormatsConfig>(),
             DEFAULT_PM_RECIPIENT
         )
     )
@@ -168,7 +169,7 @@ fun ChatUser.sendPrivateMessage(sender: ChatUser, message: String, plugin: dev.t
         sender,
         this,
         message,
-        listOf(MessageDisplay(plugin.config[Setting.PRIVATE_MESSAGES].socialSpyFormat))
+        listOf(MessageDisplay(plugin.config<MainConfig>()[Setting.PRIVATE_MESSAGES].socialSpyFormat))
     )
 
     Bukkit.getOnlinePlayers()

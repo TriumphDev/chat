@@ -19,11 +19,18 @@ allprojects {
         mavenCentral()
 
         maven("https://oss.sonatype.org/content/repositories/snapshots/")
-        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    }
+
+    dependencies {
+        // Testing
+        testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+        testImplementation("org.assertj:assertj-core:3.11.1")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+        testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.0")
     }
 
     triumph {
-        spigot("1.16.4")
+        spigot("1.16.5")
         papi("2.10.9")
     }
 

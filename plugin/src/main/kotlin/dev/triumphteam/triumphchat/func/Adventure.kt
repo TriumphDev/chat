@@ -13,7 +13,6 @@ import me.mattstudios.msg.base.internal.nodes.MessageNode
 import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
@@ -59,7 +58,7 @@ internal fun CommandSender.sendMessage(identity: Identity, component: Component)
         return
     }
 
-    sendMessage(PlainComponentSerializer.INSTANCE.serialize(component))
+    //sendMessage(PlainComponentSerializer.INSTANCE.serialize(component))
 }
 
 /**

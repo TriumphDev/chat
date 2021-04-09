@@ -13,8 +13,7 @@ repositories {
 }
 
 triumph {
-    spigot("1.16.4")
-    core("1.1.8")
+    core("1.2.3")
 }
 
 dependencies {
@@ -42,13 +41,12 @@ tasks {
         relocate("dev.triumphteam.core", "me.mattstudios.triumphchat.core")
         relocate("me.mattstudios.mf", "me.mattstudios.triumphchat.mf")
         relocate("me.mattstudios.mfgui", "me.mattstudios.triumphchat.mfgui")
+        relocate("me.mattstudios.msg", "me.mattstudios.triumphchat.msg")
 
         relocate("ch.jalu.configme", "me.mattstudios.triumphchat.configme")
-        relocate("net.kyori", "me.mattstudios.triumphchat.kyori")
+        //relocate("net.kyori", "me.mattstudios.triumphchat.kyori")
 
         relocate("kotlin", "me.mattstudios.triumphchat.kotlin")
-
-        relocate("org.yaml", "me.mattstudios.triumphchat.yaml")
 
         archiveFileName.set("TriumphChat-${project.version}.jar")
 
