@@ -5,11 +5,9 @@ import dev.triumphteam.triumphchat.TriumphChat
 
 object Completions : Initializer<TriumphChat> {
 
-    override fun initialize(plugin: TriumphChat) {
-        with(plugin) {
-            commands {
-                completion("#empty") { emptyList() }
-            }
+    override fun initialize(plugin: TriumphChat) = with(plugin) {
+        commands {
+            completion("#empty") { emptyList() }
         }
     }
 
