@@ -48,7 +48,7 @@ tasks {
 
             "kotlin" to "kotlin",
         ).forEach {
-            relocate(it.key, "dev.triumphteam.triumphchat.${it.value}")
+            //relocate(it.key, "dev.triumphteam.triumphchat.${it.value}")
         }
 
         // TODO decide if should or not relocate adventure
@@ -56,7 +56,7 @@ tasks {
         archiveFileName.set("TriumphChat-${project.version}.jar")
 
         // Testing purposes
-        destinationDirectory.set(File("C:/Users/xpsyk/Desktop/servers/paper-1.16/plugins"))
+        destinationDirectory.set(File("C:/Users/xpsyk/Desktop/servers/tchat-1.16.5/plugins"))
     }
 }
 

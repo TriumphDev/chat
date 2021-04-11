@@ -1,9 +1,11 @@
 package dev.triumphteam.triumphchat.api
 
 import me.mattstudios.msg.base.internal.Format
+import net.kyori.adventure.audience.ForwardingAudience
+import net.kyori.adventure.identity.Identified
 import java.util.UUID
 
-interface ChatUser {
+interface ChatUser : ForwardingAudience.Single, Identified {
     val uuid: UUID
     var replyTarget: UUID?
 

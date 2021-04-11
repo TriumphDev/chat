@@ -2,6 +2,7 @@ package dev.triumphteam.triumphchat
 
 import dev.triumphteam.core.TriumphPlugin
 import dev.triumphteam.core.locale.Language
+import dev.triumphteam.triumphchat.channel.ChannelManager
 import dev.triumphteam.triumphchat.commands.MessageCommand
 import dev.triumphteam.triumphchat.commands.ReloadCommand
 import dev.triumphteam.triumphchat.commands.ReplyCommand
@@ -25,8 +26,8 @@ import me.mattstudios.annotations.BukkitPlugin
 @BukkitPlugin
 class TriumphChat : TriumphPlugin() {
 
-    lateinit var userManager: UserManager
-        private set
+    val userManager = UserManager(this)
+    val channelManager = ChannelManager(this)
 
     override fun enable() {
         config(MainConfig)
@@ -37,8 +38,6 @@ class TriumphChat : TriumphPlugin() {
 
         if (!check(Dependencies)) return
         check(ValidFormats)
-
-        userManager = UserManager(this)
 
         commands {
             initialize(Arguments)

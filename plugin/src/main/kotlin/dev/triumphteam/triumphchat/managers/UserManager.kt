@@ -1,11 +1,12 @@
 package dev.triumphteam.triumphchat.managers
 
+import dev.triumphteam.triumphchat.TriumphChat
 import dev.triumphteam.triumphchat.api.ChatUser
 import dev.triumphteam.triumphchat.data.PlayerUser
 import org.bukkit.entity.Player
 import java.util.UUID
 
-class UserManager(private val plugin: dev.triumphteam.triumphchat.TriumphChat) {
+class UserManager(private val plugin: TriumphChat) {
 
     private val users = mutableMapOf<UUID, ChatUser>()
 

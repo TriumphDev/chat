@@ -25,9 +25,7 @@ class ChatListener(private val plugin: dev.triumphteam.triumphchat.TriumphChat) 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun AsyncPlayerChatEvent.onPlayerChat() {
         println(message)
-        println(message)
-        println(message)
-        println("my ass")
+
         isCancelled = true
 
         if (!isAsynchronous) {
