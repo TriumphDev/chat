@@ -3,7 +3,7 @@ package dev.triumphteam.triumphchat.api.events
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PlayerPingEvent() : Event(true) {
+class PlayerPingEvent : Event(true) {
 
     private var isCancelled = false
 

@@ -7,9 +7,15 @@ import dev.triumphteam.triumphchat.config.FormatsConfig
 import dev.triumphteam.triumphchat.config.MainConfig
 import dev.triumphteam.triumphchat.config.settings.Setting
 
-
+/**
+ * Object for validating formats from the format.yml file
+ */
 object ValidFormats : Checker<TriumphChat> {
 
+    /**
+     * Checks if the formats in the config.yml are registered in the formats.yml
+     * @param plugin Instance of the plugin's main class
+     */
     override fun check(plugin: TriumphChat): Boolean = with(plugin) {
         val formats = config<FormatsConfig>().getFormats()
 
@@ -18,12 +24,14 @@ object ValidFormats : Checker<TriumphChat> {
             "&6The following &7chat &6formats: &c${invalidChatFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
         }
 
-        val invalidSenderFormats = config<MainConfig>()[Setting.PRIVATE_MESSAGES].senderFormats.filter { it !in formats.keys }
+        val invalidSenderFormats =
+            config<MainConfig>()[Setting.PRIVATE_MESSAGES].senderFormats.filter { it !in formats.keys }
         if (invalidSenderFormats.isNotEmpty()) {
             "&6The following &7sender &6formats: &c${invalidSenderFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
         }
 
-        val invalidRecipientFormats = config<MainConfig>()[Setting.PRIVATE_MESSAGES].recipientFormats.filter { it !in formats.keys }
+        val invalidRecipientFormats =
+            config<MainConfig>()[Setting.PRIVATE_MESSAGES].recipientFormats.filter { it !in formats.keys }
         if (invalidRecipientFormats.isNotEmpty()) {
             "&6The following &7recipient &6formats: &c${invalidRecipientFormats.joinToString("&6, &c")} &6are not registered in the &cformats.yml &6and will be ignored!".log()
         }

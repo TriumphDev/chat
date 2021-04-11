@@ -17,6 +17,4 @@ interface ChatUser {
      */
     fun getChatFormats(): Set<Format>
 
-    companion object {}
-
 }

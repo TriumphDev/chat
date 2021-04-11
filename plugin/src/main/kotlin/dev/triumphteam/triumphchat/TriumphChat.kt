@@ -19,6 +19,9 @@ import dev.triumphteam.triumphchat.locale.Message
 import dev.triumphteam.triumphchat.managers.UserManager
 import me.mattstudios.annotations.BukkitPlugin
 
+/**
+ * Main implementation of the plugin
+ */
 @BukkitPlugin
 class TriumphChat : TriumphPlugin() {
 
@@ -56,5 +59,5 @@ class TriumphChat : TriumphPlugin() {
             )
         }
     }
-    
+
 }

@@ -7,13 +7,14 @@ import dev.triumphteam.triumphchat.func.IS_PAPER
 import dev.triumphteam.triumphchat.func.log
 
 /**
- * Displays the startup message
+ * Object for displaying the startup message
  */
 object StartupMessage : Initializer<TriumphChat> {
 
     /**
      * Simply logs the startup message to the console
      * Logs differently based on whether it's paper, pre 1.16.5 paper (due to console color changes), and spigot
+     * @param plugin Instance of the plugin's main class
      */
     override fun initialize(plugin: TriumphChat) = with(plugin) {
         if (!IS_PAPER) {

@@ -47,7 +47,9 @@ tasks {
             "me.mattstudios.config" to "lib.config",
 
             "kotlin" to "kotlin",
-        ).forEach { relocate(it.key, "dev.triumphteam.triumphchat.${it.value}") }
+        ).forEach {
+            relocate(it.key, "dev.triumphteam.triumphchat.${it.value}")
+        }
 
         // TODO decide if should or not relocate adventure
 
