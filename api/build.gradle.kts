@@ -6,7 +6,7 @@ triumph {
 dependencies {
     // Kotlin
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.30")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
 
     //api("net.kyori:text-serializer-plain:4.0.0-SNAPSHOT")
 }
