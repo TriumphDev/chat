@@ -22,14 +22,17 @@
  * SOFTWARE.
  */
 
-package dev.triumphteam.triumphchat.config.bean.holders
+package dev.triumphteam.triumphchat.channel
 
-import dev.triumphteam.triumphchat.config.bean.objects.elements.SoundData
+import dev.triumphteam.core.TriumphPlugin
+import dev.triumphteam.triumphchat.api.Channel
 
 /**
- * Holds settings regarding notifications
+ * TODO make this functional
  */
-data class NotificationHolder(
-    var enabled: Boolean = true,
-    var sound: SoundData = SoundData()
-)
+class ChannelManager(plugin: TriumphPlugin) {
+
+    private val channels = mutableMapOf<String, Channel>()
+
+
+}

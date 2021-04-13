@@ -1,10 +1,34 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021 Mateus Moreira
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 @file:JvmName("Utils")
 
 package dev.triumphteam.triumphchat.func
 
 import dev.triumphteam.triumphchat.api.ChatUser
 import dev.triumphteam.triumphchat.config.FormatsConfig
-import dev.triumphteam.triumphchat.config.MainConfig
+import dev.triumphteam.triumphchat.config.Config
 import dev.triumphteam.triumphchat.config.bean.objects.FormatDisplay
 import dev.triumphteam.triumphchat.config.bean.objects.MessageDisplay
 import dev.triumphteam.triumphchat.config.bean.objects.elements.ClickData
@@ -135,7 +159,7 @@ fun ChatUser.sendPrivateMessage(sender: ChatUser, message: String, plugin: dev.t
         this,
         message,
         this.selectMessageFormat(
-            plugin.config<MainConfig>()[Setting.PRIVATE_MESSAGES].senderFormats,
+            plugin.config<Config>()[Setting.PRIVATE_MESSAGES].senderFormats,
             plugin.config<FormatsConfig>(),
             DEFAULT_PM_SENDER
         )
@@ -146,7 +170,7 @@ fun ChatUser.sendPrivateMessage(sender: ChatUser, message: String, plugin: dev.t
         sender,
         message,
         sender.selectMessageFormat(
-            plugin.config<MainConfig>()[Setting.PRIVATE_MESSAGES].recipientFormats,
+            plugin.config<Config>()[Setting.PRIVATE_MESSAGES].recipientFormats,
             plugin.config<FormatsConfig>(),
             DEFAULT_PM_RECIPIENT
         )
@@ -169,7 +193,7 @@ fun ChatUser.sendPrivateMessage(sender: ChatUser, message: String, plugin: dev.t
         sender,
         this,
         message,
-        listOf(MessageDisplay(plugin.config<MainConfig>()[Setting.PRIVATE_MESSAGES].socialSpyFormat))
+        listOf(MessageDisplay(plugin.config<Config>()[Setting.PRIVATE_MESSAGES].socialSpyFormat))
     )
 
     Bukkit.getOnlinePlayers()

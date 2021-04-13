@@ -13,7 +13,7 @@ repositories {
 }
 
 triumph {
-    core("1.2.3")
+    core("1.2.4")
 }
 
 dependencies {
@@ -34,23 +34,29 @@ dependencies {
 
 tasks {
     test {
-
+        // TODO add unit testing
     }
 
     withType<ShadowJar> {
-        relocate("dev.triumphteam.core", "me.mattstudios.triumphchat.core")
-        relocate("me.mattstudios.mf", "me.mattstudios.triumphchat.mf")
-        relocate("me.mattstudios.mfgui", "me.mattstudios.triumphchat.mfgui")
-        relocate("me.mattstudios.msg", "me.mattstudios.triumphchat.msg")
 
-        relocate("ch.jalu.configme", "me.mattstudios.triumphchat.configme")
-        //relocate("net.kyori", "me.mattstudios.triumphchat.kyori")
+        // Relocations
+        mapOf(
+            "dev.triumphteam.core" to "core",
+            "me.mattstudios.mf" to "lib.cmds",
+            "me.mattstudios.msg" to "lib.msg",
+            "me.mattstudios.config" to "lib.config",
 
-        relocate("kotlin", "me.mattstudios.triumphchat.kotlin")
+            "kotlin" to "kotlin",
+        ).forEach {
+            //relocate(it.key, "dev.triumphteam.triumphchat.${it.value}")
+        }
+
+        // TODO decide if should or not relocate adventure
 
         archiveFileName.set("TriumphChat-${project.version}.jar")
 
-        destinationDirectory.set(File("C:/Users/xpsyk/Desktop/servers/paper-1.16/plugins"))
+        // Testing purposes
+        destinationDirectory.set(File("C:/Users/xpsyk/Desktop/servers/tchat-1.16.5/plugins"))
     }
 }
 

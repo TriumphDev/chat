@@ -22,14 +22,37 @@
  * SOFTWARE.
  */
 
-package dev.triumphteam.triumphchat.config.bean.holders
+package dev.triumphteam.triumphchat.user
 
-import dev.triumphteam.triumphchat.config.bean.objects.elements.SoundData
+import dev.triumphteam.triumphchat.TriumphChat
+import dev.triumphteam.triumphchat.api.Channel
+import dev.triumphteam.triumphchat.api.ChatUser
+import dev.triumphteam.triumphchat.channel.ChatChannel
+import dev.triumphteam.triumphchat.func.AUDIENCES
+import dev.triumphteam.triumphchat.permissions.ChatPermission
+import me.mattstudios.msg.base.internal.Format
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.identity.Identity
+import org.bukkit.Bukkit
+import java.util.UUID
 
-/**
- * Holds settings regarding notifications
- */
-data class NotificationHolder(
-    var enabled: Boolean = true,
-    var sound: SoundData = SoundData()
-)
+data class PlayerUser(
+    private val plugin: TriumphChat,
+    override val uuid: UUID,
+    override var channel: Channel = ChatChannel(),
+    override var replyTarget: UUID? = null,
+) : ChatUser {
+
+    override fun getChatFormats(): Set<Format> {
+        val player = Bukkit.getPlayer(uuid) ?: return Format.NONE
+        return ChatPermission.formats.filter { player.hasPermission(it.key) }.values.toSet()
+    }
+
+    override fun audience(): Audience {
+        // This is temporary
+        return AUDIENCES.player(uuid)
+    }
+
+    override fun identity() = Identity.identity(uuid)
+
+}

@@ -22,14 +22,31 @@
  * SOFTWARE.
  */
 
-package dev.triumphteam.triumphchat.config.bean.holders
+package dev.triumphteam.triumphchat.user
 
-import dev.triumphteam.triumphchat.config.bean.objects.elements.SoundData
+import dev.triumphteam.triumphchat.TriumphChat
+import dev.triumphteam.triumphchat.api.ChatUser
+import org.bukkit.entity.Player
+import java.util.UUID
 
-/**
- * Holds settings regarding notifications
- */
-data class NotificationHolder(
-    var enabled: Boolean = true,
-    var sound: SoundData = SoundData()
-)
+class UserManager(private val plugin: TriumphChat) {
+
+    private val users = mutableMapOf<UUID, ChatUser>()
+
+    init {
+        // load all players
+    }
+
+    fun getUser(uuid: UUID): ChatUser {
+        return users[uuid] ?: addUser(uuid)
+    }
+
+    fun getUser(player: Player) = getUser(player.uniqueId)
+
+    private fun addUser(uuid: UUID): ChatUser {
+        return PlayerUser(plugin, uuid).also {
+            users[uuid] = it
+        }
+    }
+
+}

@@ -22,14 +22,17 @@
  * SOFTWARE.
  */
 
-package dev.triumphteam.triumphchat.config.bean.holders
+package dev.triumphteam.triumphchat.channel
 
-import dev.triumphteam.triumphchat.config.bean.objects.elements.SoundData
+import dev.triumphteam.triumphchat.api.Channel
+import net.kyori.adventure.audience.Audience
 
-/**
- * Holds settings regarding notifications
- */
-data class NotificationHolder(
-    var enabled: Boolean = true,
-    var sound: SoundData = SoundData()
-)
+class ChatChannel : Channel {
+
+    override val prefix = ""
+
+    override fun audiences(): MutableIterable<Audience> {
+        return mutableListOf()
+    }
+
+}

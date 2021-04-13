@@ -22,14 +22,12 @@
  * SOFTWARE.
  */
 
-package dev.triumphteam.triumphchat.config.bean.holders
+package dev.triumphteam.triumphchat.api
 
-import dev.triumphteam.triumphchat.config.bean.objects.elements.SoundData
+import net.kyori.adventure.audience.ForwardingAudience
 
-/**
- * Holds settings regarding notifications
- */
-data class NotificationHolder(
-    var enabled: Boolean = true,
-    var sound: SoundData = SoundData()
-)
+interface Channel : ForwardingAudience {
+
+    val prefix: String
+
+}

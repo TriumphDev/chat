@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.4.31"
+    id("org.cadixdev.licenser") version "0.5.1"
     id("me.mattstudios.triumph") version "0.1.8"
 }
 
@@ -9,6 +10,7 @@ allprojects {
     apply {
         plugin("org.jetbrains.kotlin.jvm")
         plugin("me.mattstudios.triumph")
+        plugin("org.cadixdev.licenser")
     }
 
     group = "me.mattstudios"
@@ -46,6 +48,10 @@ allprojects {
                 javaParameters = true
             }
         }
+    }
+
+    license {
+        header = rootProject.file("LICENSE")
     }
 
 }

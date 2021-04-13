@@ -22,14 +22,24 @@
  * SOFTWARE.
  */
 
-package dev.triumphteam.triumphchat.config.bean.holders
+package dev.triumphteam.triumphchat.config
 
-import dev.triumphteam.triumphchat.config.bean.objects.elements.SoundData
+import dev.triumphteam.core.TriumphPlugin
+import dev.triumphteam.core.configuration.BaseConfig
+import dev.triumphteam.core.configuration.ConfigFactory
+import dev.triumphteam.triumphchat.config.settings.Setting
+import dev.triumphteam.triumphchat.func.PROPERTY_MAPPER
+import java.io.File
+import java.nio.file.Path
 
-/**
- * Holds settings regarding notifications
- */
-data class NotificationHolder(
-    var enabled: Boolean = true,
-    var sound: SoundData = SoundData()
-)
+class Config(dataFolder: File) : BaseConfig(
+    Path.of(dataFolder.path, "config.yml"),
+    Setting::class.java,
+    PROPERTY_MAPPER
+) {
+
+    companion object : ConfigFactory {
+        override fun create(plugin: TriumphPlugin): BaseConfig = Config(plugin.dataFolder)
+    }
+
+}
