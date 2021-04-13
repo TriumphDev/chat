@@ -24,7 +24,7 @@
 
 package dev.triumphteam.triumphchat.listeners
 
-import dev.triumphteam.triumphchat.managers.UserManager
+import dev.triumphteam.triumphchat.user.UserManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent

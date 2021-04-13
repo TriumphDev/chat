@@ -22,15 +22,13 @@
  * SOFTWARE.
  */
 
-package dev.triumphteam.triumphchat.data
+package dev.triumphteam.triumphchat.user
 
 import dev.triumphteam.triumphchat.TriumphChat
 import dev.triumphteam.triumphchat.api.Channel
 import dev.triumphteam.triumphchat.api.ChatUser
-import dev.triumphteam.triumphchat.api.Message
+import dev.triumphteam.triumphchat.channel.ChatChannel
 import dev.triumphteam.triumphchat.func.AUDIENCES
-import dev.triumphteam.triumphchat.func.sendMessage
-import dev.triumphteam.triumphchat.func.toPlayer
 import dev.triumphteam.triumphchat.permissions.ChatPermission
 import me.mattstudios.msg.base.internal.Format
 import net.kyori.adventure.audience.Audience
@@ -41,16 +39,9 @@ import java.util.UUID
 data class PlayerUser(
     private val plugin: TriumphChat,
     override val uuid: UUID,
-    override var replyTarget: UUID? = null
+    override var channel: Channel = ChatChannel(),
+    override var replyTarget: UUID? = null,
 ) : ChatUser {
-
-    override var channel: Channel
-        get() = TODO("Not yet implemented")
-        set(value) {}
-
-    override fun sendMessage(message: Message) {
-        uuid.toPlayer()?.sendMessage(Identity.identity(message.author.uuid), message.component)
-    }
 
     override fun getChatFormats(): Set<Format> {
         val player = Bukkit.getPlayer(uuid) ?: return Format.NONE

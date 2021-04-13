@@ -22,24 +22,31 @@
  * SOFTWARE.
  */
 
-package dev.triumphteam.triumphchat.config
+package dev.triumphteam.triumphchat.user
 
-import dev.triumphteam.core.TriumphPlugin
-import dev.triumphteam.core.configuration.Config
-import dev.triumphteam.core.configuration.ConfigFactory
-import dev.triumphteam.triumphchat.config.settings.Setting
-import dev.triumphteam.triumphchat.func.PROPERTY_MAPPER
-import java.io.File
-import java.nio.file.Path
+import dev.triumphteam.triumphchat.TriumphChat
+import dev.triumphteam.triumphchat.api.ChatUser
+import org.bukkit.entity.Player
+import java.util.UUID
 
-class MainConfig(dataFolder: File) : Config(
-    Path.of(dataFolder.path, "config.yml"),
-    Setting::class.java,
-    PROPERTY_MAPPER
-) {
+class UserManager(private val plugin: TriumphChat) {
 
-    companion object : ConfigFactory {
-        override fun create(plugin: TriumphPlugin): Config = MainConfig(plugin.dataFolder)
+    private val users = mutableMapOf<UUID, ChatUser>()
+
+    init {
+        // load all players
+    }
+
+    fun getUser(uuid: UUID): ChatUser {
+        return users[uuid] ?: addUser(uuid)
+    }
+
+    fun getUser(player: Player) = getUser(player.uniqueId)
+
+    private fun addUser(uuid: UUID): ChatUser {
+        return PlayerUser(plugin, uuid).also {
+            users[uuid] = it
+        }
     }
 
 }

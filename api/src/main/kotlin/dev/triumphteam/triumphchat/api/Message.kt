@@ -30,6 +30,7 @@ import net.kyori.adventure.text.Component
  *
  */
 interface Message {
+
     /**
      * The author of this [Message]
      */

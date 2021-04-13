@@ -25,9 +25,14 @@
 package dev.triumphteam.triumphchat.channel
 
 import dev.triumphteam.core.TriumphPlugin
+import dev.triumphteam.triumphchat.api.Channel
 
+/**
+ * TODO make this functional
+ */
 class ChannelManager(plugin: TriumphPlugin) {
 
-    
+    private val channels = mutableMapOf<String, Channel>()
+
 
 }

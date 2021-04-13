@@ -25,7 +25,7 @@
 package dev.triumphteam.triumphchat.commands
 
 import dev.triumphteam.triumphchat.TriumphChat
-import dev.triumphteam.triumphchat.config.MainConfig
+import dev.triumphteam.triumphchat.config.Config
 import dev.triumphteam.triumphchat.func.sendPrivateMessage
 import dev.triumphteam.triumphchat.func.sendTo
 import dev.triumphteam.triumphchat.locale.Message
@@ -43,7 +43,7 @@ import org.bukkit.entity.Player
 class ReplyCommand(private val plugin: TriumphChat) : CommandBase() {
 
     private val userManager = plugin.userManager
-    private val config = plugin.config<MainConfig>()
+    private val config = plugin.config<Config>()
 
     @Default
     @Permission(Permissions.COMMAND_REPLY)

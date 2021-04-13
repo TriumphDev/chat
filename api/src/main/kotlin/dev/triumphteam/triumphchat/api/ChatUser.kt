@@ -30,25 +30,21 @@ import net.kyori.adventure.identity.Identified
 import java.util.UUID
 
 interface ChatUser : ForwardingAudience.Single, Identified {
+
     /**
      * The user's UUID
      */
     val uuid: UUID
 
     /**
-     *
+     *  The channel the user currently has selected
      */
     var channel: Channel
 
     /**
-     *
+     *  The user the player is currently direct messaging
      */
     var replyTarget: UUID?
-
-    /**
-     * Sends a [Message] to the user
-     */
-    fun sendMessage(message: Message)
 
     /**
      * Gets the available [Format] the player has, based on permissions

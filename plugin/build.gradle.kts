@@ -13,7 +13,7 @@ repositories {
 }
 
 triumph {
-    core("1.2.3")
+    core("1.2.4")
 }
 
 dependencies {

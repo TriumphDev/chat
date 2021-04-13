@@ -31,7 +31,7 @@ import dev.triumphteam.triumphchat.commands.MessageCommand
 import dev.triumphteam.triumphchat.commands.ReloadCommand
 import dev.triumphteam.triumphchat.commands.ReplyCommand
 import dev.triumphteam.triumphchat.config.FormatsConfig
-import dev.triumphteam.triumphchat.config.MainConfig
+import dev.triumphteam.triumphchat.config.Config
 import dev.triumphteam.triumphchat.init.StartupMessage
 import dev.triumphteam.triumphchat.init.checks.Dependencies
 import dev.triumphteam.triumphchat.init.checks.ValidFormats
@@ -41,7 +41,7 @@ import dev.triumphteam.triumphchat.init.command.Completions
 import dev.triumphteam.triumphchat.listeners.ChatListener
 import dev.triumphteam.triumphchat.listeners.PlayerListener
 import dev.triumphteam.triumphchat.locale.Message
-import dev.triumphteam.triumphchat.managers.UserManager
+import dev.triumphteam.triumphchat.user.UserManager
 import me.mattstudios.annotations.BukkitPlugin
 
 /**
@@ -54,7 +54,7 @@ class TriumphChat : TriumphPlugin() {
     val channelManager = ChannelManager(this)
 
     override fun enable() {
-        config(MainConfig)
+        config(Config)
         config(FormatsConfig)
         locale(Message, Language.ENGLISH)
 

@@ -39,6 +39,9 @@ import me.mattstudios.config.properties.Property
  */
 object Setting : SettingsHolder {
 
+    @Comment(
+        ""
+    )
     @Path("chat")
     val CHAT_FORMATS = Property.create(ChatHolder())
 
